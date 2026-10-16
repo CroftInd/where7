@@ -8,8 +8,12 @@ type Props={stage:PublicStage|null; disabled?:boolean; onSelect?:(name:string)=>
 const emptyFC={type:'FeatureCollection',features:[]};
 // CARTO basemap key is read automatically at build time from .env.local / Vercel.
 const CARTO_API_KEY = process.env.NEXT_PUBLIC_CARTO_API_KEY?.trim();
+const CARTO_VECTOR_STYLE = 'https://basemaps.cartocdn.com/gl/voyager-gl-style/style.json';
+const CARTO_STYLE_URL = CARTO_API_KEY
+  ? `${CARTO_VECTOR_STYLE}?key=${encodeURIComponent(CARTO_API_KEY)}`
+  : CARTO_VECTOR_STYLE;
 const BASE_TILE_URL = process.env.NEXT_PUBLIC_MAP_TILE_URL?.trim() || 'https://basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png';
-const TILE = CARTO_API_KEY && BASE_TILE_URL.includes('cartocdn.com')
+const FALLBACK_TILE = CARTO_API_KEY && BASE_TILE_URL.includes('cartocdn.com')
   ? `${BASE_TILE_URL}${BASE_TILE_URL.includes('?') ? '&' : '?'}key=${encodeURIComponent(CARTO_API_KEY)}`
   : BASE_TILE_URL;
 const ATTRIBUTION=process.env.NEXT_PUBLIC_MAP_ATTRIBUTION||'© OpenStreetMap contributors · © CARTO';
@@ -28,11 +32,23 @@ export default function MapCanvas({stage,disabled=false,onSelect,pickMode=false,
     import('maplibre-gl').then(mod=>{
       if(stopped||!holder.current)return;
       const gl=mod.default;
-      const style:StyleSpecification={version:8,
-        sources:{basemap:{type:'raster',tiles:[TILE],tileSize:256,attribution:ATTRIBUTION}},
+      // CARTO Voyager is a vector style. The raster style is retained only as
+      // an automatic fallback if CARTO's style endpoint is unreachable.
+      const fallbackStyle:StyleSpecification={version:8,
+        sources:{basemap:{type:'raster',tiles:[FALLBACK_TILE],tileSize:256,attribution:ATTRIBUTION}},
         layers:[{id:'backdrop',type:'background',paint:{'background-color':'#132c3a'}},
           {id:'basemap',type:'raster',source:'basemap',paint:{'raster-opacity':1}}]};
-      const map=new gl.Map({container:holder.current,style,center:[-17,24],zoom:1.75,minZoom:1,maxZoom:19,attributionControl:false,pitchWithRotate:false,dragRotate:false,touchPitch:false,fadeDuration:80,renderWorldCopies:false});
+      const map=new gl.Map({container:holder.current,style:CARTO_STYLE_URL,center:[-17,24],zoom:1.75,minZoom:1,maxZoom:19,attributionControl:false,pitchWithRotate:false,dragRotate:false,touchPitch:false,fadeDuration:80,renderWorldCopies:false});
+      let fallbackStarted=false;
+      map.on('error',event=>{
+        const message=String(event.error?.message||'');
+        // A failed vector style should not prevent the entire game loading.
+        if(!map.isStyleLoaded()&&!fallbackStarted&&(message.includes('style')||message.includes('fetch')||message.includes('HTTP'))){
+          fallbackStarted=true;
+          setWarning('Vector basemap unavailable — using the fallback map.');
+          map.setStyle(fallbackStyle);
+        }
+      });
       instance=map;mapRef.current=map;
       map.addControl(new gl.AttributionControl({compact:true}),'bottom-left');
       map.on('error',e=>{const text=String(e.error?.message||'');if(text.includes('style')||text.includes('WebGL'))setMapError('The map renderer is unavailable. Try refreshing or enabling hardware acceleration.');});
@@ -103,7 +119,9 @@ export default function MapCanvas({stage,disabled=false,onSelect,pickMode=false,
     map.setLayoutProperty('regions-fill','visibility',active&&stage.selection==='region'?'visible':'none');
     map.setLayoutProperty('regions-lines','visibility',active&&stage.selection==='region'?'visible':'none');
     map.setLayoutProperty('region-highlight','visibility',active&&stage.selection==='region'?'visible':'none');
-    map.setPaintProperty('basemap','raster-opacity',detail?1:0.04);
+    // CARTO's vector style has no layer named 'basemap'. Only change the
+    // raster fallback layer if it actually exists.
+    if(map.getLayer('basemap'))map.setPaintProperty('basemap','raster-opacity',detail?1:0.04);
     const point=stage?.center||[-14,27];
     map.flyTo({center:point,zoom:stage?.zoom||1.9,duration:window.matchMedia('(prefers-reduced-motion: reduce)').matches?0:1050,essential:true});
     clearMarkers();
@@ -162,7 +180,7 @@ export default function MapCanvas({stage,disabled=false,onSelect,pickMode=false,
       <button type="button" onClick={()=>zoom(1)} aria-label="Zoom in"><Plus size={19}/></button>
       <button type="button" onClick={()=>zoom(-1)} aria-label="Zoom out"><Minus size={19}/></button>
       <button type="button" onClick={()=>mapRef.current?.flyTo({center:stage?.center||[-17,24],zoom:stage?.zoom||2,duration:500})} aria-label="Recenter"><LocateFixed size={18}/></button>
-      <button type="button" onClick={()=>setDetail(v=>!v)} aria-label={detail?'Hide map detail':'Show map detail'}><Layers size={18}/></button>
+      <button type="button" onClick={()=>setDetail(v=>!v)} aria-label={detail?'Hide fallback map detail':'Show fallback map detail'} title="Toggle fallback map detail"><Layers size={18}/></button>
     </div>
     <div className="map-corner-title"><Compass size={17}/> {pickMode?'CHOOSE A POSITION':stage?.label?.toUpperCase()||'THE EXPEDITION'}</div>
     {stage&&!disabled&&!pickMode&&<div className="map-action-hint">✦ {stage.selection==='country'?'Hover countries · Click to answer':stage.selection==='region'?'Select a region on the map':'Choose a highlighted location'}</div>}
