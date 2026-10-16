@@ -6,7 +6,12 @@ import {Compass,LocateFixed,Plus,Minus,Layers,AlertCircle} from 'lucide-react';
 
 type Props={stage:PublicStage|null; disabled?:boolean; onSelect?:(name:string)=>void; pickMode?:boolean; onPick?:(lat:number,lng:number)=>void; selected?:string|null;};
 const emptyFC={type:'FeatureCollection',features:[]};
-const TILE=process.env.NEXT_PUBLIC_MAP_TILE_URL||'https://basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png';
+// CARTO basemap key is read automatically at build time from .env.local / Vercel.
+const CARTO_API_KEY = process.env.NEXT_PUBLIC_CARTO_API_KEY?.trim();
+const BASE_TILE_URL = process.env.NEXT_PUBLIC_MAP_TILE_URL?.trim() || 'https://basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png';
+const TILE = CARTO_API_KEY && BASE_TILE_URL.includes('cartocdn.com')
+  ? `${BASE_TILE_URL}${BASE_TILE_URL.includes('?') ? '&' : '?'}key=${encodeURIComponent(CARTO_API_KEY)}`
+  : BASE_TILE_URL;
 const ATTRIBUTION=process.env.NEXT_PUBLIC_MAP_ATTRIBUTION||'© OpenStreetMap contributors · © CARTO';
 export default function MapCanvas({stage,disabled=false,onSelect,pickMode=false,onPick,selected}:Props){
   const holder=useRef<HTMLDivElement>(null);
