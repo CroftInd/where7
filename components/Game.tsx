@@ -26,6 +26,15 @@ export default function Game(){
     catch(e){setError(e instanceof Error?e.message:'Unable to load game');}
     finally{setLoading(false)}
   };
+  useEffect(()=>{
+    try {
+      if(window.localStorage.getItem('where7-how-to-play-seen-v1')!=='yes')setShowHow(true);
+    } catch {setShowHow(true); }
+  },[]);
+  const closeHow=()=>{
+    try{window.localStorage.setItem('where7-how-to-play-seen-v1','yes')}catch{}
+    setShowHow(false);
+  };
   useEffect(()=>{const params=new URLSearchParams(window.location.search);const initialMode=params.get('mode')==='practice'?'practice':'daily';const initialId=params.get('challenge')||'london';setMode(initialMode);setChallenge(initialId);void load(initialMode,initialId)},[]);
   useEffect(()=>{Promise.all(['/world-countries.geojson','/microstates.geojson'].map(url=>fetch(url).then(r=>r.json()))).then(data=>{
     const names=[...new Set(data.flatMap((f:{features:{properties:{name:string}}[]})=>f.features.map(v=>v.properties.name)))].sort((a,b)=>a.localeCompare(b));setCountries(names);
@@ -84,7 +93,6 @@ export default function Game(){
         <Link className="header-link" href="/leaderboard" aria-label="Open daily leaderboard"><Trophy size={17}/><span>Leaderboard</span></Link>
         <Link className="header-link" href="/stats" aria-label="Open explorer statistics"><Target size={17}/><span>My stats</span></Link>
         <Link className="header-link" href="/archive" aria-label="Open challenge archive"><BookOpen size={17}/><span>Archive</span></Link>
-        <Link className="admin-link" href="/admin" aria-label="Open Challenge Studio"><Settings2 size={18}/><span>Studio</span></Link>
       </nav>
     </header>
     <div className="game-canvas">
@@ -150,7 +158,7 @@ export default function Game(){
           <button className="secondary-action" onClick={()=>switchMode('practice',game?.challengeId||'london')}><Play size={16}/> Practice</button></div>
         {mode==='practice'&&<button className="result-again" onClick={()=>void action('restart')}><RotateCcw size={15}/> Restart this practice puzzle</button>}
       </div></div>}
-      {showHow&&<div className="modal-scrim" role="dialog" aria-modal="true" aria-labelledby="how-title"><div className="how-modal"><button className="close-modal" aria-label="Close instructions" onClick={()=>setShowHow(false)}><X size={19}/></button><div className="eyebrow"><BookOpen size={16}/> YOUR FIELD GUIDE</div><h2 id="how-title">Seven clues. One place.</h2><p>Begin with the entire world. Read each factual statement and select the correct location directly on the interactive map.</p><div className="how-lines"><div><Compass/><span>Correct answers reveal more specific locations.</span></div><div><Heart/><span>Every guess, right or wrong, uses one of seven hearts.</span></div><div><Trophy/><span>Only seven correct answers unlock the final building.</span></div><div><Lightbulb/><span>Hints cost points, but not hearts.</span></div></div><button className="primary-action" onClick={()=>setShowHow(false)}>Begin expedition <ArrowRight size={17}/></button></div></div>}
+      {showHow&&<div className="modal-scrim" role="dialog" aria-modal="true" aria-labelledby="how-title"><div className="how-modal"><button className="close-modal" aria-label="Close instructions" onClick={closeHow}><X size={19}/></button><div className="eyebrow"><BookOpen size={16}/> YOUR FIELD GUIDE</div><h2 id="how-title">Seven clues. One place.</h2><p>Begin with the entire world. Read each factual statement and select the correct location directly on the interactive map.</p><div className="how-lines"><div><Compass/><span>Correct answers reveal more specific locations.</span></div><div><Heart/><span>Every guess, right or wrong, uses one of seven hearts.</span></div><div><Trophy/><span>Only seven correct answers unlock the final building.</span></div><div><Lightbulb/><span>Hints cost points, but not hearts.</span></div></div><button className="primary-action" onClick={closeHow}>Begin expedition <ArrowRight size={17}/></button></div></div>}
     </div>
   </main>
 }
