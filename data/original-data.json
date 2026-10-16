@@ -1,0 +1,1562 @@
+{
+  "P": {
+    "nyc": {
+      "id": "nyc",
+      "country": "United States",
+      "names": [
+        "United States",
+        "New York",
+        "New York City",
+        "Manhattan",
+        "Midtown",
+        "Fifth Avenue",
+        "Empire State Building"
+      ],
+      "clues": [
+        "This country has 50 states and its federal capital is Washington, D.C.",
+        "This state contains the Adirondack Mountains and the American side of Niagara Falls.",
+        "This city has five boroughs: Manhattan, Brooklyn, Queens, the Bronx and Staten Island.",
+        "Most of this borough lies on the island between the Hudson and East rivers.",
+        "This central Manhattan neighbourhood includes Times Square and the Theater District.",
+        "This north–south Manhattan avenue meets West 34th Street beside the Empire State Building.",
+        "This Art Deco skyscraper was completed in 1931 and has 102 storeys."
+      ],
+      "hints": [
+        "Its flag contains 50 stars.",
+        "The state has the same name as its biggest city.",
+        "It is nicknamed the Big Apple.",
+        "Central Park lies within this borough.",
+        "Its name refers to its position in Manhattan.",
+        "The avenue is named with an ordinal number.",
+        "Its initials are ESB."
+      ],
+      "views": [
+        {
+          "center": [
+            20,
+            -24
+          ],
+          "zoom": 2.2
+        },
+        {
+          "bounds": [
+            [
+              24,
+              -125
+            ],
+            [
+              50,
+              -66
+            ]
+          ],
+          "max": 5
+        },
+        {
+          "bounds": [
+            [
+              40.35,
+              -79.9
+            ],
+            [
+              45.35,
+              -71.4
+            ]
+          ],
+          "max": 8
+        },
+        {
+          "bounds": [
+            [
+              40.48,
+              -74.28
+            ],
+            [
+              40.95,
+              -73.68
+            ]
+          ],
+          "max": 11
+        },
+        {
+          "bounds": [
+            [
+              40.692,
+              -74.041
+            ],
+            [
+              40.852,
+              -73.915
+            ]
+          ],
+          "max": 13
+        },
+        {
+          "bounds": [
+            [
+              40.729,
+              -74.015
+            ],
+            [
+              40.779,
+              -73.945
+            ]
+          ],
+          "max": 14
+        },
+        {
+          "bounds": [
+            [
+              40.738,
+              -73.998
+            ],
+            [
+              40.759,
+              -73.97
+            ]
+          ],
+          "max": 17
+        }
+      ],
+      "iso": "USA",
+      "sources": [
+        "https://www.usa.gov/states-and-territories",
+        "https://www.iloveny.com/places-to-go/adirondacks/",
+        "https://www.nyc.gov/site/planning/about/borough-offices.page",
+        "https://www.nyc.gov/site/planning/about/borough-offices.page",
+        "https://www.nyctourism.com/neighborhoods/midtown/",
+        "https://www.esbnyc.com/visit",
+        "https://www.esbnyc.com/about/history"
+      ]
+    },
+    "london": {
+      "id": "london",
+      "country": "United Kingdom",
+      "names": [
+        "United Kingdom",
+        "England",
+        "London",
+        "City of Westminster",
+        "Westminster",
+        "Whitehall",
+        "10 Downing Street"
+      ],
+      "clues": [
+        "This sovereign country consists of England, Scotland, Wales and Northern Ireland.",
+        "This constituent country contains Manchester, Birmingham and the UK capital, London.",
+        "The River Thames runs through this city, which is home to Tower Bridge.",
+        "This central London borough contains Buckingham Palace and the Palace of Westminster.",
+        "This neighbourhood contains Westminster Abbey and Parliament Square.",
+        "This London road runs from Trafalgar Square towards Parliament Street past government offices.",
+        "This numbered address on Downing Street is the official residence and office of the UK prime minister."
+      ],
+      "hints": [
+        "Its flag is the Union Jack.",
+        "Its flag displays the red Cross of St George.",
+        "Look for the UK capital.",
+        "It is also known as a city within London.",
+        "The Palace of Westminster stands here.",
+        "Its name is associated with the British civil service.",
+        "The address begins with the number 10."
+      ],
+      "views": [
+        {
+          "center": [
+            20,
+            -24
+          ],
+          "zoom": 2.2
+        },
+        {
+          "bounds": [
+            [
+              49.7,
+              -9.3
+            ],
+            [
+              59.2,
+              2.2
+            ]
+          ],
+          "max": 6
+        },
+        {
+          "bounds": [
+            [
+              49.7,
+              -6
+            ],
+            [
+              56,
+              2.1
+            ]
+          ],
+          "max": 8
+        },
+        {
+          "bounds": [
+            [
+              51.28,
+              -0.49
+            ],
+            [
+              51.68,
+              0.28
+            ]
+          ],
+          "max": 11
+        },
+        {
+          "bounds": [
+            [
+              51.472,
+              -0.24
+            ],
+            [
+              51.555,
+              -0.055
+            ]
+          ],
+          "max": 13
+        },
+        {
+          "bounds": [
+            [
+              51.496,
+              -0.158
+            ],
+            [
+              51.519,
+              -0.108
+            ]
+          ],
+          "max": 15
+        },
+        {
+          "bounds": [
+            [
+              51.4988,
+              -0.134
+            ],
+            [
+              51.509,
+              -0.119
+            ]
+          ],
+          "max": 18
+        }
+      ],
+      "iso": "GBR",
+      "sources": [
+        "https://www.gov.uk/government/how-government-works",
+        "https://www.visitengland.com/",
+        "https://www.visitlondon.com/",
+        "https://www.westminster.gov.uk/",
+        "https://www.westminster-abbey.org/",
+        "https://www.visitlondon.com/things-to-do/place/281729-whitehall",
+        "https://www.gov.uk/government/organisations/prime-ministers-office-10-downing-street/about"
+      ]
+    }
+  },
+  "GEO": {
+    "nyc": {
+      "2": [
+        {
+          "name": "New York City",
+          "type": "point",
+          "lat": 40.7128,
+          "lng": -74.006
+        },
+        {
+          "name": "Buffalo",
+          "type": "point",
+          "lat": 42.8864,
+          "lng": -78.8784
+        },
+        {
+          "name": "Rochester",
+          "type": "point",
+          "lat": 43.1566,
+          "lng": -77.6088
+        },
+        {
+          "name": "Albany",
+          "type": "point",
+          "lat": 42.6526,
+          "lng": -73.7562
+        },
+        {
+          "name": "Syracuse",
+          "type": "point",
+          "lat": 43.0481,
+          "lng": -76.1474
+        },
+        {
+          "name": "Yonkers",
+          "type": "point",
+          "lat": 40.9312,
+          "lng": -73.8988
+        },
+        {
+          "name": "Ithaca",
+          "type": "point",
+          "lat": 42.444,
+          "lng": -76.5019
+        }
+      ],
+      "3": [
+        {
+          "name": "Manhattan",
+          "type": "poly",
+          "coords": [
+            [
+              40.699,
+              -74.018
+            ],
+            [
+              40.715,
+              -74.015
+            ],
+            [
+              40.738,
+              -74.01
+            ],
+            [
+              40.764,
+              -73.998
+            ],
+            [
+              40.788,
+              -73.975
+            ],
+            [
+              40.809,
+              -73.959
+            ],
+            [
+              40.829,
+              -73.945
+            ],
+            [
+              40.87,
+              -73.928
+            ],
+            [
+              40.876,
+              -73.92
+            ],
+            [
+              40.842,
+              -73.933
+            ],
+            [
+              40.798,
+              -73.954
+            ],
+            [
+              40.771,
+              -73.967
+            ],
+            [
+              40.748,
+              -73.973
+            ],
+            [
+              40.717,
+              -73.977
+            ],
+            [
+              40.704,
+              -73.989
+            ]
+          ]
+        },
+        {
+          "name": "Brooklyn",
+          "type": "poly",
+          "coords": [
+            [
+              40.571,
+              -74.045
+            ],
+            [
+              40.591,
+              -74.03
+            ],
+            [
+              40.647,
+              -74.03
+            ],
+            [
+              40.698,
+              -73.991
+            ],
+            [
+              40.744,
+              -73.952
+            ],
+            [
+              40.739,
+              -73.917
+            ],
+            [
+              40.703,
+              -73.888
+            ],
+            [
+              40.662,
+              -73.858
+            ],
+            [
+              40.615,
+              -73.852
+            ],
+            [
+              40.575,
+              -73.89
+            ]
+          ]
+        },
+        {
+          "name": "Queens",
+          "type": "poly",
+          "coords": [
+            [
+              40.543,
+              -73.96
+            ],
+            [
+              40.59,
+              -73.87
+            ],
+            [
+              40.62,
+              -73.75
+            ],
+            [
+              40.7,
+              -73.71
+            ],
+            [
+              40.79,
+              -73.7
+            ],
+            [
+              40.805,
+              -73.76
+            ],
+            [
+              40.777,
+              -73.854
+            ],
+            [
+              40.74,
+              -73.9
+            ],
+            [
+              40.71,
+              -73.96
+            ],
+            [
+              40.645,
+              -73.95
+            ]
+          ]
+        },
+        {
+          "name": "Bronx",
+          "type": "poly",
+          "coords": [
+            [
+              40.786,
+              -73.933
+            ],
+            [
+              40.805,
+              -73.93
+            ],
+            [
+              40.869,
+              -73.912
+            ],
+            [
+              40.917,
+              -73.899
+            ],
+            [
+              40.915,
+              -73.768
+            ],
+            [
+              40.852,
+              -73.764
+            ],
+            [
+              40.806,
+              -73.83
+            ]
+          ]
+        },
+        {
+          "name": "Staten Island",
+          "type": "poly",
+          "coords": [
+            [
+              40.487,
+              -74.24
+            ],
+            [
+              40.53,
+              -74.253
+            ],
+            [
+              40.62,
+              -74.209
+            ],
+            [
+              40.651,
+              -74.143
+            ],
+            [
+              40.63,
+              -74.057
+            ],
+            [
+              40.578,
+              -74.065
+            ],
+            [
+              40.519,
+              -74.1
+            ]
+          ]
+        }
+      ],
+      "4": [
+        {
+          "name": "Midtown",
+          "type": "box",
+          "bounds": [
+            [
+              40.742,
+              -73.997
+            ],
+            [
+              40.767,
+              -73.966
+            ]
+          ]
+        },
+        {
+          "name": "Chelsea",
+          "type": "box",
+          "bounds": [
+            [
+              40.735,
+              -74.015
+            ],
+            [
+              40.753,
+              -73.996
+            ]
+          ]
+        },
+        {
+          "name": "SoHo",
+          "type": "box",
+          "bounds": [
+            [
+              40.718,
+              -74.003
+            ],
+            [
+              40.732,
+              -73.99
+            ]
+          ]
+        },
+        {
+          "name": "Upper East Side",
+          "type": "box",
+          "bounds": [
+            [
+              40.768,
+              -73.97
+            ],
+            [
+              40.794,
+              -73.95
+            ]
+          ]
+        },
+        {
+          "name": "Tribeca",
+          "type": "box",
+          "bounds": [
+            [
+              40.714,
+              -74.014
+            ],
+            [
+              40.725,
+              -74.003
+            ]
+          ]
+        },
+        {
+          "name": "Financial District",
+          "type": "box",
+          "bounds": [
+            [
+              40.701,
+              -74.02
+            ],
+            [
+              40.714,
+              -74.005
+            ]
+          ]
+        },
+        {
+          "name": "Lower East Side",
+          "type": "box",
+          "bounds": [
+            [
+              40.715,
+              -73.99
+            ],
+            [
+              40.738,
+              -73.975
+            ]
+          ]
+        },
+        {
+          "name": "Greenwich Village",
+          "type": "box",
+          "bounds": [
+            [
+              40.727,
+              -74.011
+            ],
+            [
+              40.74,
+              -73.994
+            ]
+          ]
+        }
+      ],
+      "5": [
+        {
+          "name": "Fifth Avenue",
+          "type": "road",
+          "coords": [
+            [
+              40.735,
+              -73.993
+            ],
+            [
+              40.744,
+              -73.988
+            ],
+            [
+              40.752,
+              -73.983
+            ],
+            [
+              40.759,
+              -73.978
+            ],
+            [
+              40.766,
+              -73.973
+            ]
+          ]
+        },
+        {
+          "name": "Sixth Avenue",
+          "type": "road",
+          "coords": [
+            [
+              40.734,
+              -73.999
+            ],
+            [
+              40.744,
+              -73.994
+            ],
+            [
+              40.752,
+              -73.988
+            ],
+            [
+              40.764,
+              -73.98
+            ]
+          ]
+        },
+        {
+          "name": "Broadway",
+          "type": "road",
+          "coords": [
+            [
+              40.737,
+              -73.996
+            ],
+            [
+              40.743,
+              -73.992
+            ],
+            [
+              40.752,
+              -73.987
+            ],
+            [
+              40.764,
+              -73.982
+            ]
+          ]
+        },
+        {
+          "name": "Madison Avenue",
+          "type": "road",
+          "coords": [
+            [
+              40.737,
+              -73.989
+            ],
+            [
+              40.744,
+              -73.984
+            ],
+            [
+              40.755,
+              -73.976
+            ],
+            [
+              40.765,
+              -73.969
+            ]
+          ]
+        },
+        {
+          "name": "Park Avenue",
+          "type": "road",
+          "coords": [
+            [
+              40.741,
+              -73.984
+            ],
+            [
+              40.749,
+              -73.978
+            ],
+            [
+              40.757,
+              -73.971
+            ],
+            [
+              40.766,
+              -73.964
+            ]
+          ]
+        },
+        {
+          "name": "Seventh Avenue",
+          "type": "road",
+          "coords": [
+            [
+              40.735,
+              -74.002
+            ],
+            [
+              40.745,
+              -73.995
+            ],
+            [
+              40.754,
+              -73.989
+            ],
+            [
+              40.764,
+              -73.981
+            ]
+          ]
+        }
+      ],
+      "6": [
+        {
+          "name": "Empire State Building",
+          "type": "building",
+          "lat": 40.748441,
+          "lng": -73.985664
+        },
+        {
+          "name": "Macy's Herald Square",
+          "type": "building",
+          "lat": 40.75025,
+          "lng": -73.9886
+        },
+        {
+          "name": "New York Public Library",
+          "type": "building",
+          "lat": 40.7532,
+          "lng": -73.9822
+        },
+        {
+          "name": "One Vanderbilt",
+          "type": "building",
+          "lat": 40.7529,
+          "lng": -73.9786
+        },
+        {
+          "name": "Flatiron Building",
+          "type": "building",
+          "lat": 40.7411,
+          "lng": -73.9897
+        },
+        {
+          "name": "500 Fifth Avenue",
+          "type": "building",
+          "lat": 40.7538,
+          "lng": -73.9802
+        },
+        {
+          "name": "Madison Square Garden",
+          "type": "building",
+          "lat": 40.7505,
+          "lng": -73.9934
+        }
+      ]
+    },
+    "london": {
+      "1": [
+        {
+          "name": "England",
+          "type": "poly",
+          "coords": [
+            [
+              55.81,
+              -2
+            ],
+            [
+              55.4,
+              -1.48
+            ],
+            [
+              54.85,
+              -1.36
+            ],
+            [
+              54.59,
+              -1.15
+            ],
+            [
+              53.9,
+              -0.13
+            ],
+            [
+              53.66,
+              0.1
+            ],
+            [
+              53.15,
+              0.22
+            ],
+            [
+              52.96,
+              0.4
+            ],
+            [
+              52.4,
+              1.62
+            ],
+            [
+              51.98,
+              1.62
+            ],
+            [
+              51.42,
+              1.36
+            ],
+            [
+              50.92,
+              1.41
+            ],
+            [
+              50.72,
+              0.82
+            ],
+            [
+              50.72,
+              -0.95
+            ],
+            [
+              50.58,
+              -1.84
+            ],
+            [
+              50.48,
+              -2.76
+            ],
+            [
+              50.61,
+              -3.5
+            ],
+            [
+              50.32,
+              -4.01
+            ],
+            [
+              50.07,
+              -5.04
+            ],
+            [
+              50.13,
+              -5.68
+            ],
+            [
+              50.41,
+              -5.04
+            ],
+            [
+              50.72,
+              -4.19
+            ],
+            [
+              51.16,
+              -3.34
+            ],
+            [
+              51.55,
+              -2.69
+            ],
+            [
+              51.89,
+              -2.74
+            ],
+            [
+              52.24,
+              -2.76
+            ],
+            [
+              52.65,
+              -3.03
+            ],
+            [
+              53.16,
+              -3.03
+            ],
+            [
+              53.43,
+              -3.05
+            ],
+            [
+              53.66,
+              -3.36
+            ],
+            [
+              54.19,
+              -3.66
+            ],
+            [
+              54.64,
+              -3.61
+            ],
+            [
+              54.84,
+              -3.12
+            ],
+            [
+              55.02,
+              -3.1
+            ],
+            [
+              55.48,
+              -2.65
+            ]
+          ]
+        },
+        {
+          "name": "Scotland",
+          "type": "poly",
+          "coords": [
+            [
+              55.81,
+              -2
+            ],
+            [
+              55.48,
+              -2.65
+            ],
+            [
+              55.02,
+              -3.1
+            ],
+            [
+              54.95,
+              -3.2
+            ],
+            [
+              55.25,
+              -4.97
+            ],
+            [
+              55.65,
+              -5.53
+            ],
+            [
+              56.35,
+              -6.13
+            ],
+            [
+              57.13,
+              -6.56
+            ],
+            [
+              57.69,
+              -5.76
+            ],
+            [
+              58.2,
+              -5.14
+            ],
+            [
+              58.6,
+              -4.42
+            ],
+            [
+              58.65,
+              -3.02
+            ],
+            [
+              58.2,
+              -2.32
+            ],
+            [
+              57.35,
+              -1.76
+            ],
+            [
+              56.4,
+              -2.64
+            ]
+          ]
+        },
+        {
+          "name": "Wales",
+          "type": "poly",
+          "coords": [
+            [
+              53.43,
+              -3.05
+            ],
+            [
+              53.38,
+              -4.38
+            ],
+            [
+              52.91,
+              -4.72
+            ],
+            [
+              52.25,
+              -4.69
+            ],
+            [
+              51.72,
+              -5.23
+            ],
+            [
+              51.37,
+              -4.29
+            ],
+            [
+              51.56,
+              -2.69
+            ],
+            [
+              51.89,
+              -2.74
+            ],
+            [
+              52.24,
+              -2.76
+            ],
+            [
+              52.65,
+              -3.03
+            ],
+            [
+              53.16,
+              -3.03
+            ]
+          ]
+        },
+        {
+          "name": "Northern Ireland",
+          "type": "poly",
+          "coords": [
+            [
+              55.19,
+              -6.9
+            ],
+            [
+              55.28,
+              -6.05
+            ],
+            [
+              54.98,
+              -5.45
+            ],
+            [
+              54.55,
+              -5.48
+            ],
+            [
+              54.02,
+              -6.06
+            ],
+            [
+              54.08,
+              -7.45
+            ],
+            [
+              54.39,
+              -8.1
+            ],
+            [
+              54.8,
+              -7.7
+            ]
+          ]
+        }
+      ],
+      "2": [
+        {
+          "name": "London",
+          "type": "point",
+          "lat": 51.5074,
+          "lng": -0.1278
+        },
+        {
+          "name": "Manchester",
+          "type": "point",
+          "lat": 53.4808,
+          "lng": -2.2426
+        },
+        {
+          "name": "Birmingham",
+          "type": "point",
+          "lat": 52.4862,
+          "lng": -1.8904
+        },
+        {
+          "name": "Liverpool",
+          "type": "point",
+          "lat": 53.4084,
+          "lng": -2.9916
+        },
+        {
+          "name": "Leeds",
+          "type": "point",
+          "lat": 53.8008,
+          "lng": -1.5491
+        },
+        {
+          "name": "Bristol",
+          "type": "point",
+          "lat": 51.4545,
+          "lng": -2.5879
+        },
+        {
+          "name": "Oxford",
+          "type": "point",
+          "lat": 51.752,
+          "lng": -1.2577
+        },
+        {
+          "name": "Newcastle",
+          "type": "point",
+          "lat": 54.9783,
+          "lng": -1.6178
+        },
+        {
+          "name": "Norwich",
+          "type": "point",
+          "lat": 52.6309,
+          "lng": 1.2974
+        }
+      ],
+      "3": [
+        {
+          "name": "City of Westminster",
+          "type": "box",
+          "bounds": [
+            [
+              51.48,
+              -0.195
+            ],
+            [
+              51.539,
+              -0.107
+            ]
+          ]
+        },
+        {
+          "name": "Camden",
+          "type": "box",
+          "bounds": [
+            [
+              51.531,
+              -0.193
+            ],
+            [
+              51.573,
+              -0.114
+            ]
+          ]
+        },
+        {
+          "name": "Kensington and Chelsea",
+          "type": "box",
+          "bounds": [
+            [
+              51.477,
+              -0.231
+            ],
+            [
+              51.528,
+              -0.171
+            ]
+          ]
+        },
+        {
+          "name": "Lambeth",
+          "type": "box",
+          "bounds": [
+            [
+              51.415,
+              -0.14
+            ],
+            [
+              51.502,
+              -0.098
+            ]
+          ]
+        },
+        {
+          "name": "Southwark",
+          "type": "box",
+          "bounds": [
+            [
+              51.448,
+              -0.118
+            ],
+            [
+              51.512,
+              -0.043
+            ]
+          ]
+        },
+        {
+          "name": "City of London",
+          "type": "box",
+          "bounds": [
+            [
+              51.508,
+              -0.113
+            ],
+            [
+              51.524,
+              -0.073
+            ]
+          ]
+        },
+        {
+          "name": "Islington",
+          "type": "box",
+          "bounds": [
+            [
+              51.527,
+              -0.126
+            ],
+            [
+              51.574,
+              -0.074
+            ]
+          ]
+        },
+        {
+          "name": "Hackney",
+          "type": "box",
+          "bounds": [
+            [
+              51.53,
+              -0.09
+            ],
+            [
+              51.572,
+              -0.019
+            ]
+          ]
+        }
+      ],
+      "4": [
+        {
+          "name": "Westminster",
+          "type": "box",
+          "bounds": [
+            [
+              51.496,
+              -0.143
+            ],
+            [
+              51.509,
+              -0.116
+            ]
+          ]
+        },
+        {
+          "name": "Mayfair",
+          "type": "box",
+          "bounds": [
+            [
+              51.505,
+              -0.159
+            ],
+            [
+              51.517,
+              -0.14
+            ]
+          ]
+        },
+        {
+          "name": "Soho",
+          "type": "box",
+          "bounds": [
+            [
+              51.511,
+              -0.14
+            ],
+            [
+              51.518,
+              -0.128
+            ]
+          ]
+        },
+        {
+          "name": "St James's",
+          "type": "box",
+          "bounds": [
+            [
+              51.502,
+              -0.143
+            ],
+            [
+              51.51,
+              -0.129
+            ]
+          ]
+        },
+        {
+          "name": "Pimlico",
+          "type": "box",
+          "bounds": [
+            [
+              51.483,
+              -0.144
+            ],
+            [
+              51.499,
+              -0.125
+            ]
+          ]
+        },
+        {
+          "name": "Covent Garden",
+          "type": "box",
+          "bounds": [
+            [
+              51.51,
+              -0.128
+            ],
+            [
+              51.517,
+              -0.116
+            ]
+          ]
+        },
+        {
+          "name": "Belgravia",
+          "type": "box",
+          "bounds": [
+            [
+              51.492,
+              -0.166
+            ],
+            [
+              51.503,
+              -0.145
+            ]
+          ]
+        }
+      ],
+      "5": [
+        {
+          "name": "Whitehall",
+          "type": "road",
+          "coords": [
+            [
+              51.5072,
+              -0.1278
+            ],
+            [
+              51.505,
+              -0.1267
+            ],
+            [
+              51.5029,
+              -0.1258
+            ]
+          ]
+        },
+        {
+          "name": "Parliament Street",
+          "type": "road",
+          "coords": [
+            [
+              51.5029,
+              -0.1258
+            ],
+            [
+              51.5012,
+              -0.1256
+            ]
+          ]
+        },
+        {
+          "name": "Downing Street",
+          "type": "road",
+          "coords": [
+            [
+              51.50348,
+              -0.1282
+            ],
+            [
+              51.50347,
+              -0.1259
+            ]
+          ]
+        },
+        {
+          "name": "Horse Guards Road",
+          "type": "road",
+          "coords": [
+            [
+              51.5071,
+              -0.1293
+            ],
+            [
+              51.5048,
+              -0.1293
+            ],
+            [
+              51.502,
+              -0.1285
+            ]
+          ]
+        },
+        {
+          "name": "Northumberland Avenue",
+          "type": "road",
+          "coords": [
+            [
+              51.5077,
+              -0.1241
+            ],
+            [
+              51.506,
+              -0.1199
+            ]
+          ]
+        },
+        {
+          "name": "Great George Street",
+          "type": "road",
+          "coords": [
+            [
+              51.5017,
+              -0.1275
+            ],
+            [
+              51.5016,
+              -0.1353
+            ]
+          ]
+        },
+        {
+          "name": "Victoria Street",
+          "type": "road",
+          "coords": [
+            [
+              51.4966,
+              -0.143
+            ],
+            [
+              51.4996,
+              -0.134
+            ],
+            [
+              51.5009,
+              -0.129
+            ]
+          ]
+        }
+      ],
+      "6": [
+        {
+          "name": "10 Downing Street",
+          "type": "building",
+          "lat": 51.50336,
+          "lng": -0.12765
+        },
+        {
+          "name": "HM Treasury",
+          "type": "building",
+          "lat": 51.50225,
+          "lng": -0.1261
+        },
+        {
+          "name": "Cabinet Office",
+          "type": "building",
+          "lat": 51.5047,
+          "lng": -0.1269
+        },
+        {
+          "name": "Horse Guards",
+          "type": "building",
+          "lat": 51.50475,
+          "lng": -0.1278
+        },
+        {
+          "name": "Banqueting House",
+          "type": "building",
+          "lat": 51.50495,
+          "lng": -0.1259
+        },
+        {
+          "name": "Admiralty House",
+          "type": "building",
+          "lat": 51.50595,
+          "lng": -0.1269
+        },
+        {
+          "name": "Portcullis House",
+          "type": "building",
+          "lat": 51.5009,
+          "lng": -0.1255
+        }
+      ]
+    }
+  }
+}
