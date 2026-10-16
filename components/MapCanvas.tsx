@@ -1,35 +1,3 @@
-'use client';
-import {useCallback,useEffect,useRef,useState} from 'react';
-import type {PublicStage} from '@/lib/types';
-import type {Map as MaplibreMap,Marker as MaplibreMarker,StyleSpecification,GeoJSONSource} from 'maplibre-gl';
-import {Compass,LocateFixed,Plus,Minus,Layers,AlertCircle} from 'lucide-react';
-
-type Props={stage:PublicStage|null; disabled?:boolean; onSelect?:(name:string)=>void; pickMode?:boolean; onPick?:(lat:number,lng:number)=>void; selected?:string|null;};
-const emptyFC={type:'FeatureCollection',features:[]};
-const TILE=process.env.NEXT_PUBLIC_MAP_TILE_URL||'https://basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png';
-const ATTRIBUTION=process.env.NEXT_PUBLIC_MAP_ATTRIBUTION||'© OpenStreetMap contributors · © CARTO';
-export default function MapCanvas({stage,disabled=false,onSelect,pickMode=false,onPick,selected}:Props){
-  const holder=useRef<HTMLDivElement>(null);
-  const mapRef=useRef<MaplibreMap|null>(null);
-  const markers=useRef<MaplibreMarker[]>([]);
-  const onSelectRef=useRef(onSelect),onPickRef=useRef(onPick),stageRef=useRef(stage),disabledRef=useRef(disabled),pickRef=useRef(pickMode);
-  const [ready,setReady]=useState(false),[warning,setWarning]=useState(''),[hover,setHover]=useState(''),[hoverPos,setHoverPos]=useState<[number,number]>([0,0]),[detail,setDetail]=useState(true);
-  const [mapError,setMapError]=useState('');
-  onSelectRef.current=onSelect;onPickRef.current=onPick;stageRef.current=stage;disabledRef.current=disabled;pickRef.current=pickMode;
-  const clearMarkers=useCallback(()=>{markers.current.forEach(m=>m.remove());markers.current=[]},[]);
-  useEffect(()=>{
-    if(!holder.current)return;
-    let stopped=false;let instance:MaplibreMap|null=null;
-    import('maplibre-gl').then(mod=>{
-      if(stopped||!holder.current)return;
-      const gl=mod.default;
-      const style:StyleSpecification={version:8,
-        sources:{basemap:{type:'raster',tiles:[TILE],tileSize:256,attribution:ATTRIBUTION}},
-        layers:[{id:'backdrop',type:'background',paint:{'background-color':'#132c3a'}},
-          {id:'basemap',type:'raster',source:'basemap',paint:{'raster-opacity':1}}]};
-      const map=new gl.Map({container:holder.current,style,center:[-17,24],zoom:1.75,minZoom:1,maxZoom:19,attributionControl:false,pitchWithRotate:false,dragRotate:false,touchPitch:false,fadeDuration:80,renderWorldCopies:false});
-      instance=map;mapRef.current=map;
-      map.addControl(new gl.AttributionControl({compact:true}),'bottom-left');
       map.on('error',e=>{const text=String(e.error?.message||'');if(text.includes('style')||text.includes('WebGL'))setMapError('The map renderer is unavailable. Try refreshing or enabling hardware acceleration.');});
       map.on('load',()=>{
         if(stopped)return;
@@ -126,7 +94,8 @@ export default function MapCanvas({stage,disabled=false,onSelect,pickMode=false,
     return()=>clearMarkers();
     function addChoiceMarkers(s:PublicStage){
       import('maplibre-gl').then(({default:gl})=>{
-        if(!mapRef.current||stageRef.current!==s||disabledRef.current)return;
+        const currentMap=mapRef.current;
+        if(!currentMap||stageRef.current!==s||disabledRef.current)return;
         for(const choice of s.choices){
           const wrap=document.createElement('button');wrap.className='map-choice';wrap.type='button';wrap.setAttribute('aria-label','Select '+choice.name);
           wrap.title=choice.name;wrap.innerHTML=`<span class="map-choice-dot"></span><span class="map-choice-name"></span>`;
@@ -134,7 +103,7 @@ export default function MapCanvas({stage,disabled=false,onSelect,pickMode=false,
           wrap.addEventListener('pointerenter',()=>setHover(choice.name));wrap.addEventListener('pointerleave',()=>setHover(''));
           wrap.addEventListener('click',e=>{e.stopPropagation();onSelectRef.current?.(choice.name)});
           wrap.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();onSelectRef.current?.(choice.name)}});
-          const marker=new gl.Marker({element:wrap,anchor:'center'}).setLngLat([choice.lng,choice.lat]).addTo(map);
+          const marker=new gl.Marker({element:wrap,anchor:'center'}).setLngLat([choice.lng,choice.lat]).addTo(currentMap);
           markers.current.push(marker);
         }
       });
@@ -157,8 +126,3 @@ export default function MapCanvas({stage,disabled=false,onSelect,pickMode=false,
       <button type="button" onClick={()=>zoom(-1)} aria-label="Zoom out"><Minus size={19}/></button>
       <button type="button" onClick={()=>mapRef.current?.flyTo({center:stage?.center||[-17,24],zoom:stage?.zoom||2,duration:500})} aria-label="Recenter"><LocateFixed size={18}/></button>
       <button type="button" onClick={()=>setDetail(v=>!v)} aria-label={detail?'Hide map detail':'Show map detail'}><Layers size={18}/></button>
-    </div>
-    <div className="map-corner-title"><Compass size={17}/> {pickMode?'CHOOSE A POSITION':stage?.label?.toUpperCase()||'THE EXPEDITION'}</div>
-    {stage&&!disabled&&!pickMode&&<div className="map-action-hint">✦ {stage.selection==='country'?'Hover countries · Click to answer':stage.selection==='region'?'Select a region on the map':'Choose a highlighted location'}</div>}
-  </div>
-}
