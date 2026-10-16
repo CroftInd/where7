@@ -1,0 +1,4602 @@
+[
+  {
+    "id": "atlas20-01-eiffel-tower",
+    "title": "Parisian Iron Icon",
+    "description": "Follow seven map clues to Eiffel Tower in Paris.",
+    "countryIso3": "FRA",
+    "status": "published",
+    "publishDate": null,
+    "difficulty": "standard",
+    "stages": [
+      {
+        "level": 0,
+        "label": "Country",
+        "clue": "A wrought-iron tower was built as the centrepiece of an 1889 world's fair.",
+        "hint": "Consider the landmark's architecture, history and country.",
+        "source": "https://en.wikipedia.org/wiki/Eiffel_Tower",
+        "answer": "France",
+        "center": [
+          0,
+          22
+        ],
+        "zoom": 2.1,
+        "selection": "country",
+        "choices": []
+      },
+      {
+        "level": 1,
+        "label": "State / Region",
+        "clue": "Its metropolitan region is centred on the national capital.",
+        "hint": "Think about the administrative region around this destination.",
+        "source": "https://en.wikipedia.org/wiki/Eiffel_Tower",
+        "answer": "Île-de-France",
+        "center": [
+          2.29448,
+          48.85837
+        ],
+        "zoom": 5.5,
+        "selection": "markers",
+        "choices": [
+          {
+            "id": "normandy",
+            "name": "Normandy",
+            "lat": 49.18,
+            "lng": -0.37
+          },
+          {
+            "id": "provence-alpes-c-te-d-azur",
+            "name": "Provence-Alpes-Côte d’Azur",
+            "lat": 43.53,
+            "lng": 5.45
+          },
+          {
+            "id": "le-de-france",
+            "name": "Île-de-France",
+            "lat": 48.85837,
+            "lng": 2.29448
+          }
+        ]
+      },
+      {
+        "level": 2,
+        "label": "City",
+        "clue": "The city is nicknamed the City of Light.",
+        "hint": "Think about the main city associated with the landmark.",
+        "source": "https://en.wikipedia.org/wiki/Eiffel_Tower",
+        "answer": "Paris",
+        "center": [
+          2.29448,
+          48.85837
+        ],
+        "zoom": 9,
+        "selection": "markers",
+        "choices": [
+          {
+            "id": "lyon",
+            "name": "Lyon",
+            "lat": 45.76,
+            "lng": 4.84
+          },
+          {
+            "id": "marseille",
+            "name": "Marseille",
+            "lat": 43.3,
+            "lng": 5.37
+          },
+          {
+            "id": "paris",
+            "name": "Paris",
+            "lat": 48.85837,
+            "lng": 2.29448
+          }
+        ]
+      },
+      {
+        "level": 3,
+        "label": "Area",
+        "clue": "The landmark is on the river's Left Bank.",
+        "hint": "Use the map's administrative divisions and riverfront landmarks.",
+        "source": "https://en.wikipedia.org/wiki/Eiffel_Tower",
+        "answer": "7th arrondissement",
+        "center": [
+          2.29448,
+          48.85837
+        ],
+        "zoom": 11.5,
+        "selection": "markers",
+        "choices": [
+          {
+            "id": "7th-arrondissement",
+            "name": "7th arrondissement",
+            "lat": 48.85837,
+            "lng": 2.29448
+          },
+          {
+            "id": "map-point-3-north",
+            "name": "Map point north",
+            "lat": 48.88337,
+            "lng": 2.30323
+          },
+          {
+            "id": "map-point-3-south",
+            "name": "Map point south",
+            "lat": 48.83337,
+            "lng": 2.28573
+          }
+        ]
+      },
+      {
+        "level": 4,
+        "label": "District",
+        "clue": "The neighbourhood lies near a former military parade ground.",
+        "hint": "Zoom in and compare the nearby neighbourhoods.",
+        "source": "https://en.wikipedia.org/wiki/Eiffel_Tower",
+        "answer": "Gros-Caillou",
+        "center": [
+          2.29448,
+          48.85837
+        ],
+        "zoom": 13,
+        "selection": "markers",
+        "choices": [
+          {
+            "id": "gros-caillou",
+            "name": "Gros-Caillou",
+            "lat": 48.85837,
+            "lng": 2.29448
+          },
+          {
+            "id": "map-point-4-north",
+            "name": "Map point north",
+            "lat": 48.86737,
+            "lng": 2.2976300000000003
+          },
+          {
+            "id": "map-point-4-south",
+            "name": "Map point south",
+            "lat": 48.84937,
+            "lng": 2.29133
+          }
+        ]
+      },
+      {
+        "level": 5,
+        "label": "Street",
+        "clue": "The approach is named after a French engineer associated with early aviation.",
+        "hint": "Look for the main access road, square or approach.",
+        "source": "https://en.wikipedia.org/wiki/Eiffel_Tower",
+        "answer": "Avenue Anatole France",
+        "center": [
+          2.29448,
+          48.85837
+        ],
+        "zoom": 15,
+        "selection": "markers",
+        "choices": [
+          {
+            "id": "avenue-anatole-france",
+            "name": "Avenue Anatole France",
+            "lat": 48.85837,
+            "lng": 2.29448
+          },
+          {
+            "id": "map-point-5-north",
+            "name": "Map point north",
+            "lat": 48.86187,
+            "lng": 2.295705
+          },
+          {
+            "id": "map-point-5-south",
+            "name": "Map point south",
+            "lat": 48.85487,
+            "lng": 2.2932550000000003
+          }
+        ]
+      },
+      {
+        "level": 6,
+        "label": "Building",
+        "clue": "Find the 19th-century iron lattice tower.",
+        "hint": "Look closely at the monument's distinctive shape on the map.",
+        "source": "https://en.wikipedia.org/wiki/Eiffel_Tower",
+        "answer": "Eiffel Tower",
+        "center": [
+          2.29448,
+          48.85837
+        ],
+        "zoom": 17,
+        "selection": "markers",
+        "choices": [
+          {
+            "id": "eiffel-tower",
+            "name": "Eiffel Tower",
+            "lat": 48.85837,
+            "lng": 2.29448
+          },
+          {
+            "id": "map-point-6-north",
+            "name": "Map point north",
+            "lat": 48.85977,
+            "lng": 2.29497
+          },
+          {
+            "id": "map-point-6-south",
+            "name": "Map point south",
+            "lat": 48.856970000000004,
+            "lng": 2.29399
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "atlas20-02-louvre-museum",
+    "title": "The Louvre Trail",
+    "description": "Follow seven map clues to Louvre Museum in Paris.",
+    "countryIso3": "FRA",
+    "status": "published",
+    "publishDate": null,
+    "difficulty": "standard",
+    "stages": [
+      {
+        "level": 0,
+        "label": "Country",
+        "clue": "This museum occupies a former royal palace and is famous for a portrait with an enigmatic smile.",
+        "hint": "Consider the landmark's architecture, history and country.",
+        "source": "https://en.wikipedia.org/wiki/Louvre",
+        "answer": "France",
+        "center": [
+          0,
+          22
+        ],
+        "zoom": 2.1,
+        "selection": "country",
+        "choices": []
+      },
+      {
+        "level": 1,
+        "label": "State / Region",
+        "clue": "The museum is in the region surrounding the national capital.",
+        "hint": "Think about the administrative region around this destination.",
+        "source": "https://en.wikipedia.org/wiki/Louvre",
+        "answer": "Île-de-France",
+        "center": [
+          2.33764,
+          48.86061
+        ],
+        "zoom": 5.5,
+        "selection": "markers",
+        "choices": [
+          {
+            "id": "normandy",
+            "name": "Normandy",
+            "lat": 49.18,
+            "lng": -0.37
+          },
+          {
+            "id": "provence-alpes-c-te-d-azur",
+            "name": "Provence-Alpes-Côte d’Azur",
+            "lat": 43.53,
+            "lng": 5.45
+          },
+          {
+            "id": "le-de-france",
+            "name": "Île-de-France",
+            "lat": 48.86061,
+            "lng": 2.33764
+          }
+        ]
+      },
+      {
+        "level": 2,
+        "label": "City",
+        "clue": "The city has a famous glass pyramid in the courtyard of this museum.",
+        "hint": "Think about the main city associated with the landmark.",
+        "source": "https://en.wikipedia.org/wiki/Louvre",
+        "answer": "Paris",
+        "center": [
+          2.33764,
+          48.86061
+        ],
+        "zoom": 9,
+        "selection": "markers",
+        "choices": [
+          {
+            "id": "lyon",
+            "name": "Lyon",
+            "lat": 45.76,
+            "lng": 4.84
+          },
+          {
+            "id": "marseille",
+            "name": "Marseille",
+            "lat": 43.3,
+            "lng": 5.37
+          },
+          {
+            "id": "paris",
+            "name": "Paris",
+            "lat": 48.86061,
+            "lng": 2.33764
+          }
+        ]
+      },
+      {
+        "level": 3,
+        "label": "Area",
+        "clue": "The museum stands in the central riverside part of the city.",
+        "hint": "Use the map's administrative divisions and riverfront landmarks.",
+        "source": "https://en.wikipedia.org/wiki/Louvre",
+        "answer": "1st arrondissement",
+        "center": [
+          2.33764,
+          48.86061
+        ],
+        "zoom": 11.5,
+        "selection": "markers",
+        "choices": [
+          {
+            "id": "1st-arrondissement",
+            "name": "1st arrondissement",
+            "lat": 48.86061,
+            "lng": 2.33764
+          },
+          {
+            "id": "map-point-3-north",
+            "name": "Map point north",
+            "lat": 48.88561,
+            "lng": 2.34639
+          },
+          {
+            "id": "map-point-3-south",
+            "name": "Map point south",
+            "lat": 48.83561,
+            "lng": 2.32889
+          }
+        ]
+      },
+      {
+        "level": 4,
+        "label": "District",
+        "clue": "The area is close to the Palais-Royal gardens.",
+        "hint": "Zoom in and compare the nearby neighbourhoods.",
+        "source": "https://en.wikipedia.org/wiki/Louvre",
+        "answer": "Palais-Royal",
+        "center": [
+          2.33764,
+          48.86061
+        ],
+        "zoom": 13,
+        "selection": "markers",
+        "choices": [
+          {
+            "id": "palais-royal",
+            "name": "Palais-Royal",
+            "lat": 48.86061,
+            "lng": 2.33764
+          },
+          {
+            "id": "map-point-4-north",
+            "name": "Map point north",
+            "lat": 48.86961,
+            "lng": 2.34079
+          },
+          {
+            "id": "map-point-4-south",
+            "name": "Map point south",
+            "lat": 48.85161,
+            "lng": 2.3344899999999997
+          }
+        ]
+      },
+      {
+        "level": 5,
+        "label": "Street",
+        "clue": "The road runs along the palace's northern frontage.",
+        "hint": "Look for the main access road, square or approach.",
+        "source": "https://en.wikipedia.org/wiki/Louvre",
+        "answer": "Rue de Rivoli",
+        "center": [
+          2.33764,
+          48.86061
+        ],
+        "zoom": 15,
+        "selection": "markers",
+        "choices": [
+          {
+            "id": "rue-de-rivoli",
+            "name": "Rue de Rivoli",
+            "lat": 48.86061,
+            "lng": 2.33764
+          },
+          {
+            "id": "map-point-5-north",
+            "name": "Map point north",
+            "lat": 48.864110000000004,
+            "lng": 2.3388649999999997
+          },
+          {
+            "id": "map-point-5-south",
+            "name": "Map point south",
+            "lat": 48.85711,
+            "lng": 2.336415
+          }
+        ]
+      },
+      {
+        "level": 6,
+        "label": "Building",
+        "clue": "Select the art museum with the glass pyramid.",
+        "hint": "Look closely at the monument's distinctive shape on the map.",
+        "source": "https://en.wikipedia.org/wiki/Louvre",
+        "answer": "Louvre Museum",
+        "center": [
+          2.33764,
+          48.86061
+        ],
+        "zoom": 17,
+        "selection": "markers",
+        "choices": [
+          {
+            "id": "louvre-museum",
+            "name": "Louvre Museum",
+            "lat": 48.86061,
+            "lng": 2.33764
+          },
+          {
+            "id": "map-point-6-north",
+            "name": "Map point north",
+            "lat": 48.86201,
+            "lng": 2.33813
+          },
+          {
+            "id": "map-point-6-south",
+            "name": "Map point south",
+            "lat": 48.859210000000004,
+            "lng": 2.33715
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "atlas20-03-colosseum",
+    "title": "Ancient Roman Arena",
+    "description": "Follow seven map clues to Colosseum in Rome.",
+    "countryIso3": "ITA",
+    "status": "published",
+    "publishDate": null,
+    "difficulty": "standard",
+    "stages": [
+      {
+        "level": 0,
+        "label": "Country",
+        "clue": "This ancient amphitheatre once hosted gladiatorial contests.",
+        "hint": "Consider the landmark's architecture, history and country.",
+        "source": "https://en.wikipedia.org/wiki/Colosseum",
+        "answer": "Italy",
+        "center": [
+          0,
+          22
+        ],
+        "zoom": 2.1,
+        "selection": "country",
+        "choices": []
+      },
+      {
+        "level": 1,
+        "label": "State / Region",
+        "clue": "The region includes the national capital and the Tyrrhenian coast.",
+        "hint": "Think about the administrative region around this destination.",
+        "source": "https://en.wikipedia.org/wiki/Colosseum",
+        "answer": "Lazio",
+        "center": [
+          12.49223,
+          41.89021
+        ],
+        "zoom": 5.5,
+        "selection": "markers",
+        "choices": [
+          {
+            "id": "tuscany",
+            "name": "Tuscany",
+            "lat": 43.77,
+            "lng": 11.25
+          },
+          {
+            "id": "lombardy",
+            "name": "Lombardy",
+            "lat": 45.46,
+            "lng": 9.19
+          },
+          {
+            "id": "lazio",
+            "name": "Lazio",
+            "lat": 41.89021,
+            "lng": 12.49223
+          }
+        ]
+      },
+      {
+        "level": 2,
+        "label": "City",
+        "clue": "The city was the heart of a vast ancient empire.",
+        "hint": "Think about the main city associated with the landmark.",
+        "source": "https://en.wikipedia.org/wiki/Colosseum",
+        "answer": "Rome",
+        "center": [
+          12.49223,
+          41.89021
+        ],
+        "zoom": 9,
+        "selection": "markers",
+        "choices": [
+          {
+            "id": "florence",
+            "name": "Florence",
+            "lat": 43.77,
+            "lng": 11.25
+          },
+          {
+            "id": "milan",
+            "name": "Milan",
+            "lat": 45.46,
+            "lng": 9.19
+          },
+          {
+            "id": "rome",
+            "name": "Rome",
+            "lat": 41.89021,
+            "lng": 12.49223
+          }
+        ]
+      },
+      {
+        "level": 3,
+        "label": "Area",
+        "clue": "The monument stands in the historic central municipality.",
+        "hint": "Use the map's administrative divisions and riverfront landmarks.",
+        "source": "https://en.wikipedia.org/wiki/Colosseum",
+        "answer": "Municipio I",
+        "center": [
+          12.49223,
+          41.89021
+        ],
+        "zoom": 11.5,
+        "selection": "markers",
+        "choices": [
+          {
+            "id": "municipio-i",
+            "name": "Municipio I",
+            "lat": 41.89021,
+            "lng": 12.49223
+          },
+          {
+            "id": "map-point-3-north",
+            "name": "Map point north",
+            "lat": 41.91521,
+            "lng": 12.500979999999998
+          },
+          {
+            "id": "map-point-3-south",
+            "name": "Map point south",
+            "lat": 41.865210000000005,
+            "lng": 12.48348
+          }
+        ]
+      },
+      {
+        "level": 4,
+        "label": "District",
+        "clue": "It sits just east of the Roman Forum.",
+        "hint": "Zoom in and compare the nearby neighbourhoods.",
+        "source": "https://en.wikipedia.org/wiki/Colosseum",
+        "answer": "Monti",
+        "center": [
+          12.49223,
+          41.89021
+        ],
+        "zoom": 13,
+        "selection": "markers",
+        "choices": [
+          {
+            "id": "monti",
+            "name": "Monti",
+            "lat": 41.89021,
+            "lng": 12.49223
+          },
+          {
+            "id": "map-point-4-north",
+            "name": "Map point north",
+            "lat": 41.899210000000004,
+            "lng": 12.495379999999999
+          },
+          {
+            "id": "map-point-4-south",
+            "name": "Map point south",
+            "lat": 41.88121,
+            "lng": 12.48908
+          }
+        ]
+      },
+      {
+        "level": 5,
+        "label": "Street",
+        "clue": "The square is named for the amphitheatre itself.",
+        "hint": "Look for the main access road, square or approach.",
+        "source": "https://en.wikipedia.org/wiki/Colosseum",
+        "answer": "Piazza del Colosseo",
+        "center": [
+          12.49223,
+          41.89021
+        ],
+        "zoom": 15,
+        "selection": "markers",
+        "choices": [
+          {
+            "id": "piazza-del-colosseo",
+            "name": "Piazza del Colosseo",
+            "lat": 41.89021,
+            "lng": 12.49223
+          },
+          {
+            "id": "map-point-5-north",
+            "name": "Map point north",
+            "lat": 41.893710000000006,
+            "lng": 12.493454999999999
+          },
+          {
+            "id": "map-point-5-south",
+            "name": "Map point south",
+            "lat": 41.88671,
+            "lng": 12.491005
+          }
+        ]
+      },
+      {
+        "level": 6,
+        "label": "Building",
+        "clue": "Select the monumental oval Roman amphitheatre.",
+        "hint": "Look closely at the monument's distinctive shape on the map.",
+        "source": "https://en.wikipedia.org/wiki/Colosseum",
+        "answer": "Colosseum",
+        "center": [
+          12.49223,
+          41.89021
+        ],
+        "zoom": 17,
+        "selection": "markers",
+        "choices": [
+          {
+            "id": "colosseum",
+            "name": "Colosseum",
+            "lat": 41.89021,
+            "lng": 12.49223
+          },
+          {
+            "id": "map-point-6-north",
+            "name": "Map point north",
+            "lat": 41.89161,
+            "lng": 12.492719999999998
+          },
+          {
+            "id": "map-point-6-south",
+            "name": "Map point south",
+            "lat": 41.88881000000001,
+            "lng": 12.49174
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "atlas20-04-trevi-fountain",
+    "title": "Roman Fountain Quest",
+    "description": "Follow seven map clues to Trevi Fountain in Rome.",
+    "countryIso3": "ITA",
+    "status": "published",
+    "publishDate": null,
+    "difficulty": "standard",
+    "stages": [
+      {
+        "level": 0,
+        "label": "Country",
+        "clue": "Coins tossed into this Baroque fountain are said to ensure a return visit.",
+        "hint": "Consider the landmark's architecture, history and country.",
+        "source": "https://en.wikipedia.org/wiki/Trevi_Fountain",
+        "answer": "Italy",
+        "center": [
+          0,
+          22
+        ],
+        "zoom": 2.1,
+        "selection": "country",
+        "choices": []
+      },
+      {
+        "level": 1,
+        "label": "State / Region",
+        "clue": "The region surrounds the country's capital.",
+        "hint": "Think about the administrative region around this destination.",
+        "source": "https://en.wikipedia.org/wiki/Trevi_Fountain",
+        "answer": "Lazio",
+        "center": [
+          12.48331,
+          41.90093
+        ],
+        "zoom": 5.5,
+        "selection": "markers",
+        "choices": [
+          {
+            "id": "tuscany",
+            "name": "Tuscany",
+            "lat": 43.77,
+            "lng": 11.25
+          },
+          {
+            "id": "lombardy",
+            "name": "Lombardy",
+            "lat": 45.46,
+            "lng": 9.19
+          },
+          {
+            "id": "lazio",
+            "name": "Lazio",
+            "lat": 41.90093,
+            "lng": 12.48331
+          }
+        ]
+      },
+      {
+        "level": 2,
+        "label": "City",
+        "clue": "The city is celebrated for its ancient ruins and seven hills.",
+        "hint": "Think about the main city associated with the landmark.",
+        "source": "https://en.wikipedia.org/wiki/Trevi_Fountain",
+        "answer": "Rome",
+        "center": [
+          12.48331,
+          41.90093
+        ],
+        "zoom": 9,
+        "selection": "markers",
+        "choices": [
+          {
+            "id": "florence",
+            "name": "Florence",
+            "lat": 43.77,
+            "lng": 11.25
+          },
+          {
+            "id": "milan",
+            "name": "Milan",
+            "lat": 45.46,
+            "lng": 9.19
+          },
+          {
+            "id": "rome",
+            "name": "Rome",
+            "lat": 41.90093,
+            "lng": 12.48331
+          }
+        ]
+      },
+      {
+        "level": 3,
+        "label": "Area",
+        "clue": "The fountain lies in the historic central municipality.",
+        "hint": "Use the map's administrative divisions and riverfront landmarks.",
+        "source": "https://en.wikipedia.org/wiki/Trevi_Fountain",
+        "answer": "Municipio I",
+        "center": [
+          12.48331,
+          41.90093
+        ],
+        "zoom": 11.5,
+        "selection": "markers",
+        "choices": [
+          {
+            "id": "municipio-i",
+            "name": "Municipio I",
+            "lat": 41.90093,
+            "lng": 12.48331
+          },
+          {
+            "id": "map-point-3-north",
+            "name": "Map point north",
+            "lat": 41.92593,
+            "lng": 12.492059999999999
+          },
+          {
+            "id": "map-point-3-south",
+            "name": "Map point south",
+            "lat": 41.875930000000004,
+            "lng": 12.47456
+          }
+        ]
+      },
+      {
+        "level": 4,
+        "label": "District",
+        "clue": "Its neighbourhood shares its name with the fountain.",
+        "hint": "Zoom in and compare the nearby neighbourhoods.",
+        "source": "https://en.wikipedia.org/wiki/Trevi_Fountain",
+        "answer": "Trevi",
+        "center": [
+          12.48331,
+          41.90093
+        ],
+        "zoom": 13,
+        "selection": "markers",
+        "choices": [
+          {
+            "id": "trevi",
+            "name": "Trevi",
+            "lat": 41.90093,
+            "lng": 12.48331
+          },
+          {
+            "id": "map-point-4-north",
+            "name": "Map point north",
+            "lat": 41.90993,
+            "lng": 12.48646
+          },
+          {
+            "id": "map-point-4-south",
+            "name": "Map point south",
+            "lat": 41.89193,
+            "lng": 12.48016
+          }
+        ]
+      },
+      {
+        "level": 5,
+        "label": "Street",
+        "clue": "The piazza takes its name from the same historic district.",
+        "hint": "Look for the main access road, square or approach.",
+        "source": "https://en.wikipedia.org/wiki/Trevi_Fountain",
+        "answer": "Piazza di Trevi",
+        "center": [
+          12.48331,
+          41.90093
+        ],
+        "zoom": 15,
+        "selection": "markers",
+        "choices": [
+          {
+            "id": "piazza-di-trevi",
+            "name": "Piazza di Trevi",
+            "lat": 41.90093,
+            "lng": 12.48331
+          },
+          {
+            "id": "map-point-5-north",
+            "name": "Map point north",
+            "lat": 41.904430000000005,
+            "lng": 12.484535
+          },
+          {
+            "id": "map-point-5-south",
+            "name": "Map point south",
+            "lat": 41.89743,
+            "lng": 12.482085
+          }
+        ]
+      },
+      {
+        "level": 6,
+        "label": "Building",
+        "clue": "Select the monumental Baroque fountain.",
+        "hint": "Look closely at the monument's distinctive shape on the map.",
+        "source": "https://en.wikipedia.org/wiki/Trevi_Fountain",
+        "answer": "Trevi Fountain",
+        "center": [
+          12.48331,
+          41.90093
+        ],
+        "zoom": 17,
+        "selection": "markers",
+        "choices": [
+          {
+            "id": "trevi-fountain",
+            "name": "Trevi Fountain",
+            "lat": 41.90093,
+            "lng": 12.48331
+          },
+          {
+            "id": "map-point-6-north",
+            "name": "Map point north",
+            "lat": 41.90233,
+            "lng": 12.483799999999999
+          },
+          {
+            "id": "map-point-6-south",
+            "name": "Map point south",
+            "lat": 41.899530000000006,
+            "lng": 12.48282
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "atlas20-05-sagrada-fam-lia",
+    "title": "Barcelona's Unfinished Wonder",
+    "description": "Follow seven map clues to Sagrada Família in Barcelona.",
+    "countryIso3": "ESP",
+    "status": "published",
+    "publishDate": null,
+    "difficulty": "standard",
+    "stages": [
+      {
+        "level": 0,
+        "label": "Country",
+        "clue": "Construction of this basilica began in the 19th century and is still continuing.",
+        "hint": "Consider the landmark's architecture, history and country.",
+        "source": "https://en.wikipedia.org/wiki/Sagrada_Fam%C3%ADlia",
+        "answer": "Spain",
+        "center": [
+          0,
+          22
+        ],
+        "zoom": 2.1,
+        "selection": "country",
+        "choices": []
+      },
+      {
+        "level": 1,
+        "label": "State / Region",
+        "clue": "The autonomous community is in the country's northeast.",
+        "hint": "Think about the administrative region around this destination.",
+        "source": "https://en.wikipedia.org/wiki/Sagrada_Fam%C3%ADlia",
+        "answer": "Catalonia",
+        "center": [
+          2.17436,
+          41.40363
+        ],
+        "zoom": 5.5,
+        "selection": "markers",
+        "choices": [
+          {
+            "id": "andalusia",
+            "name": "Andalusia",
+            "lat": 37.39,
+            "lng": -5.99
+          },
+          {
+            "id": "community-of-madrid",
+            "name": "Community of Madrid",
+            "lat": 40.42,
+            "lng": -3.7
+          },
+          {
+            "id": "catalonia",
+            "name": "Catalonia",
+            "lat": 41.40363,
+            "lng": 2.17436
+          }
+        ]
+      },
+      {
+        "level": 2,
+        "label": "City",
+        "clue": "The city is known for Antoni Gaudí's architecture.",
+        "hint": "Think about the main city associated with the landmark.",
+        "source": "https://en.wikipedia.org/wiki/Sagrada_Fam%C3%ADlia",
+        "answer": "Barcelona",
+        "center": [
+          2.17436,
+          41.40363
+        ],
+        "zoom": 9,
+        "selection": "markers",
+        "choices": [
+          {
+            "id": "madrid",
+            "name": "Madrid",
+            "lat": 40.42,
+            "lng": -3.7
+          },
+          {
+            "id": "seville",
+            "name": "Seville",
+            "lat": 37.39,
+            "lng": -5.99
+          },
+          {
+            "id": "barcelona",
+            "name": "Barcelona",
+            "lat": 41.40363,
+            "lng": 2.17436
+          }
+        ]
+      },
+      {
+        "level": 3,
+        "label": "Area",
+        "clue": "The basilica stands in a district planned with a distinctive grid.",
+        "hint": "Use the map's administrative divisions and riverfront landmarks.",
+        "source": "https://en.wikipedia.org/wiki/Sagrada_Fam%C3%ADlia",
+        "answer": "Eixample",
+        "center": [
+          2.17436,
+          41.40363
+        ],
+        "zoom": 11.5,
+        "selection": "markers",
+        "choices": [
+          {
+            "id": "eixample",
+            "name": "Eixample",
+            "lat": 41.40363,
+            "lng": 2.17436
+          },
+          {
+            "id": "map-point-3-north",
+            "name": "Map point north",
+            "lat": 41.42863,
+            "lng": 2.18311
+          },
+          {
+            "id": "map-point-3-south",
+            "name": "Map point south",
+            "lat": 41.37863,
+            "lng": 2.16561
+          }
+        ]
+      },
+      {
+        "level": 4,
+        "label": "District",
+        "clue": "Its neighbourhood is named after the basilica.",
+        "hint": "Zoom in and compare the nearby neighbourhoods.",
+        "source": "https://en.wikipedia.org/wiki/Sagrada_Fam%C3%ADlia",
+        "answer": "Sagrada Família",
+        "center": [
+          2.17436,
+          41.40363
+        ],
+        "zoom": 13,
+        "selection": "markers",
+        "choices": [
+          {
+            "id": "sagrada-fam-lia",
+            "name": "Sagrada Família",
+            "lat": 41.40363,
+            "lng": 2.17436
+          },
+          {
+            "id": "map-point-4-north",
+            "name": "Map point north",
+            "lat": 41.41263,
+            "lng": 2.1775100000000003
+          },
+          {
+            "id": "map-point-4-south",
+            "name": "Map point south",
+            "lat": 41.39463,
+            "lng": 2.17121
+          }
+        ]
+      },
+      {
+        "level": 5,
+        "label": "Street",
+        "clue": "The road is named after an island in the Balearics.",
+        "hint": "Look for the main access road, square or approach.",
+        "source": "https://en.wikipedia.org/wiki/Sagrada_Fam%C3%ADlia",
+        "answer": "Carrer de Mallorca",
+        "center": [
+          2.17436,
+          41.40363
+        ],
+        "zoom": 15,
+        "selection": "markers",
+        "choices": [
+          {
+            "id": "carrer-de-mallorca",
+            "name": "Carrer de Mallorca",
+            "lat": 41.40363,
+            "lng": 2.17436
+          },
+          {
+            "id": "map-point-5-north",
+            "name": "Map point north",
+            "lat": 41.40713,
+            "lng": 2.175585
+          },
+          {
+            "id": "map-point-5-south",
+            "name": "Map point south",
+            "lat": 41.40013,
+            "lng": 2.1731350000000003
+          }
+        ]
+      },
+      {
+        "level": 6,
+        "label": "Building",
+        "clue": "Select Gaudí's unfinished basilica.",
+        "hint": "Look closely at the monument's distinctive shape on the map.",
+        "source": "https://en.wikipedia.org/wiki/Sagrada_Fam%C3%ADlia",
+        "answer": "Sagrada Família",
+        "center": [
+          2.17436,
+          41.40363
+        ],
+        "zoom": 17,
+        "selection": "markers",
+        "choices": [
+          {
+            "id": "sagrada-fam-lia",
+            "name": "Sagrada Família",
+            "lat": 41.40363,
+            "lng": 2.17436
+          },
+          {
+            "id": "map-point-6-north",
+            "name": "Map point north",
+            "lat": 41.40503,
+            "lng": 2.17485
+          },
+          {
+            "id": "map-point-6-south",
+            "name": "Map point south",
+            "lat": 41.40223,
+            "lng": 2.17387
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "atlas20-06-real-casa-de-correos",
+    "title": "Madrid's Historic Clock",
+    "description": "Follow seven map clues to Real Casa de Correos in Madrid.",
+    "countryIso3": "ESP",
+    "status": "published",
+    "publishDate": null,
+    "difficulty": "standard",
+    "stages": [
+      {
+        "level": 0,
+        "label": "Country",
+        "clue": "A historic post office building houses a famous clock associated with New Year's celebrations.",
+        "hint": "Consider the landmark's architecture, history and country.",
+        "source": "https://en.wikipedia.org/wiki/Real_Casa_de_Correos",
+        "answer": "Spain",
+        "center": [
+          0,
+          22
+        ],
+        "zoom": 2.1,
+        "selection": "country",
+        "choices": []
+      },
+      {
+        "level": 1,
+        "label": "State / Region",
+        "clue": "The autonomous community surrounds the national capital.",
+        "hint": "Think about the administrative region around this destination.",
+        "source": "https://en.wikipedia.org/wiki/Real_Casa_de_Correos",
+        "answer": "Community of Madrid",
+        "center": [
+          -3.70346,
+          40.41691
+        ],
+        "zoom": 5.5,
+        "selection": "markers",
+        "choices": [
+          {
+            "id": "catalonia",
+            "name": "Catalonia",
+            "lat": 41.39,
+            "lng": 2.17
+          },
+          {
+            "id": "andalusia",
+            "name": "Andalusia",
+            "lat": 37.39,
+            "lng": -5.99
+          },
+          {
+            "id": "community-of-madrid",
+            "name": "Community of Madrid",
+            "lat": 40.41691,
+            "lng": -3.70346
+          }
+        ]
+      },
+      {
+        "level": 2,
+        "label": "City",
+        "clue": "The city is the national capital and home to the Prado Museum.",
+        "hint": "Think about the main city associated with the landmark.",
+        "source": "https://en.wikipedia.org/wiki/Real_Casa_de_Correos",
+        "answer": "Madrid",
+        "center": [
+          -3.70346,
+          40.41691
+        ],
+        "zoom": 9,
+        "selection": "markers",
+        "choices": [
+          {
+            "id": "barcelona",
+            "name": "Barcelona",
+            "lat": 41.39,
+            "lng": 2.17
+          },
+          {
+            "id": "seville",
+            "name": "Seville",
+            "lat": 37.39,
+            "lng": -5.99
+          },
+          {
+            "id": "madrid",
+            "name": "Madrid",
+            "lat": 40.41691,
+            "lng": -3.70346
+          }
+        ]
+      },
+      {
+        "level": 3,
+        "label": "Area",
+        "clue": "The building stands in the central borough.",
+        "hint": "Use the map's administrative divisions and riverfront landmarks.",
+        "source": "https://en.wikipedia.org/wiki/Real_Casa_de_Correos",
+        "answer": "Centro",
+        "center": [
+          -3.70346,
+          40.41691
+        ],
+        "zoom": 11.5,
+        "selection": "markers",
+        "choices": [
+          {
+            "id": "centro",
+            "name": "Centro",
+            "lat": 40.41691,
+            "lng": -3.70346
+          },
+          {
+            "id": "map-point-3-north",
+            "name": "Map point north",
+            "lat": 40.44191,
+            "lng": -3.69471
+          },
+          {
+            "id": "map-point-3-south",
+            "name": "Map point south",
+            "lat": 40.39191,
+            "lng": -3.7122100000000002
+          }
+        ]
+      },
+      {
+        "level": 4,
+        "label": "District",
+        "clue": "The neighbourhood contains the city's famous central square.",
+        "hint": "Zoom in and compare the nearby neighbourhoods.",
+        "source": "https://en.wikipedia.org/wiki/Real_Casa_de_Correos",
+        "answer": "Sol",
+        "center": [
+          -3.70346,
+          40.41691
+        ],
+        "zoom": 13,
+        "selection": "markers",
+        "choices": [
+          {
+            "id": "sol",
+            "name": "Sol",
+            "lat": 40.41691,
+            "lng": -3.70346
+          },
+          {
+            "id": "map-point-4-north",
+            "name": "Map point north",
+            "lat": 40.42591,
+            "lng": -3.70031
+          },
+          {
+            "id": "map-point-4-south",
+            "name": "Map point south",
+            "lat": 40.40791,
+            "lng": -3.7066100000000004
+          }
+        ]
+      },
+      {
+        "level": 5,
+        "label": "Street",
+        "clue": "The square is named for the sun.",
+        "hint": "Look for the main access road, square or approach.",
+        "source": "https://en.wikipedia.org/wiki/Real_Casa_de_Correos",
+        "answer": "Puerta del Sol",
+        "center": [
+          -3.70346,
+          40.41691
+        ],
+        "zoom": 15,
+        "selection": "markers",
+        "choices": [
+          {
+            "id": "puerta-del-sol",
+            "name": "Puerta del Sol",
+            "lat": 40.41691,
+            "lng": -3.70346
+          },
+          {
+            "id": "map-point-5-north",
+            "name": "Map point north",
+            "lat": 40.420410000000004,
+            "lng": -3.7022350000000004
+          },
+          {
+            "id": "map-point-5-south",
+            "name": "Map point south",
+            "lat": 40.41341,
+            "lng": -3.704685
+          }
+        ]
+      },
+      {
+        "level": 6,
+        "label": "Building",
+        "clue": "Select the historic former post office building with the clock tower.",
+        "hint": "Look closely at the monument's distinctive shape on the map.",
+        "source": "https://en.wikipedia.org/wiki/Real_Casa_de_Correos",
+        "answer": "Real Casa de Correos",
+        "center": [
+          -3.70346,
+          40.41691
+        ],
+        "zoom": 17,
+        "selection": "markers",
+        "choices": [
+          {
+            "id": "real-casa-de-correos",
+            "name": "Real Casa de Correos",
+            "lat": 40.41691,
+            "lng": -3.70346
+          },
+          {
+            "id": "map-point-6-north",
+            "name": "Map point north",
+            "lat": 40.41831,
+            "lng": -3.70297
+          },
+          {
+            "id": "map-point-6-south",
+            "name": "Map point south",
+            "lat": 40.415510000000005,
+            "lng": -3.7039500000000003
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "atlas20-07-brandenburg-gate",
+    "title": "Gateway to Berlin",
+    "description": "Follow seven map clues to Brandenburg Gate in Berlin.",
+    "countryIso3": "DEU",
+    "status": "published",
+    "publishDate": null,
+    "difficulty": "standard",
+    "stages": [
+      {
+        "level": 0,
+        "label": "Country",
+        "clue": "This neoclassical monument once stood beside the division between East and West.",
+        "hint": "Consider the landmark's architecture, history and country.",
+        "source": "https://en.wikipedia.org/wiki/Brandenburg_Gate",
+        "answer": "Germany",
+        "center": [
+          0,
+          22
+        ],
+        "zoom": 2.1,
+        "selection": "country",
+        "choices": []
+      },
+      {
+        "level": 1,
+        "label": "State / Region",
+        "clue": "The destination lies in a city-state as well as a national capital.",
+        "hint": "Think about the administrative region around this destination.",
+        "source": "https://en.wikipedia.org/wiki/Brandenburg_Gate",
+        "answer": "Berlin",
+        "center": [
+          13.3777,
+          52.51627
+        ],
+        "zoom": 5.5,
+        "selection": "markers",
+        "choices": [
+          {
+            "id": "bavaria",
+            "name": "Bavaria",
+            "lat": 48.14,
+            "lng": 11.58
+          },
+          {
+            "id": "hamburg",
+            "name": "Hamburg",
+            "lat": 53.55,
+            "lng": 9.99
+          },
+          {
+            "id": "berlin",
+            "name": "Berlin",
+            "lat": 52.51627,
+            "lng": 13.3777
+          }
+        ]
+      },
+      {
+        "level": 2,
+        "label": "City",
+        "clue": "The city was divided by a wall during the Cold War.",
+        "hint": "Think about the main city associated with the landmark.",
+        "source": "https://en.wikipedia.org/wiki/Brandenburg_Gate",
+        "answer": "Berlin",
+        "center": [
+          13.3777,
+          52.51627
+        ],
+        "zoom": 9,
+        "selection": "markers",
+        "choices": [
+          {
+            "id": "munich",
+            "name": "Munich",
+            "lat": 48.14,
+            "lng": 11.58
+          },
+          {
+            "id": "hamburg",
+            "name": "Hamburg",
+            "lat": 53.55,
+            "lng": 9.99
+          },
+          {
+            "id": "berlin",
+            "name": "Berlin",
+            "lat": 52.51627,
+            "lng": 13.3777
+          }
+        ]
+      },
+      {
+        "level": 3,
+        "label": "Area",
+        "clue": "The monument is in the central borough.",
+        "hint": "Use the map's administrative divisions and riverfront landmarks.",
+        "source": "https://en.wikipedia.org/wiki/Brandenburg_Gate",
+        "answer": "Mitte",
+        "center": [
+          13.3777,
+          52.51627
+        ],
+        "zoom": 11.5,
+        "selection": "markers",
+        "choices": [
+          {
+            "id": "mitte",
+            "name": "Mitte",
+            "lat": 52.51627,
+            "lng": 13.3777
+          },
+          {
+            "id": "map-point-3-north",
+            "name": "Map point north",
+            "lat": 52.54127,
+            "lng": 13.38645
+          },
+          {
+            "id": "map-point-3-south",
+            "name": "Map point south",
+            "lat": 52.49127,
+            "lng": 13.368950000000002
+          }
+        ]
+      },
+      {
+        "level": 4,
+        "label": "District",
+        "clue": "The district includes the grand boulevard Unter den Linden.",
+        "hint": "Zoom in and compare the nearby neighbourhoods.",
+        "source": "https://en.wikipedia.org/wiki/Brandenburg_Gate",
+        "answer": "Dorotheenstadt",
+        "center": [
+          13.3777,
+          52.51627
+        ],
+        "zoom": 13,
+        "selection": "markers",
+        "choices": [
+          {
+            "id": "dorotheenstadt",
+            "name": "Dorotheenstadt",
+            "lat": 52.51627,
+            "lng": 13.3777
+          },
+          {
+            "id": "map-point-4-north",
+            "name": "Map point north",
+            "lat": 52.52527,
+            "lng": 13.38085
+          },
+          {
+            "id": "map-point-4-south",
+            "name": "Map point south",
+            "lat": 52.50727,
+            "lng": 13.374550000000001
+          }
+        ]
+      },
+      {
+        "level": 5,
+        "label": "Street",
+        "clue": "The square takes its name from the French capital.",
+        "hint": "Look for the main access road, square or approach.",
+        "source": "https://en.wikipedia.org/wiki/Brandenburg_Gate",
+        "answer": "Pariser Platz",
+        "center": [
+          13.3777,
+          52.51627
+        ],
+        "zoom": 15,
+        "selection": "markers",
+        "choices": [
+          {
+            "id": "pariser-platz",
+            "name": "Pariser Platz",
+            "lat": 52.51627,
+            "lng": 13.3777
+          },
+          {
+            "id": "map-point-5-north",
+            "name": "Map point north",
+            "lat": 52.51977,
+            "lng": 13.378925
+          },
+          {
+            "id": "map-point-5-south",
+            "name": "Map point south",
+            "lat": 52.512769999999996,
+            "lng": 13.376475000000001
+          }
+        ]
+      },
+      {
+        "level": 6,
+        "label": "Building",
+        "clue": "Select the sandstone gate crowned by a quadriga.",
+        "hint": "Look closely at the monument's distinctive shape on the map.",
+        "source": "https://en.wikipedia.org/wiki/Brandenburg_Gate",
+        "answer": "Brandenburg Gate",
+        "center": [
+          13.3777,
+          52.51627
+        ],
+        "zoom": 17,
+        "selection": "markers",
+        "choices": [
+          {
+            "id": "brandenburg-gate",
+            "name": "Brandenburg Gate",
+            "lat": 52.51627,
+            "lng": 13.3777
+          },
+          {
+            "id": "map-point-6-north",
+            "name": "Map point north",
+            "lat": 52.517669999999995,
+            "lng": 13.37819
+          },
+          {
+            "id": "map-point-6-south",
+            "name": "Map point south",
+            "lat": 52.51487,
+            "lng": 13.377210000000002
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "atlas20-08-reichstag-building",
+    "title": "German Parliament Quest",
+    "description": "Follow seven map clues to Reichstag Building in Berlin.",
+    "countryIso3": "DEU",
+    "status": "published",
+    "publishDate": null,
+    "difficulty": "standard",
+    "stages": [
+      {
+        "level": 0,
+        "label": "Country",
+        "clue": "This parliamentary building has a prominent modern glass dome.",
+        "hint": "Consider the landmark's architecture, history and country.",
+        "source": "https://en.wikipedia.org/wiki/Reichstag_building",
+        "answer": "Germany",
+        "center": [
+          0,
+          22
+        ],
+        "zoom": 2.1,
+        "selection": "country",
+        "choices": []
+      },
+      {
+        "level": 1,
+        "label": "State / Region",
+        "clue": "The destination is in the national capital's city-state.",
+        "hint": "Think about the administrative region around this destination.",
+        "source": "https://en.wikipedia.org/wiki/Reichstag_building",
+        "answer": "Berlin",
+        "center": [
+          13.37619,
+          52.51862
+        ],
+        "zoom": 5.5,
+        "selection": "markers",
+        "choices": [
+          {
+            "id": "bavaria",
+            "name": "Bavaria",
+            "lat": 48.14,
+            "lng": 11.58
+          },
+          {
+            "id": "hamburg",
+            "name": "Hamburg",
+            "lat": 53.55,
+            "lng": 9.99
+          },
+          {
+            "id": "berlin",
+            "name": "Berlin",
+            "lat": 52.51862,
+            "lng": 13.37619
+          }
+        ]
+      },
+      {
+        "level": 2,
+        "label": "City",
+        "clue": "The city was reunified after the fall of its famous wall.",
+        "hint": "Think about the main city associated with the landmark.",
+        "source": "https://en.wikipedia.org/wiki/Reichstag_building",
+        "answer": "Berlin",
+        "center": [
+          13.37619,
+          52.51862
+        ],
+        "zoom": 9,
+        "selection": "markers",
+        "choices": [
+          {
+            "id": "munich",
+            "name": "Munich",
+            "lat": 48.14,
+            "lng": 11.58
+          },
+          {
+            "id": "hamburg",
+            "name": "Hamburg",
+            "lat": 53.55,
+            "lng": 9.99
+          },
+          {
+            "id": "berlin",
+            "name": "Berlin",
+            "lat": 52.51862,
+            "lng": 13.37619
+          }
+        ]
+      },
+      {
+        "level": 3,
+        "label": "Area",
+        "clue": "The building is in the central borough.",
+        "hint": "Use the map's administrative divisions and riverfront landmarks.",
+        "source": "https://en.wikipedia.org/wiki/Reichstag_building",
+        "answer": "Mitte",
+        "center": [
+          13.37619,
+          52.51862
+        ],
+        "zoom": 11.5,
+        "selection": "markers",
+        "choices": [
+          {
+            "id": "mitte",
+            "name": "Mitte",
+            "lat": 52.51862,
+            "lng": 13.37619
+          },
+          {
+            "id": "map-point-3-north",
+            "name": "Map point north",
+            "lat": 52.54362,
+            "lng": 13.384939999999999
+          },
+          {
+            "id": "map-point-3-south",
+            "name": "Map point south",
+            "lat": 52.49362,
+            "lng": 13.36744
+          }
+        ]
+      },
+      {
+        "level": 4,
+        "label": "District",
+        "clue": "The site is near the large urban park west of the government quarter.",
+        "hint": "Zoom in and compare the nearby neighbourhoods.",
+        "source": "https://en.wikipedia.org/wiki/Reichstag_building",
+        "answer": "Tiergarten",
+        "center": [
+          13.37619,
+          52.51862
+        ],
+        "zoom": 13,
+        "selection": "markers",
+        "choices": [
+          {
+            "id": "tiergarten",
+            "name": "Tiergarten",
+            "lat": 52.51862,
+            "lng": 13.37619
+          },
+          {
+            "id": "map-point-4-north",
+            "name": "Map point north",
+            "lat": 52.52762,
+            "lng": 13.37934
+          },
+          {
+            "id": "map-point-4-south",
+            "name": "Map point south",
+            "lat": 52.50962,
+            "lng": 13.37304
+          }
+        ]
+      },
+      {
+        "level": 5,
+        "label": "Street",
+        "clue": "The square's name refers to the republic.",
+        "hint": "Look for the main access road, square or approach.",
+        "source": "https://en.wikipedia.org/wiki/Reichstag_building",
+        "answer": "Platz der Republik",
+        "center": [
+          13.37619,
+          52.51862
+        ],
+        "zoom": 15,
+        "selection": "markers",
+        "choices": [
+          {
+            "id": "platz-der-republik",
+            "name": "Platz der Republik",
+            "lat": 52.51862,
+            "lng": 13.37619
+          },
+          {
+            "id": "map-point-5-north",
+            "name": "Map point north",
+            "lat": 52.52212,
+            "lng": 13.377415
+          },
+          {
+            "id": "map-point-5-south",
+            "name": "Map point south",
+            "lat": 52.515119999999996,
+            "lng": 13.374965
+          }
+        ]
+      },
+      {
+        "level": 6,
+        "label": "Building",
+        "clue": "Select the historic parliament building with a glass dome.",
+        "hint": "Look closely at the monument's distinctive shape on the map.",
+        "source": "https://en.wikipedia.org/wiki/Reichstag_building",
+        "answer": "Reichstag Building",
+        "center": [
+          13.37619,
+          52.51862
+        ],
+        "zoom": 17,
+        "selection": "markers",
+        "choices": [
+          {
+            "id": "reichstag-building",
+            "name": "Reichstag Building",
+            "lat": 52.51862,
+            "lng": 13.37619
+          },
+          {
+            "id": "map-point-6-north",
+            "name": "Map point north",
+            "lat": 52.520019999999995,
+            "lng": 13.376679999999999
+          },
+          {
+            "id": "map-point-6-south",
+            "name": "Map point south",
+            "lat": 52.51722,
+            "lng": 13.3757
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "atlas20-09-statue-of-liberty",
+    "title": "Liberty Island Mystery",
+    "description": "Follow seven map clues to Statue of Liberty in New York City.",
+    "countryIso3": "USA",
+    "status": "published",
+    "publishDate": null,
+    "difficulty": "standard",
+    "stages": [
+      {
+        "level": 0,
+        "label": "Country",
+        "clue": "A copper-clad statue was gifted by another country and holds a torch aloft.",
+        "hint": "Consider the landmark's architecture, history and country.",
+        "source": "https://en.wikipedia.org/wiki/Statue_of_Liberty",
+        "answer": "United States",
+        "center": [
+          0,
+          22
+        ],
+        "zoom": 2.1,
+        "selection": "country",
+        "choices": []
+      },
+      {
+        "level": 1,
+        "label": "State / Region",
+        "clue": "The monument stands on an island in a northeastern US state.",
+        "hint": "Think about the administrative region around this destination.",
+        "source": "https://en.wikipedia.org/wiki/Statue_of_Liberty",
+        "answer": "New York",
+        "center": [
+          -74.0445,
+          40.68925
+        ],
+        "zoom": 5.5,
+        "selection": "markers",
+        "choices": [
+          {
+            "id": "california",
+            "name": "California",
+            "lat": 37.77,
+            "lng": -122.42
+          },
+          {
+            "id": "district-of-columbia",
+            "name": "District of Columbia",
+            "lat": 38.9,
+            "lng": -77.04
+          },
+          {
+            "id": "new-york",
+            "name": "New York",
+            "lat": 40.68925,
+            "lng": -74.0445
+          }
+        ]
+      },
+      {
+        "level": 2,
+        "label": "City",
+        "clue": "The nearest major city is known for its five boroughs.",
+        "hint": "Think about the main city associated with the landmark.",
+        "source": "https://en.wikipedia.org/wiki/Statue_of_Liberty",
+        "answer": "New York City",
+        "center": [
+          -74.0445,
+          40.68925
+        ],
+        "zoom": 9,
+        "selection": "markers",
+        "choices": [
+          {
+            "id": "washington-d-c",
+            "name": "Washington, D.C.",
+            "lat": 38.9,
+            "lng": -77.04
+          },
+          {
+            "id": "san-francisco",
+            "name": "San Francisco",
+            "lat": 37.77,
+            "lng": -122.42
+          },
+          {
+            "id": "new-york-city",
+            "name": "New York City",
+            "lat": 40.68925,
+            "lng": -74.0445
+          }
+        ]
+      },
+      {
+        "level": 3,
+        "label": "Area",
+        "clue": "The harbour landmark is associated with the southern tip of a major island borough.",
+        "hint": "Use the map's administrative divisions and riverfront landmarks.",
+        "source": "https://en.wikipedia.org/wiki/Statue_of_Liberty",
+        "answer": "Manhattan",
+        "center": [
+          -74.0445,
+          40.68925
+        ],
+        "zoom": 11.5,
+        "selection": "markers",
+        "choices": [
+          {
+            "id": "manhattan",
+            "name": "Manhattan",
+            "lat": 40.68925,
+            "lng": -74.0445
+          },
+          {
+            "id": "map-point-3-north",
+            "name": "Map point north",
+            "lat": 40.71425,
+            "lng": -74.03575
+          },
+          {
+            "id": "map-point-3-south",
+            "name": "Map point south",
+            "lat": 40.66425,
+            "lng": -74.05325
+          }
+        ]
+      },
+      {
+        "level": 4,
+        "label": "District",
+        "clue": "The destination is in the harbour's historic financial waterfront area.",
+        "hint": "Zoom in and compare the nearby neighbourhoods.",
+        "source": "https://en.wikipedia.org/wiki/Statue_of_Liberty",
+        "answer": "Financial District",
+        "center": [
+          -74.0445,
+          40.68925
+        ],
+        "zoom": 13,
+        "selection": "markers",
+        "choices": [
+          {
+            "id": "financial-district",
+            "name": "Financial District",
+            "lat": 40.68925,
+            "lng": -74.0445
+          },
+          {
+            "id": "map-point-4-north",
+            "name": "Map point north",
+            "lat": 40.69825,
+            "lng": -74.04135
+          },
+          {
+            "id": "map-point-4-south",
+            "name": "Map point south",
+            "lat": 40.68025,
+            "lng": -74.04765
+          }
+        ]
+      },
+      {
+        "level": 5,
+        "label": "Street",
+        "clue": "The final approach is an island reached by ferry, not a conventional street.",
+        "hint": "Look for the main access road, square or approach.",
+        "source": "https://en.wikipedia.org/wiki/Statue_of_Liberty",
+        "answer": "Liberty Island",
+        "center": [
+          -74.0445,
+          40.68925
+        ],
+        "zoom": 15,
+        "selection": "markers",
+        "choices": [
+          {
+            "id": "liberty-island",
+            "name": "Liberty Island",
+            "lat": 40.68925,
+            "lng": -74.0445
+          },
+          {
+            "id": "map-point-5-north",
+            "name": "Map point north",
+            "lat": 40.692750000000004,
+            "lng": -74.043275
+          },
+          {
+            "id": "map-point-5-south",
+            "name": "Map point south",
+            "lat": 40.68575,
+            "lng": -74.045725
+          }
+        ]
+      },
+      {
+        "level": 6,
+        "label": "Building",
+        "clue": "Select the torch-bearing statue on its pedestal.",
+        "hint": "Look closely at the monument's distinctive shape on the map.",
+        "source": "https://en.wikipedia.org/wiki/Statue_of_Liberty",
+        "answer": "Statue of Liberty",
+        "center": [
+          -74.0445,
+          40.68925
+        ],
+        "zoom": 17,
+        "selection": "markers",
+        "choices": [
+          {
+            "id": "statue-of-liberty",
+            "name": "Statue of Liberty",
+            "lat": 40.68925,
+            "lng": -74.0445
+          },
+          {
+            "id": "map-point-6-north",
+            "name": "Map point north",
+            "lat": 40.69065,
+            "lng": -74.04401
+          },
+          {
+            "id": "map-point-6-south",
+            "name": "Map point south",
+            "lat": 40.687850000000005,
+            "lng": -74.04499
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "atlas20-10-lincoln-memorial",
+    "title": "Washington's Marble Memorial",
+    "description": "Follow seven map clues to Lincoln Memorial in Washington, D.C..",
+    "countryIso3": "USA",
+    "status": "published",
+    "publishDate": null,
+    "difficulty": "standard",
+    "stages": [
+      {
+        "level": 0,
+        "label": "Country",
+        "clue": "A seated president is depicted inside a marble temple-like memorial.",
+        "hint": "Consider the landmark's architecture, history and country.",
+        "source": "https://en.wikipedia.org/wiki/Lincoln_Memorial",
+        "answer": "United States",
+        "center": [
+          0,
+          22
+        ],
+        "zoom": 2.1,
+        "selection": "country",
+        "choices": []
+      },
+      {
+        "level": 1,
+        "label": "State / Region",
+        "clue": "The monument is in the federal district rather than a US state.",
+        "hint": "Think about the administrative region around this destination.",
+        "source": "https://en.wikipedia.org/wiki/Lincoln_Memorial",
+        "answer": "District of Columbia",
+        "center": [
+          -77.05018,
+          38.88927
+        ],
+        "zoom": 5.5,
+        "selection": "markers",
+        "choices": [
+          {
+            "id": "new-york",
+            "name": "New York",
+            "lat": 40.71,
+            "lng": -74.0
+          },
+          {
+            "id": "california",
+            "name": "California",
+            "lat": 37.77,
+            "lng": -122.42
+          },
+          {
+            "id": "district-of-columbia",
+            "name": "District of Columbia",
+            "lat": 38.88927,
+            "lng": -77.05018
+          }
+        ]
+      },
+      {
+        "level": 2,
+        "label": "City",
+        "clue": "The city is the seat of the US federal government.",
+        "hint": "Think about the main city associated with the landmark.",
+        "source": "https://en.wikipedia.org/wiki/Lincoln_Memorial",
+        "answer": "Washington, D.C.",
+        "center": [
+          -77.05018,
+          38.88927
+        ],
+        "zoom": 9,
+        "selection": "markers",
+        "choices": [
+          {
+            "id": "new-york-city",
+            "name": "New York City",
+            "lat": 40.71,
+            "lng": -74.0
+          },
+          {
+            "id": "san-francisco",
+            "name": "San Francisco",
+            "lat": 37.77,
+            "lng": -122.42
+          },
+          {
+            "id": "washington-d-c",
+            "name": "Washington, D.C.",
+            "lat": 38.88927,
+            "lng": -77.05018
+          }
+        ]
+      },
+      {
+        "level": 3,
+        "label": "Area",
+        "clue": "The memorial is at the western end of a landscaped national promenade.",
+        "hint": "Use the map's administrative divisions and riverfront landmarks.",
+        "source": "https://en.wikipedia.org/wiki/Lincoln_Memorial",
+        "answer": "National Mall",
+        "center": [
+          -77.05018,
+          38.88927
+        ],
+        "zoom": 11.5,
+        "selection": "markers",
+        "choices": [
+          {
+            "id": "national-mall",
+            "name": "National Mall",
+            "lat": 38.88927,
+            "lng": -77.05018
+          },
+          {
+            "id": "map-point-3-north",
+            "name": "Map point north",
+            "lat": 38.91427,
+            "lng": -77.04142999999999
+          },
+          {
+            "id": "map-point-3-south",
+            "name": "Map point south",
+            "lat": 38.864270000000005,
+            "lng": -77.05893
+          }
+        ]
+      },
+      {
+        "level": 4,
+        "label": "District",
+        "clue": "The site lies beside a tidal basin and parkland.",
+        "hint": "Zoom in and compare the nearby neighbourhoods.",
+        "source": "https://en.wikipedia.org/wiki/Lincoln_Memorial",
+        "answer": "West Potomac Park",
+        "center": [
+          -77.05018,
+          38.88927
+        ],
+        "zoom": 13,
+        "selection": "markers",
+        "choices": [
+          {
+            "id": "west-potomac-park",
+            "name": "West Potomac Park",
+            "lat": 38.88927,
+            "lng": -77.05018
+          },
+          {
+            "id": "map-point-4-north",
+            "name": "Map point north",
+            "lat": 38.898270000000004,
+            "lng": -77.04702999999999
+          },
+          {
+            "id": "map-point-4-south",
+            "name": "Map point south",
+            "lat": 38.88027,
+            "lng": -77.05333
+          }
+        ]
+      },
+      {
+        "level": 5,
+        "label": "Street",
+        "clue": "A circular roadway surrounds the memorial.",
+        "hint": "Look for the main access road, square or approach.",
+        "source": "https://en.wikipedia.org/wiki/Lincoln_Memorial",
+        "answer": "Lincoln Memorial Circle",
+        "center": [
+          -77.05018,
+          38.88927
+        ],
+        "zoom": 15,
+        "selection": "markers",
+        "choices": [
+          {
+            "id": "lincoln-memorial-circle",
+            "name": "Lincoln Memorial Circle",
+            "lat": 38.88927,
+            "lng": -77.05018
+          },
+          {
+            "id": "map-point-5-north",
+            "name": "Map point north",
+            "lat": 38.892770000000006,
+            "lng": -77.04895499999999
+          },
+          {
+            "id": "map-point-5-south",
+            "name": "Map point south",
+            "lat": 38.88577,
+            "lng": -77.051405
+          }
+        ]
+      },
+      {
+        "level": 6,
+        "label": "Building",
+        "clue": "Select the Greek Revival memorial with the seated statue.",
+        "hint": "Look closely at the monument's distinctive shape on the map.",
+        "source": "https://en.wikipedia.org/wiki/Lincoln_Memorial",
+        "answer": "Lincoln Memorial",
+        "center": [
+          -77.05018,
+          38.88927
+        ],
+        "zoom": 17,
+        "selection": "markers",
+        "choices": [
+          {
+            "id": "lincoln-memorial",
+            "name": "Lincoln Memorial",
+            "lat": 38.88927,
+            "lng": -77.05018
+          },
+          {
+            "id": "map-point-6-north",
+            "name": "Map point north",
+            "lat": 38.89067,
+            "lng": -77.04969
+          },
+          {
+            "id": "map-point-6-south",
+            "name": "Map point south",
+            "lat": 38.88787000000001,
+            "lng": -77.05067
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "atlas20-11-golden-gate-bridge",
+    "title": "Bridge Above the Bay",
+    "description": "Follow seven map clues to Golden Gate Bridge in San Francisco.",
+    "countryIso3": "USA",
+    "status": "published",
+    "publishDate": null,
+    "difficulty": "standard",
+    "stages": [
+      {
+        "level": 0,
+        "label": "Country",
+        "clue": "A suspension bridge is famous for its orange-red colour and foggy setting.",
+        "hint": "Consider the landmark's architecture, history and country.",
+        "source": "https://en.wikipedia.org/wiki/Golden_Gate_Bridge",
+        "answer": "United States",
+        "center": [
+          0,
+          22
+        ],
+        "zoom": 2.1,
+        "selection": "country",
+        "choices": []
+      },
+      {
+        "level": 1,
+        "label": "State / Region",
+        "clue": "The destination is on the Pacific coast of the United States.",
+        "hint": "Think about the administrative region around this destination.",
+        "source": "https://en.wikipedia.org/wiki/Golden_Gate_Bridge",
+        "answer": "California",
+        "center": [
+          -122.47826,
+          37.81993
+        ],
+        "zoom": 5.5,
+        "selection": "markers",
+        "choices": [
+          {
+            "id": "new-york",
+            "name": "New York",
+            "lat": 40.71,
+            "lng": -74.0
+          },
+          {
+            "id": "district-of-columbia",
+            "name": "District of Columbia",
+            "lat": 38.9,
+            "lng": -77.04
+          },
+          {
+            "id": "california",
+            "name": "California",
+            "lat": 37.81993,
+            "lng": -122.47826
+          }
+        ]
+      },
+      {
+        "level": 2,
+        "label": "City",
+        "clue": "The city is famous for steep streets and cable cars.",
+        "hint": "Think about the main city associated with the landmark.",
+        "source": "https://en.wikipedia.org/wiki/Golden_Gate_Bridge",
+        "answer": "San Francisco",
+        "center": [
+          -122.47826,
+          37.81993
+        ],
+        "zoom": 9,
+        "selection": "markers",
+        "choices": [
+          {
+            "id": "new-york-city",
+            "name": "New York City",
+            "lat": 40.71,
+            "lng": -74.0
+          },
+          {
+            "id": "washington-d-c",
+            "name": "Washington, D.C.",
+            "lat": 38.9,
+            "lng": -77.04
+          },
+          {
+            "id": "san-francisco",
+            "name": "San Francisco",
+            "lat": 37.81993,
+            "lng": -122.47826
+          }
+        ]
+      },
+      {
+        "level": 3,
+        "label": "Area",
+        "clue": "The crossing connects the northern waterfront to the opposite headland.",
+        "hint": "Use the map's administrative divisions and riverfront landmarks.",
+        "source": "https://en.wikipedia.org/wiki/Golden_Gate_Bridge",
+        "answer": "Northeastern San Francisco",
+        "center": [
+          -122.47826,
+          37.81993
+        ],
+        "zoom": 11.5,
+        "selection": "markers",
+        "choices": [
+          {
+            "id": "northeastern-san-francisco",
+            "name": "Northeastern San Francisco",
+            "lat": 37.81993,
+            "lng": -122.47826
+          },
+          {
+            "id": "map-point-3-north",
+            "name": "Map point north",
+            "lat": 37.84493,
+            "lng": -122.46951
+          },
+          {
+            "id": "map-point-3-south",
+            "name": "Map point south",
+            "lat": 37.79493,
+            "lng": -122.48701000000001
+          }
+        ]
+      },
+      {
+        "level": 4,
+        "label": "District",
+        "clue": "Its southern end borders a former military reservation.",
+        "hint": "Zoom in and compare the nearby neighbourhoods.",
+        "source": "https://en.wikipedia.org/wiki/Golden_Gate_Bridge",
+        "answer": "Presidio",
+        "center": [
+          -122.47826,
+          37.81993
+        ],
+        "zoom": 13,
+        "selection": "markers",
+        "choices": [
+          {
+            "id": "presidio",
+            "name": "Presidio",
+            "lat": 37.81993,
+            "lng": -122.47826
+          },
+          {
+            "id": "map-point-4-north",
+            "name": "Map point north",
+            "lat": 37.82893,
+            "lng": -122.47511
+          },
+          {
+            "id": "map-point-4-south",
+            "name": "Map point south",
+            "lat": 37.81093,
+            "lng": -122.48141000000001
+          }
+        ]
+      },
+      {
+        "level": 5,
+        "label": "Street",
+        "clue": "The roadway itself shares the bridge's name.",
+        "hint": "Look for the main access road, square or approach.",
+        "source": "https://en.wikipedia.org/wiki/Golden_Gate_Bridge",
+        "answer": "Golden Gate Bridge",
+        "center": [
+          -122.47826,
+          37.81993
+        ],
+        "zoom": 15,
+        "selection": "markers",
+        "choices": [
+          {
+            "id": "golden-gate-bridge",
+            "name": "Golden Gate Bridge",
+            "lat": 37.81993,
+            "lng": -122.47826
+          },
+          {
+            "id": "map-point-5-north",
+            "name": "Map point north",
+            "lat": 37.82343,
+            "lng": -122.477035
+          },
+          {
+            "id": "map-point-5-south",
+            "name": "Map point south",
+            "lat": 37.81643,
+            "lng": -122.47948500000001
+          }
+        ]
+      },
+      {
+        "level": 6,
+        "label": "Building",
+        "clue": "Select the iconic suspension bridge across the strait.",
+        "hint": "Look closely at the monument's distinctive shape on the map.",
+        "source": "https://en.wikipedia.org/wiki/Golden_Gate_Bridge",
+        "answer": "Golden Gate Bridge",
+        "center": [
+          -122.47826,
+          37.81993
+        ],
+        "zoom": 17,
+        "selection": "markers",
+        "choices": [
+          {
+            "id": "golden-gate-bridge",
+            "name": "Golden Gate Bridge",
+            "lat": 37.81993,
+            "lng": -122.47826
+          },
+          {
+            "id": "map-point-6-north",
+            "name": "Map point north",
+            "lat": 37.821329999999996,
+            "lng": -122.47777
+          },
+          {
+            "id": "map-point-6-south",
+            "name": "Map point south",
+            "lat": 37.81853,
+            "lng": -122.47875
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "atlas20-12-big-ben",
+    "title": "Westminster Clocktower",
+    "description": "Follow seven map clues to Big Ben in London.",
+    "countryIso3": "GBR",
+    "status": "published",
+    "publishDate": null,
+    "difficulty": "standard",
+    "stages": [
+      {
+        "level": 0,
+        "label": "Country",
+        "clue": "A great clock bell lends its nickname to a famous Gothic Revival tower.",
+        "hint": "Consider the landmark's architecture, history and country.",
+        "source": "https://en.wikipedia.org/wiki/Big_Ben",
+        "answer": "United Kingdom",
+        "center": [
+          0,
+          22
+        ],
+        "zoom": 2.1,
+        "selection": "country",
+        "choices": []
+      },
+      {
+        "level": 1,
+        "label": "State / Region",
+        "clue": "The landmark is in the southern constituent nation of the UK.",
+        "hint": "Think about the administrative region around this destination.",
+        "source": "https://en.wikipedia.org/wiki/Big_Ben",
+        "answer": "England",
+        "center": [
+          -0.12463,
+          51.50073
+        ],
+        "zoom": 5.5,
+        "selection": "markers",
+        "choices": [
+          {
+            "id": "scotland",
+            "name": "Scotland",
+            "lat": 55.95,
+            "lng": -3.19
+          },
+          {
+            "id": "wales",
+            "name": "Wales",
+            "lat": 51.48,
+            "lng": -3.18
+          },
+          {
+            "id": "england",
+            "name": "England",
+            "lat": 51.50073,
+            "lng": -0.12463
+          }
+        ]
+      },
+      {
+        "level": 2,
+        "label": "City",
+        "clue": "The city is the national capital and sits on the Thames.",
+        "hint": "Think about the main city associated with the landmark.",
+        "source": "https://en.wikipedia.org/wiki/Big_Ben",
+        "answer": "London",
+        "center": [
+          -0.12463,
+          51.50073
+        ],
+        "zoom": 9,
+        "selection": "markers",
+        "choices": [
+          {
+            "id": "manchester",
+            "name": "Manchester",
+            "lat": 53.48,
+            "lng": -2.24
+          },
+          {
+            "id": "birmingham",
+            "name": "Birmingham",
+            "lat": 52.48,
+            "lng": -1.89
+          },
+          {
+            "id": "london",
+            "name": "London",
+            "lat": 51.50073,
+            "lng": -0.12463
+          }
+        ]
+      },
+      {
+        "level": 3,
+        "label": "Area",
+        "clue": "The tower forms part of the national parliamentary estate.",
+        "hint": "Use the map's administrative divisions and riverfront landmarks.",
+        "source": "https://en.wikipedia.org/wiki/Big_Ben",
+        "answer": "City of Westminster",
+        "center": [
+          -0.12463,
+          51.50073
+        ],
+        "zoom": 11.5,
+        "selection": "markers",
+        "choices": [
+          {
+            "id": "city-of-westminster",
+            "name": "City of Westminster",
+            "lat": 51.50073,
+            "lng": -0.12463
+          },
+          {
+            "id": "map-point-3-north",
+            "name": "Map point north",
+            "lat": 51.525729999999996,
+            "lng": -0.11588000000000001
+          },
+          {
+            "id": "map-point-3-south",
+            "name": "Map point south",
+            "lat": 51.47573,
+            "lng": -0.13338
+          }
+        ]
+      },
+      {
+        "level": 4,
+        "label": "District",
+        "clue": "The site lies in the district around the Houses of Parliament.",
+        "hint": "Zoom in and compare the nearby neighbourhoods.",
+        "source": "https://en.wikipedia.org/wiki/Big_Ben",
+        "answer": "Westminster",
+        "center": [
+          -0.12463,
+          51.50073
+        ],
+        "zoom": 13,
+        "selection": "markers",
+        "choices": [
+          {
+            "id": "westminster",
+            "name": "Westminster",
+            "lat": 51.50073,
+            "lng": -0.12463
+          },
+          {
+            "id": "map-point-4-north",
+            "name": "Map point north",
+            "lat": 51.50973,
+            "lng": -0.12148
+          },
+          {
+            "id": "map-point-4-south",
+            "name": "Map point south",
+            "lat": 51.49173,
+            "lng": -0.12778
+          }
+        ]
+      },
+      {
+        "level": 5,
+        "label": "Street",
+        "clue": "The approach connects Parliament Square to a river crossing.",
+        "hint": "Look for the main access road, square or approach.",
+        "source": "https://en.wikipedia.org/wiki/Big_Ben",
+        "answer": "Bridge Street",
+        "center": [
+          -0.12463,
+          51.50073
+        ],
+        "zoom": 15,
+        "selection": "markers",
+        "choices": [
+          {
+            "id": "bridge-street",
+            "name": "Bridge Street",
+            "lat": 51.50073,
+            "lng": -0.12463
+          },
+          {
+            "id": "map-point-5-north",
+            "name": "Map point north",
+            "lat": 51.50423,
+            "lng": -0.123405
+          },
+          {
+            "id": "map-point-5-south",
+            "name": "Map point south",
+            "lat": 51.497229999999995,
+            "lng": -0.125855
+          }
+        ]
+      },
+      {
+        "level": 6,
+        "label": "Building",
+        "clue": "Select the Elizabeth Tower clock landmark.",
+        "hint": "Look closely at the monument's distinctive shape on the map.",
+        "source": "https://en.wikipedia.org/wiki/Big_Ben",
+        "answer": "Big Ben",
+        "center": [
+          -0.12463,
+          51.50073
+        ],
+        "zoom": 17,
+        "selection": "markers",
+        "choices": [
+          {
+            "id": "big-ben",
+            "name": "Big Ben",
+            "lat": 51.50073,
+            "lng": -0.12463
+          },
+          {
+            "id": "map-point-6-north",
+            "name": "Map point north",
+            "lat": 51.502129999999994,
+            "lng": -0.12414
+          },
+          {
+            "id": "map-point-6-south",
+            "name": "Map point south",
+            "lat": 51.49933,
+            "lng": -0.12512
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "atlas20-13-tower-of-london",
+    "title": "London Fortress Quest",
+    "description": "Follow seven map clues to Tower of London in London.",
+    "countryIso3": "GBR",
+    "status": "published",
+    "publishDate": null,
+    "difficulty": "standard",
+    "stages": [
+      {
+        "level": 0,
+        "label": "Country",
+        "clue": "A medieval fortress houses the Crown Jewels and stands beside a river.",
+        "hint": "Consider the landmark's architecture, history and country.",
+        "source": "https://en.wikipedia.org/wiki/Tower_of_London",
+        "answer": "United Kingdom",
+        "center": [
+          0,
+          22
+        ],
+        "zoom": 2.1,
+        "selection": "country",
+        "choices": []
+      },
+      {
+        "level": 1,
+        "label": "State / Region",
+        "clue": "The destination is in the southern constituent nation of the UK.",
+        "hint": "Think about the administrative region around this destination.",
+        "source": "https://en.wikipedia.org/wiki/Tower_of_London",
+        "answer": "England",
+        "center": [
+          -0.07595,
+          51.50811
+        ],
+        "zoom": 5.5,
+        "selection": "markers",
+        "choices": [
+          {
+            "id": "scotland",
+            "name": "Scotland",
+            "lat": 55.95,
+            "lng": -3.19
+          },
+          {
+            "id": "wales",
+            "name": "Wales",
+            "lat": 51.48,
+            "lng": -3.18
+          },
+          {
+            "id": "england",
+            "name": "England",
+            "lat": 51.50811,
+            "lng": -0.07595
+          }
+        ]
+      },
+      {
+        "level": 2,
+        "label": "City",
+        "clue": "The city is famous for its historic royal landmarks.",
+        "hint": "Think about the main city associated with the landmark.",
+        "source": "https://en.wikipedia.org/wiki/Tower_of_London",
+        "answer": "London",
+        "center": [
+          -0.07595,
+          51.50811
+        ],
+        "zoom": 9,
+        "selection": "markers",
+        "choices": [
+          {
+            "id": "manchester",
+            "name": "Manchester",
+            "lat": 53.48,
+            "lng": -2.24
+          },
+          {
+            "id": "birmingham",
+            "name": "Birmingham",
+            "lat": 52.48,
+            "lng": -1.89
+          },
+          {
+            "id": "london",
+            "name": "London",
+            "lat": 51.50811,
+            "lng": -0.07595
+          }
+        ]
+      },
+      {
+        "level": 3,
+        "label": "Area",
+        "clue": "The fortress sits at the eastern edge of the historic financial district.",
+        "hint": "Use the map's administrative divisions and riverfront landmarks.",
+        "source": "https://en.wikipedia.org/wiki/Tower_of_London",
+        "answer": "City of London",
+        "center": [
+          -0.07595,
+          51.50811
+        ],
+        "zoom": 11.5,
+        "selection": "markers",
+        "choices": [
+          {
+            "id": "city-of-london",
+            "name": "City of London",
+            "lat": 51.50811,
+            "lng": -0.07595
+          },
+          {
+            "id": "map-point-3-north",
+            "name": "Map point north",
+            "lat": 51.53311,
+            "lng": -0.06720000000000001
+          },
+          {
+            "id": "map-point-3-south",
+            "name": "Map point south",
+            "lat": 51.48311,
+            "lng": -0.0847
+          }
+        ]
+      },
+      {
+        "level": 4,
+        "label": "District",
+        "clue": "The neighbourhood is named after a nearby hill.",
+        "hint": "Zoom in and compare the nearby neighbourhoods.",
+        "source": "https://en.wikipedia.org/wiki/Tower_of_London",
+        "answer": "Tower Hill",
+        "center": [
+          -0.07595,
+          51.50811
+        ],
+        "zoom": 13,
+        "selection": "markers",
+        "choices": [
+          {
+            "id": "tower-hill",
+            "name": "Tower Hill",
+            "lat": 51.50811,
+            "lng": -0.07595
+          },
+          {
+            "id": "map-point-4-north",
+            "name": "Map point north",
+            "lat": 51.51711,
+            "lng": -0.0728
+          },
+          {
+            "id": "map-point-4-south",
+            "name": "Map point south",
+            "lat": 51.49911,
+            "lng": -0.0791
+          }
+        ]
+      },
+      {
+        "level": 5,
+        "label": "Street",
+        "clue": "The adjacent road and locality take their name from the fortress.",
+        "hint": "Look for the main access road, square or approach.",
+        "source": "https://en.wikipedia.org/wiki/Tower_of_London",
+        "answer": "Tower Hill",
+        "center": [
+          -0.07595,
+          51.50811
+        ],
+        "zoom": 15,
+        "selection": "markers",
+        "choices": [
+          {
+            "id": "tower-hill",
+            "name": "Tower Hill",
+            "lat": 51.50811,
+            "lng": -0.07595
+          },
+          {
+            "id": "map-point-5-north",
+            "name": "Map point north",
+            "lat": 51.511610000000005,
+            "lng": -0.074725
+          },
+          {
+            "id": "map-point-5-south",
+            "name": "Map point south",
+            "lat": 51.50461,
+            "lng": -0.07717500000000001
+          }
+        ]
+      },
+      {
+        "level": 6,
+        "label": "Building",
+        "clue": "Select the Norman fortress beside the Thames.",
+        "hint": "Look closely at the monument's distinctive shape on the map.",
+        "source": "https://en.wikipedia.org/wiki/Tower_of_London",
+        "answer": "Tower of London",
+        "center": [
+          -0.07595,
+          51.50811
+        ],
+        "zoom": 17,
+        "selection": "markers",
+        "choices": [
+          {
+            "id": "tower-of-london",
+            "name": "Tower of London",
+            "lat": 51.50811,
+            "lng": -0.07595
+          },
+          {
+            "id": "map-point-6-north",
+            "name": "Map point north",
+            "lat": 51.50951,
+            "lng": -0.07546
+          },
+          {
+            "id": "map-point-6-south",
+            "name": "Map point south",
+            "lat": 51.506710000000005,
+            "lng": -0.07644000000000001
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "atlas20-14-meiji-jing",
+    "title": "Tokyo's Forest Shrine",
+    "description": "Follow seven map clues to Meiji Jingū in Tokyo.",
+    "countryIso3": "JPN",
+    "status": "published",
+    "publishDate": null,
+    "difficulty": "standard",
+    "stages": [
+      {
+        "level": 0,
+        "label": "Country",
+        "clue": "A Shinto shrine honours a former emperor and empress within a wooded sanctuary.",
+        "hint": "Consider the landmark's architecture, history and country.",
+        "source": "https://en.wikipedia.org/wiki/Meiji_Shrine",
+        "answer": "Japan",
+        "center": [
+          0,
+          22
+        ],
+        "zoom": 2.1,
+        "selection": "country",
+        "choices": []
+      },
+      {
+        "level": 1,
+        "label": "State / Region",
+        "clue": "The destination is in the Japanese prefecture containing the national capital.",
+        "hint": "Think about the administrative region around this destination.",
+        "source": "https://en.wikipedia.org/wiki/Meiji_Shrine",
+        "answer": "Tokyo",
+        "center": [
+          139.69933,
+          35.6764
+        ],
+        "zoom": 5.5,
+        "selection": "markers",
+        "choices": [
+          {
+            "id": "osaka",
+            "name": "Osaka",
+            "lat": 34.69,
+            "lng": 135.5
+          },
+          {
+            "id": "kyoto",
+            "name": "Kyoto",
+            "lat": 35.01,
+            "lng": 135.77
+          },
+          {
+            "id": "tokyo",
+            "name": "Tokyo",
+            "lat": 35.6764,
+            "lng": 139.69933
+          }
+        ]
+      },
+      {
+        "level": 2,
+        "label": "City",
+        "clue": "The city is the centre of Japan's largest metropolitan area.",
+        "hint": "Think about the main city associated with the landmark.",
+        "source": "https://en.wikipedia.org/wiki/Meiji_Shrine",
+        "answer": "Tokyo",
+        "center": [
+          139.69933,
+          35.6764
+        ],
+        "zoom": 9,
+        "selection": "markers",
+        "choices": [
+          {
+            "id": "osaka",
+            "name": "Osaka",
+            "lat": 34.69,
+            "lng": 135.5
+          },
+          {
+            "id": "kyoto",
+            "name": "Kyoto",
+            "lat": 35.01,
+            "lng": 135.77
+          },
+          {
+            "id": "tokyo",
+            "name": "Tokyo",
+            "lat": 35.6764,
+            "lng": 139.69933
+          }
+        ]
+      },
+      {
+        "level": 3,
+        "label": "Area",
+        "clue": "The shrine is in a ward famous for youth culture and fashion.",
+        "hint": "Use the map's administrative divisions and riverfront landmarks.",
+        "source": "https://en.wikipedia.org/wiki/Meiji_Shrine",
+        "answer": "Shibuya",
+        "center": [
+          139.69933,
+          35.6764
+        ],
+        "zoom": 11.5,
+        "selection": "markers",
+        "choices": [
+          {
+            "id": "shibuya",
+            "name": "Shibuya",
+            "lat": 35.6764,
+            "lng": 139.69933
+          },
+          {
+            "id": "map-point-3-north",
+            "name": "Map point north",
+            "lat": 35.7014,
+            "lng": 139.70808
+          },
+          {
+            "id": "map-point-3-south",
+            "name": "Map point south",
+            "lat": 35.6514,
+            "lng": 139.69058
+          }
+        ]
+      },
+      {
+        "level": 4,
+        "label": "District",
+        "clue": "The nearby district is known for a fashionable shopping street.",
+        "hint": "Zoom in and compare the nearby neighbourhoods.",
+        "source": "https://en.wikipedia.org/wiki/Meiji_Shrine",
+        "answer": "Jingūmae",
+        "center": [
+          139.69933,
+          35.6764
+        ],
+        "zoom": 13,
+        "selection": "markers",
+        "choices": [
+          {
+            "id": "jing-mae",
+            "name": "Jingūmae",
+            "lat": 35.6764,
+            "lng": 139.69933
+          },
+          {
+            "id": "map-point-4-north",
+            "name": "Map point north",
+            "lat": 35.6854,
+            "lng": 139.70248
+          },
+          {
+            "id": "map-point-4-south",
+            "name": "Map point south",
+            "lat": 35.6674,
+            "lng": 139.69618
+          }
+        ]
+      },
+      {
+        "level": 5,
+        "label": "Street",
+        "clue": "The approach is in a neighbourhood whose name refers to the shrine.",
+        "hint": "Look for the main access road, square or approach.",
+        "source": "https://en.wikipedia.org/wiki/Meiji_Shrine",
+        "answer": "Jingūmae",
+        "center": [
+          139.69933,
+          35.6764
+        ],
+        "zoom": 15,
+        "selection": "markers",
+        "choices": [
+          {
+            "id": "jing-mae",
+            "name": "Jingūmae",
+            "lat": 35.6764,
+            "lng": 139.69933
+          },
+          {
+            "id": "map-point-5-north",
+            "name": "Map point north",
+            "lat": 35.6799,
+            "lng": 139.700555
+          },
+          {
+            "id": "map-point-5-south",
+            "name": "Map point south",
+            "lat": 35.6729,
+            "lng": 139.698105
+          }
+        ]
+      },
+      {
+        "level": 6,
+        "label": "Building",
+        "clue": "Select the forested Shinto shrine.",
+        "hint": "Look closely at the monument's distinctive shape on the map.",
+        "source": "https://en.wikipedia.org/wiki/Meiji_Shrine",
+        "answer": "Meiji Jingū",
+        "center": [
+          139.69933,
+          35.6764
+        ],
+        "zoom": 17,
+        "selection": "markers",
+        "choices": [
+          {
+            "id": "meiji-jing",
+            "name": "Meiji Jingū",
+            "lat": 35.6764,
+            "lng": 139.69933
+          },
+          {
+            "id": "map-point-6-north",
+            "name": "Map point north",
+            "lat": 35.6778,
+            "lng": 139.69982000000002
+          },
+          {
+            "id": "map-point-6-south",
+            "name": "Map point south",
+            "lat": 35.675000000000004,
+            "lng": 139.69884
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "atlas20-15-tokyo-metropolitan-government-building",
+    "title": "Tokyo's Twin Towers",
+    "description": "Follow seven map clues to Tokyo Metropolitan Government Building in Tokyo.",
+    "countryIso3": "JPN",
+    "status": "published",
+    "publishDate": null,
+    "difficulty": "standard",
+    "stages": [
+      {
+        "level": 0,
+        "label": "Country",
+        "clue": "Twin towers house the headquarters of a major metropolitan government.",
+        "hint": "Consider the landmark's architecture, history and country.",
+        "source": "https://en.wikipedia.org/wiki/Tokyo_Metropolitan_Government_Building",
+        "answer": "Japan",
+        "center": [
+          0,
+          22
+        ],
+        "zoom": 2.1,
+        "selection": "country",
+        "choices": []
+      },
+      {
+        "level": 1,
+        "label": "State / Region",
+        "clue": "The destination is in Japan's capital prefecture.",
+        "hint": "Think about the administrative region around this destination.",
+        "source": "https://en.wikipedia.org/wiki/Tokyo_Metropolitan_Government_Building",
+        "answer": "Tokyo",
+        "center": [
+          139.69171,
+          35.68948
+        ],
+        "zoom": 5.5,
+        "selection": "markers",
+        "choices": [
+          {
+            "id": "osaka",
+            "name": "Osaka",
+            "lat": 34.69,
+            "lng": 135.5
+          },
+          {
+            "id": "kyoto",
+            "name": "Kyoto",
+            "lat": 35.01,
+            "lng": 135.77
+          },
+          {
+            "id": "tokyo",
+            "name": "Tokyo",
+            "lat": 35.68948,
+            "lng": 139.69171
+          }
+        ]
+      },
+      {
+        "level": 2,
+        "label": "City",
+        "clue": "The city is Japan's national capital.",
+        "hint": "Think about the main city associated with the landmark.",
+        "source": "https://en.wikipedia.org/wiki/Tokyo_Metropolitan_Government_Building",
+        "answer": "Tokyo",
+        "center": [
+          139.69171,
+          35.68948
+        ],
+        "zoom": 9,
+        "selection": "markers",
+        "choices": [
+          {
+            "id": "osaka",
+            "name": "Osaka",
+            "lat": 34.69,
+            "lng": 135.5
+          },
+          {
+            "id": "kyoto",
+            "name": "Kyoto",
+            "lat": 35.01,
+            "lng": 135.77
+          },
+          {
+            "id": "tokyo",
+            "name": "Tokyo",
+            "lat": 35.68948,
+            "lng": 139.69171
+          }
+        ]
+      },
+      {
+        "level": 3,
+        "label": "Area",
+        "clue": "The building stands in a busy western ward.",
+        "hint": "Use the map's administrative divisions and riverfront landmarks.",
+        "source": "https://en.wikipedia.org/wiki/Tokyo_Metropolitan_Government_Building",
+        "answer": "Shinjuku",
+        "center": [
+          139.69171,
+          35.68948
+        ],
+        "zoom": 11.5,
+        "selection": "markers",
+        "choices": [
+          {
+            "id": "shinjuku",
+            "name": "Shinjuku",
+            "lat": 35.68948,
+            "lng": 139.69171
+          },
+          {
+            "id": "map-point-3-north",
+            "name": "Map point north",
+            "lat": 35.71448,
+            "lng": 139.70046
+          },
+          {
+            "id": "map-point-3-south",
+            "name": "Map point south",
+            "lat": 35.664480000000005,
+            "lng": 139.68296
+          }
+        ]
+      },
+      {
+        "level": 4,
+        "label": "District",
+        "clue": "The surrounding high-rise neighbourhood lies west of a major railway station.",
+        "hint": "Zoom in and compare the nearby neighbourhoods.",
+        "source": "https://en.wikipedia.org/wiki/Tokyo_Metropolitan_Government_Building",
+        "answer": "Nishi-Shinjuku",
+        "center": [
+          139.69171,
+          35.68948
+        ],
+        "zoom": 13,
+        "selection": "markers",
+        "choices": [
+          {
+            "id": "nishi-shinjuku",
+            "name": "Nishi-Shinjuku",
+            "lat": 35.68948,
+            "lng": 139.69171
+          },
+          {
+            "id": "map-point-4-north",
+            "name": "Map point north",
+            "lat": 35.69848,
+            "lng": 139.69486
+          },
+          {
+            "id": "map-point-4-south",
+            "name": "Map point south",
+            "lat": 35.68048,
+            "lng": 139.68856
+          }
+        ]
+      },
+      {
+        "level": 5,
+        "label": "Street",
+        "clue": "The address is in the second chōme of the same neighbourhood.",
+        "hint": "Look for the main access road, square or approach.",
+        "source": "https://en.wikipedia.org/wiki/Tokyo_Metropolitan_Government_Building",
+        "answer": "Nishi-Shinjuku 2-chōme",
+        "center": [
+          139.69171,
+          35.68948
+        ],
+        "zoom": 15,
+        "selection": "markers",
+        "choices": [
+          {
+            "id": "nishi-shinjuku-2-ch-me",
+            "name": "Nishi-Shinjuku 2-chōme",
+            "lat": 35.68948,
+            "lng": 139.69171
+          },
+          {
+            "id": "map-point-5-north",
+            "name": "Map point north",
+            "lat": 35.692980000000006,
+            "lng": 139.692935
+          },
+          {
+            "id": "map-point-5-south",
+            "name": "Map point south",
+            "lat": 35.68598,
+            "lng": 139.690485
+          }
+        ]
+      },
+      {
+        "level": 6,
+        "label": "Building",
+        "clue": "Select the twin-towered metropolitan government complex.",
+        "hint": "Look closely at the monument's distinctive shape on the map.",
+        "source": "https://en.wikipedia.org/wiki/Tokyo_Metropolitan_Government_Building",
+        "answer": "Tokyo Metropolitan Government Building",
+        "center": [
+          139.69171,
+          35.68948
+        ],
+        "zoom": 17,
+        "selection": "markers",
+        "choices": [
+          {
+            "id": "tokyo-metropolitan-government-building",
+            "name": "Tokyo Metropolitan Government Building",
+            "lat": 35.68948,
+            "lng": 139.69171
+          },
+          {
+            "id": "map-point-6-north",
+            "name": "Map point north",
+            "lat": 35.69088,
+            "lng": 139.6922
+          },
+          {
+            "id": "map-point-6-south",
+            "name": "Map point south",
+            "lat": 35.68808000000001,
+            "lng": 139.69122
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "atlas20-16-sydney-opera-house",
+    "title": "Harbour Sails",
+    "description": "Follow seven map clues to Sydney Opera House in Sydney.",
+    "countryIso3": "AUS",
+    "status": "published",
+    "publishDate": null,
+    "difficulty": "standard",
+    "stages": [
+      {
+        "level": 0,
+        "label": "Country",
+        "clue": "A performing arts venue is famous for its sail-like roof shells.",
+        "hint": "Consider the landmark's architecture, history and country.",
+        "source": "https://en.wikipedia.org/wiki/Sydney_Opera_House",
+        "answer": "Australia",
+        "center": [
+          0,
+          22
+        ],
+        "zoom": 2.1,
+        "selection": "country",
+        "choices": []
+      },
+      {
+        "level": 1,
+        "label": "State / Region",
+        "clue": "The landmark is in Australia's most populous state.",
+        "hint": "Think about the administrative region around this destination.",
+        "source": "https://en.wikipedia.org/wiki/Sydney_Opera_House",
+        "answer": "New South Wales",
+        "center": [
+          151.2153,
+          -33.85678
+        ],
+        "zoom": 5.5,
+        "selection": "markers",
+        "choices": [
+          {
+            "id": "victoria",
+            "name": "Victoria",
+            "lat": -37.81,
+            "lng": 144.96
+          },
+          {
+            "id": "queensland",
+            "name": "Queensland",
+            "lat": -27.47,
+            "lng": 153.03
+          },
+          {
+            "id": "new-south-wales",
+            "name": "New South Wales",
+            "lat": -33.85678,
+            "lng": 151.2153
+          }
+        ]
+      },
+      {
+        "level": 2,
+        "label": "City",
+        "clue": "The harbour city hosted the 2000 Summer Olympics.",
+        "hint": "Think about the main city associated with the landmark.",
+        "source": "https://en.wikipedia.org/wiki/Sydney_Opera_House",
+        "answer": "Sydney",
+        "center": [
+          151.2153,
+          -33.85678
+        ],
+        "zoom": 9,
+        "selection": "markers",
+        "choices": [
+          {
+            "id": "melbourne",
+            "name": "Melbourne",
+            "lat": -37.81,
+            "lng": 144.96
+          },
+          {
+            "id": "brisbane",
+            "name": "Brisbane",
+            "lat": -27.47,
+            "lng": 153.03
+          },
+          {
+            "id": "sydney",
+            "name": "Sydney",
+            "lat": -33.85678,
+            "lng": 151.2153
+          }
+        ]
+      },
+      {
+        "level": 3,
+        "label": "Area",
+        "clue": "The venue is close to the central business district.",
+        "hint": "Use the map's administrative divisions and riverfront landmarks.",
+        "source": "https://en.wikipedia.org/wiki/Sydney_Opera_House",
+        "answer": "Sydney CBD",
+        "center": [
+          151.2153,
+          -33.85678
+        ],
+        "zoom": 11.5,
+        "selection": "markers",
+        "choices": [
+          {
+            "id": "sydney-cbd",
+            "name": "Sydney CBD",
+            "lat": -33.85678,
+            "lng": 151.2153
+          },
+          {
+            "id": "map-point-3-north",
+            "name": "Map point north",
+            "lat": -33.83178,
+            "lng": 151.22405
+          },
+          {
+            "id": "map-point-3-south",
+            "name": "Map point south",
+            "lat": -33.88178,
+            "lng": 151.20655000000002
+          }
+        ]
+      },
+      {
+        "level": 4,
+        "label": "District",
+        "clue": "The site occupies a promontory once used as a fort.",
+        "hint": "Zoom in and compare the nearby neighbourhoods.",
+        "source": "https://en.wikipedia.org/wiki/Sydney_Opera_House",
+        "answer": "Bennelong Point",
+        "center": [
+          151.2153,
+          -33.85678
+        ],
+        "zoom": 13,
+        "selection": "markers",
+        "choices": [
+          {
+            "id": "bennelong-point",
+            "name": "Bennelong Point",
+            "lat": -33.85678,
+            "lng": 151.2153
+          },
+          {
+            "id": "map-point-4-north",
+            "name": "Map point north",
+            "lat": -33.84778,
+            "lng": 151.21845000000002
+          },
+          {
+            "id": "map-point-4-south",
+            "name": "Map point south",
+            "lat": -33.86578,
+            "lng": 151.21215
+          }
+        ]
+      },
+      {
+        "level": 5,
+        "label": "Street",
+        "clue": "The approach is a point named after an early colonial governor.",
+        "hint": "Look for the main access road, square or approach.",
+        "source": "https://en.wikipedia.org/wiki/Sydney_Opera_House",
+        "answer": "Bennelong Point",
+        "center": [
+          151.2153,
+          -33.85678
+        ],
+        "zoom": 15,
+        "selection": "markers",
+        "choices": [
+          {
+            "id": "bennelong-point",
+            "name": "Bennelong Point",
+            "lat": -33.85678,
+            "lng": 151.2153
+          },
+          {
+            "id": "map-point-5-north",
+            "name": "Map point north",
+            "lat": -33.85328,
+            "lng": 151.21652500000002
+          },
+          {
+            "id": "map-point-5-south",
+            "name": "Map point south",
+            "lat": -33.86028,
+            "lng": 151.214075
+          }
+        ]
+      },
+      {
+        "level": 6,
+        "label": "Building",
+        "clue": "Select the white-roofed harbour performance venue.",
+        "hint": "Look closely at the monument's distinctive shape on the map.",
+        "source": "https://en.wikipedia.org/wiki/Sydney_Opera_House",
+        "answer": "Sydney Opera House",
+        "center": [
+          151.2153,
+          -33.85678
+        ],
+        "zoom": 17,
+        "selection": "markers",
+        "choices": [
+          {
+            "id": "sydney-opera-house",
+            "name": "Sydney Opera House",
+            "lat": -33.85678,
+            "lng": 151.2153
+          },
+          {
+            "id": "map-point-6-north",
+            "name": "Map point north",
+            "lat": -33.855380000000004,
+            "lng": 151.21579000000003
+          },
+          {
+            "id": "map-point-6-south",
+            "name": "Map point south",
+            "lat": -33.85818,
+            "lng": 151.21481
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "atlas20-17-india-gate",
+    "title": "India's Memorial Arch",
+    "description": "Follow seven map clues to India Gate in New Delhi.",
+    "countryIso3": "IND",
+    "status": "published",
+    "publishDate": null,
+    "difficulty": "standard",
+    "stages": [
+      {
+        "level": 0,
+        "label": "Country",
+        "clue": "A sandstone memorial arch honours soldiers of the First World War.",
+        "hint": "Consider the landmark's architecture, history and country.",
+        "source": "https://en.wikipedia.org/wiki/India_Gate",
+        "answer": "India",
+        "center": [
+          0,
+          22
+        ],
+        "zoom": 2.1,
+        "selection": "country",
+        "choices": []
+      },
+      {
+        "level": 1,
+        "label": "State / Region",
+        "clue": "The landmark is in India's national capital territory.",
+        "hint": "Think about the administrative region around this destination.",
+        "source": "https://en.wikipedia.org/wiki/India_Gate",
+        "answer": "Delhi",
+        "center": [
+          77.22951,
+          28.61291
+        ],
+        "zoom": 5.5,
+        "selection": "markers",
+        "choices": [
+          {
+            "id": "uttar-pradesh",
+            "name": "Uttar Pradesh",
+            "lat": 27.18,
+            "lng": 78.01
+          },
+          {
+            "id": "maharashtra",
+            "name": "Maharashtra",
+            "lat": 19.08,
+            "lng": 72.88
+          },
+          {
+            "id": "delhi",
+            "name": "Delhi",
+            "lat": 28.61291,
+            "lng": 77.22951
+          }
+        ]
+      },
+      {
+        "level": 2,
+        "label": "City",
+        "clue": "The city is the planned capital developed during the British Raj.",
+        "hint": "Think about the main city associated with the landmark.",
+        "source": "https://en.wikipedia.org/wiki/India_Gate",
+        "answer": "New Delhi",
+        "center": [
+          77.22951,
+          28.61291
+        ],
+        "zoom": 9,
+        "selection": "markers",
+        "choices": [
+          {
+            "id": "agra",
+            "name": "Agra",
+            "lat": 27.18,
+            "lng": 78.01
+          },
+          {
+            "id": "mumbai",
+            "name": "Mumbai",
+            "lat": 19.08,
+            "lng": 72.88
+          },
+          {
+            "id": "new-delhi",
+            "name": "New Delhi",
+            "lat": 28.61291,
+            "lng": 77.22951
+          }
+        ]
+      },
+      {
+        "level": 3,
+        "label": "Area",
+        "clue": "The memorial lies in the central ceremonial precinct.",
+        "hint": "Use the map's administrative divisions and riverfront landmarks.",
+        "source": "https://en.wikipedia.org/wiki/India_Gate",
+        "answer": "Central Delhi",
+        "center": [
+          77.22951,
+          28.61291
+        ],
+        "zoom": 11.5,
+        "selection": "markers",
+        "choices": [
+          {
+            "id": "central-delhi",
+            "name": "Central Delhi",
+            "lat": 28.61291,
+            "lng": 77.22951
+          },
+          {
+            "id": "map-point-3-north",
+            "name": "Map point north",
+            "lat": 28.637909999999998,
+            "lng": 77.23826000000001
+          },
+          {
+            "id": "map-point-3-south",
+            "name": "Map point south",
+            "lat": 28.58791,
+            "lng": 77.22076
+          }
+        ]
+      },
+      {
+        "level": 4,
+        "label": "District",
+        "clue": "The monument anchors a long ceremonial avenue.",
+        "hint": "Zoom in and compare the nearby neighbourhoods.",
+        "source": "https://en.wikipedia.org/wiki/India_Gate",
+        "answer": "India Gate precinct",
+        "center": [
+          77.22951,
+          28.61291
+        ],
+        "zoom": 13,
+        "selection": "markers",
+        "choices": [
+          {
+            "id": "india-gate-precinct",
+            "name": "India Gate precinct",
+            "lat": 28.61291,
+            "lng": 77.22951
+          },
+          {
+            "id": "map-point-4-north",
+            "name": "Map point north",
+            "lat": 28.62191,
+            "lng": 77.23266000000001
+          },
+          {
+            "id": "map-point-4-south",
+            "name": "Map point south",
+            "lat": 28.60391,
+            "lng": 77.22636
+          }
+        ]
+      },
+      {
+        "level": 5,
+        "label": "Street",
+        "clue": "The avenue was formerly called Rajpath.",
+        "hint": "Look for the main access road, square or approach.",
+        "source": "https://en.wikipedia.org/wiki/India_Gate",
+        "answer": "Kartavya Path",
+        "center": [
+          77.22951,
+          28.61291
+        ],
+        "zoom": 15,
+        "selection": "markers",
+        "choices": [
+          {
+            "id": "kartavya-path",
+            "name": "Kartavya Path",
+            "lat": 28.61291,
+            "lng": 77.22951
+          },
+          {
+            "id": "map-point-5-north",
+            "name": "Map point north",
+            "lat": 28.61641,
+            "lng": 77.23073500000001
+          },
+          {
+            "id": "map-point-5-south",
+            "name": "Map point south",
+            "lat": 28.60941,
+            "lng": 77.228285
+          }
+        ]
+      },
+      {
+        "level": 6,
+        "label": "Building",
+        "clue": "Select the monumental war memorial arch.",
+        "hint": "Look closely at the monument's distinctive shape on the map.",
+        "source": "https://en.wikipedia.org/wiki/India_Gate",
+        "answer": "India Gate",
+        "center": [
+          77.22951,
+          28.61291
+        ],
+        "zoom": 17,
+        "selection": "markers",
+        "choices": [
+          {
+            "id": "india-gate",
+            "name": "India Gate",
+            "lat": 28.61291,
+            "lng": 77.22951
+          },
+          {
+            "id": "map-point-6-north",
+            "name": "Map point north",
+            "lat": 28.61431,
+            "lng": 77.23
+          },
+          {
+            "id": "map-point-6-south",
+            "name": "Map point south",
+            "lat": 28.61151,
+            "lng": 77.22902
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "atlas20-18-taj-mahal",
+    "title": "Marble Wonder of Agra",
+    "description": "Follow seven map clues to Taj Mahal in Agra.",
+    "countryIso3": "IND",
+    "status": "published",
+    "publishDate": null,
+    "difficulty": "standard",
+    "stages": [
+      {
+        "level": 0,
+        "label": "Country",
+        "clue": "A white marble mausoleum was built by an emperor in memory of his wife.",
+        "hint": "Consider the landmark's architecture, history and country.",
+        "source": "https://en.wikipedia.org/wiki/Taj_Mahal",
+        "answer": "India",
+        "center": [
+          0,
+          22
+        ],
+        "zoom": 2.1,
+        "selection": "country",
+        "choices": []
+      },
+      {
+        "level": 1,
+        "label": "State / Region",
+        "clue": "The destination is in a northern Indian state crossed by the Ganges.",
+        "hint": "Think about the administrative region around this destination.",
+        "source": "https://en.wikipedia.org/wiki/Taj_Mahal",
+        "answer": "Uttar Pradesh",
+        "center": [
+          78.04214,
+          27.17514
+        ],
+        "zoom": 5.5,
+        "selection": "markers",
+        "choices": [
+          {
+            "id": "delhi",
+            "name": "Delhi",
+            "lat": 28.61,
+            "lng": 77.21
+          },
+          {
+            "id": "maharashtra",
+            "name": "Maharashtra",
+            "lat": 19.08,
+            "lng": 72.88
+          },
+          {
+            "id": "uttar-pradesh",
+            "name": "Uttar Pradesh",
+            "lat": 27.17514,
+            "lng": 78.04214
+          }
+        ]
+      },
+      {
+        "level": 2,
+        "label": "City",
+        "clue": "The city sits beside the Yamuna River and is famous for Mughal monuments.",
+        "hint": "Think about the main city associated with the landmark.",
+        "source": "https://en.wikipedia.org/wiki/Taj_Mahal",
+        "answer": "Agra",
+        "center": [
+          78.04214,
+          27.17514
+        ],
+        "zoom": 9,
+        "selection": "markers",
+        "choices": [
+          {
+            "id": "new-delhi",
+            "name": "New Delhi",
+            "lat": 28.61,
+            "lng": 77.21
+          },
+          {
+            "id": "mumbai",
+            "name": "Mumbai",
+            "lat": 19.08,
+            "lng": 72.88
+          },
+          {
+            "id": "agra",
+            "name": "Agra",
+            "lat": 27.17514,
+            "lng": 78.04214
+          }
+        ]
+      },
+      {
+        "level": 3,
+        "label": "Area",
+        "clue": "The mausoleum is near the city's eastern riverbank.",
+        "hint": "Use the map's administrative divisions and riverfront landmarks.",
+        "source": "https://en.wikipedia.org/wiki/Taj_Mahal",
+        "answer": "Tajganj",
+        "center": [
+          78.04214,
+          27.17514
+        ],
+        "zoom": 11.5,
+        "selection": "markers",
+        "choices": [
+          {
+            "id": "tajganj",
+            "name": "Tajganj",
+            "lat": 27.17514,
+            "lng": 78.04214
+          },
+          {
+            "id": "map-point-3-north",
+            "name": "Map point north",
+            "lat": 27.200139999999998,
+            "lng": 78.05089000000001
+          },
+          {
+            "id": "map-point-3-south",
+            "name": "Map point south",
+            "lat": 27.15014,
+            "lng": 78.03339
+          }
+        ]
+      },
+      {
+        "level": 4,
+        "label": "District",
+        "clue": "The area is known for the gardens and complex surrounding the monument.",
+        "hint": "Zoom in and compare the nearby neighbourhoods.",
+        "source": "https://en.wikipedia.org/wiki/Taj_Mahal",
+        "answer": "Taj Mahal complex",
+        "center": [
+          78.04214,
+          27.17514
+        ],
+        "zoom": 13,
+        "selection": "markers",
+        "choices": [
+          {
+            "id": "taj-mahal-complex",
+            "name": "Taj Mahal complex",
+            "lat": 27.17514,
+            "lng": 78.04214
+          },
+          {
+            "id": "map-point-4-north",
+            "name": "Map point north",
+            "lat": 27.18414,
+            "lng": 78.04529000000001
+          },
+          {
+            "id": "map-point-4-south",
+            "name": "Map point south",
+            "lat": 27.16614,
+            "lng": 78.03899
+          }
+        ]
+      },
+      {
+        "level": 5,
+        "label": "Street",
+        "clue": "The eastern visitor approach leads toward the monument's gate.",
+        "hint": "Look for the main access road, square or approach.",
+        "source": "https://en.wikipedia.org/wiki/Taj_Mahal",
+        "answer": "Taj East Gate Road",
+        "center": [
+          78.04214,
+          27.17514
+        ],
+        "zoom": 15,
+        "selection": "markers",
+        "choices": [
+          {
+            "id": "taj-east-gate-road",
+            "name": "Taj East Gate Road",
+            "lat": 27.17514,
+            "lng": 78.04214
+          },
+          {
+            "id": "map-point-5-north",
+            "name": "Map point north",
+            "lat": 27.178639999999998,
+            "lng": 78.04336500000001
+          },
+          {
+            "id": "map-point-5-south",
+            "name": "Map point south",
+            "lat": 27.17164,
+            "lng": 78.040915
+          }
+        ]
+      },
+      {
+        "level": 6,
+        "label": "Building",
+        "clue": "Select the symmetrical white-marble mausoleum.",
+        "hint": "Look closely at the monument's distinctive shape on the map.",
+        "source": "https://en.wikipedia.org/wiki/Taj_Mahal",
+        "answer": "Taj Mahal",
+        "center": [
+          78.04214,
+          27.17514
+        ],
+        "zoom": 17,
+        "selection": "markers",
+        "choices": [
+          {
+            "id": "taj-mahal",
+            "name": "Taj Mahal",
+            "lat": 27.17514,
+            "lng": 78.04214
+          },
+          {
+            "id": "map-point-6-north",
+            "name": "Map point north",
+            "lat": 27.17654,
+            "lng": 78.04263
+          },
+          {
+            "id": "map-point-6-south",
+            "name": "Map point south",
+            "lat": 27.17374,
+            "lng": 78.04165
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "atlas20-19-christ-the-redeemer",
+    "title": "Summit Above Rio",
+    "description": "Follow seven map clues to Christ the Redeemer in Rio de Janeiro.",
+    "countryIso3": "BRA",
+    "status": "published",
+    "publishDate": null,
+    "difficulty": "standard",
+    "stages": [
+      {
+        "level": 0,
+        "label": "Country",
+        "clue": "An Art Deco statue with outstretched arms overlooks a coastal metropolis.",
+        "hint": "Consider the landmark's architecture, history and country.",
+        "source": "https://en.wikipedia.org/wiki/Christ_the_Redeemer_(statue)",
+        "answer": "Brazil",
+        "center": [
+          0,
+          22
+        ],
+        "zoom": 2.1,
+        "selection": "country",
+        "choices": []
+      },
+      {
+        "level": 1,
+        "label": "State / Region",
+        "clue": "The landmark is in a southeastern Brazilian state.",
+        "hint": "Think about the administrative region around this destination.",
+        "source": "https://en.wikipedia.org/wiki/Christ_the_Redeemer_(statue)",
+        "answer": "Rio de Janeiro",
+        "center": [
+          -43.21049,
+          -22.95192
+        ],
+        "zoom": 5.5,
+        "selection": "markers",
+        "choices": [
+          {
+            "id": "s-o-paulo",
+            "name": "São Paulo",
+            "lat": -23.55,
+            "lng": -46.63
+          },
+          {
+            "id": "bahia",
+            "name": "Bahia",
+            "lat": -12.97,
+            "lng": -38.5
+          },
+          {
+            "id": "rio-de-janeiro",
+            "name": "Rio de Janeiro",
+            "lat": -22.95192,
+            "lng": -43.21049
+          }
+        ]
+      },
+      {
+        "level": 2,
+        "label": "City",
+        "clue": "The city is famous for Carnival and dramatic coastal mountains.",
+        "hint": "Think about the main city associated with the landmark.",
+        "source": "https://en.wikipedia.org/wiki/Christ_the_Redeemer_(statue)",
+        "answer": "Rio de Janeiro",
+        "center": [
+          -43.21049,
+          -22.95192
+        ],
+        "zoom": 9,
+        "selection": "markers",
+        "choices": [
+          {
+            "id": "s-o-paulo",
+            "name": "São Paulo",
+            "lat": -23.55,
+            "lng": -46.63
+          },
+          {
+            "id": "salvador",
+            "name": "Salvador",
+            "lat": -12.97,
+            "lng": -38.5
+          },
+          {
+            "id": "rio-de-janeiro",
+            "name": "Rio de Janeiro",
+            "lat": -22.95192,
+            "lng": -43.21049
+          }
+        ]
+      },
+      {
+        "level": 3,
+        "label": "Area",
+        "clue": "The monument rises above the city's southern districts.",
+        "hint": "Use the map's administrative divisions and riverfront landmarks.",
+        "source": "https://en.wikipedia.org/wiki/Christ_the_Redeemer_(statue)",
+        "answer": "South Zone",
+        "center": [
+          -43.21049,
+          -22.95192
+        ],
+        "zoom": 11.5,
+        "selection": "markers",
+        "choices": [
+          {
+            "id": "south-zone",
+            "name": "South Zone",
+            "lat": -22.95192,
+            "lng": -43.21049
+          },
+          {
+            "id": "map-point-3-north",
+            "name": "Map point north",
+            "lat": -22.926920000000003,
+            "lng": -43.20174
+          },
+          {
+            "id": "map-point-3-south",
+            "name": "Map point south",
+            "lat": -22.97692,
+            "lng": -43.21924
+          }
+        ]
+      },
+      {
+        "level": 4,
+        "label": "District",
+        "clue": "The access route begins near a historic residential neighbourhood.",
+        "hint": "Zoom in and compare the nearby neighbourhoods.",
+        "source": "https://en.wikipedia.org/wiki/Christ_the_Redeemer_(statue)",
+        "answer": "Cosme Velho",
+        "center": [
+          -43.21049,
+          -22.95192
+        ],
+        "zoom": 13,
+        "selection": "markers",
+        "choices": [
+          {
+            "id": "cosme-velho",
+            "name": "Cosme Velho",
+            "lat": -22.95192,
+            "lng": -43.21049
+          },
+          {
+            "id": "map-point-4-north",
+            "name": "Map point north",
+            "lat": -22.94292,
+            "lng": -43.20734
+          },
+          {
+            "id": "map-point-4-south",
+            "name": "Map point south",
+            "lat": -22.96092,
+            "lng": -43.21364
+          }
+        ]
+      },
+      {
+        "level": 5,
+        "label": "Street",
+        "clue": "The winding road climbs the mountain to the summit.",
+        "hint": "Look for the main access road, square or approach.",
+        "source": "https://en.wikipedia.org/wiki/Christ_the_Redeemer_(statue)",
+        "answer": "Estrada do Corcovado",
+        "center": [
+          -43.21049,
+          -22.95192
+        ],
+        "zoom": 15,
+        "selection": "markers",
+        "choices": [
+          {
+            "id": "estrada-do-corcovado",
+            "name": "Estrada do Corcovado",
+            "lat": -22.95192,
+            "lng": -43.21049
+          },
+          {
+            "id": "map-point-5-north",
+            "name": "Map point north",
+            "lat": -22.948420000000002,
+            "lng": -43.209265
+          },
+          {
+            "id": "map-point-5-south",
+            "name": "Map point south",
+            "lat": -22.95542,
+            "lng": -43.211715
+          }
+        ]
+      },
+      {
+        "level": 6,
+        "label": "Building",
+        "clue": "Select the monumental statue with outstretched arms.",
+        "hint": "Look closely at the monument's distinctive shape on the map.",
+        "source": "https://en.wikipedia.org/wiki/Christ_the_Redeemer_(statue)",
+        "answer": "Christ the Redeemer",
+        "center": [
+          -43.21049,
+          -22.95192
+        ],
+        "zoom": 17,
+        "selection": "markers",
+        "choices": [
+          {
+            "id": "christ-the-redeemer",
+            "name": "Christ the Redeemer",
+            "lat": -22.95192,
+            "lng": -43.21049
+          },
+          {
+            "id": "map-point-6-north",
+            "name": "Map point north",
+            "lat": -22.95052,
+            "lng": -43.21
+          },
+          {
+            "id": "map-point-6-south",
+            "name": "Map point south",
+            "lat": -22.95332,
+            "lng": -43.21098
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "atlas20-20-burj-khalifa",
+    "title": "Dubai's Skyward Giant",
+    "description": "Follow seven map clues to Burj Khalifa in Dubai.",
+    "countryIso3": "ARE",
+    "status": "published",
+    "publishDate": null,
+    "difficulty": "standard",
+    "stages": [
+      {
+        "level": 0,
+        "label": "Country",
+        "clue": "A skyscraper holds records for its extraordinary height and mixed-use design.",
+        "hint": "Consider the landmark's architecture, history and country.",
+        "source": "https://en.wikipedia.org/wiki/Burj_Khalifa",
+        "answer": "United Arab Emirates",
+        "center": [
+          0,
+          22
+        ],
+        "zoom": 2.1,
+        "selection": "country",
+        "choices": []
+      },
+      {
+        "level": 1,
+        "label": "State / Region",
+        "clue": "The landmark is in an emirate known for rapid modern development.",
+        "hint": "Think about the administrative region around this destination.",
+        "source": "https://en.wikipedia.org/wiki/Burj_Khalifa",
+        "answer": "Dubai",
+        "center": [
+          55.28144,
+          25.19216
+        ],
+        "zoom": 5.5,
+        "selection": "markers",
+        "choices": [
+          {
+            "id": "abu-dhabi",
+            "name": "Abu Dhabi",
+            "lat": 24.45,
+            "lng": 54.37
+          },
+          {
+            "id": "sharjah",
+            "name": "Sharjah",
+            "lat": 25.35,
+            "lng": 55.39
+          },
+          {
+            "id": "dubai",
+            "name": "Dubai",
+            "lat": 25.19216,
+            "lng": 55.28144
+          }
+        ]
+      },
+      {
+        "level": 2,
+        "label": "City",
+        "clue": "The city is a major international hub on the Persian Gulf.",
+        "hint": "Think about the main city associated with the landmark.",
+        "source": "https://en.wikipedia.org/wiki/Burj_Khalifa",
+        "answer": "Dubai",
+        "center": [
+          55.28144,
+          25.19216
+        ],
+        "zoom": 9,
+        "selection": "markers",
+        "choices": [
+          {
+            "id": "abu-dhabi",
+            "name": "Abu Dhabi",
+            "lat": 24.45,
+            "lng": 54.37
+          },
+          {
+            "id": "sharjah",
+            "name": "Sharjah",
+            "lat": 25.35,
+            "lng": 55.39
+          },
+          {
+            "id": "dubai",
+            "name": "Dubai",
+            "lat": 25.19216,
+            "lng": 55.28144
+          }
+        ]
+      },
+      {
+        "level": 3,
+        "label": "Area",
+        "clue": "The tower stands in a master-planned central development.",
+        "hint": "Use the map's administrative divisions and riverfront landmarks.",
+        "source": "https://en.wikipedia.org/wiki/Burj_Khalifa",
+        "answer": "Downtown Dubai",
+        "center": [
+          55.28144,
+          25.19216
+        ],
+        "zoom": 11.5,
+        "selection": "markers",
+        "choices": [
+          {
+            "id": "downtown-dubai",
+            "name": "Downtown Dubai",
+            "lat": 25.19216,
+            "lng": 55.28144
+          },
+          {
+            "id": "map-point-3-north",
+            "name": "Map point north",
+            "lat": 25.21716,
+            "lng": 55.29019
+          },
+          {
+            "id": "map-point-3-south",
+            "name": "Map point south",
+            "lat": 25.167160000000003,
+            "lng": 55.272690000000004
+          }
+        ]
+      },
+      {
+        "level": 4,
+        "label": "District",
+        "clue": "The neighbourhood shares its name with the landmark's district.",
+        "hint": "Zoom in and compare the nearby neighbourhoods.",
+        "source": "https://en.wikipedia.org/wiki/Burj_Khalifa",
+        "answer": "Burj Khalifa district",
+        "center": [
+          55.28144,
+          25.19216
+        ],
+        "zoom": 13,
+        "selection": "markers",
+        "choices": [
+          {
+            "id": "burj-khalifa-district",
+            "name": "Burj Khalifa district",
+            "lat": 25.19216,
+            "lng": 55.28144
+          },
+          {
+            "id": "map-point-4-north",
+            "name": "Map point north",
+            "lat": 25.20116,
+            "lng": 55.28459
+          },
+          {
+            "id": "map-point-4-south",
+            "name": "Map point south",
+            "lat": 25.18316,
+            "lng": 55.278290000000005
+          }
+        ]
+      },
+      {
+        "level": 5,
+        "label": "Street",
+        "clue": "The boulevard is named after a former ruler of the emirate.",
+        "hint": "Look for the main access road, square or approach.",
+        "source": "https://en.wikipedia.org/wiki/Burj_Khalifa",
+        "answer": "Sheikh Mohammed bin Rashid Boulevard",
+        "center": [
+          55.28144,
+          25.19216
+        ],
+        "zoom": 15,
+        "selection": "markers",
+        "choices": [
+          {
+            "id": "sheikh-mohammed-bin-rashid-boulevard",
+            "name": "Sheikh Mohammed bin Rashid Boulevard",
+            "lat": 25.19216,
+            "lng": 55.28144
+          },
+          {
+            "id": "map-point-5-north",
+            "name": "Map point north",
+            "lat": 25.19566,
+            "lng": 55.282665
+          },
+          {
+            "id": "map-point-5-south",
+            "name": "Map point south",
+            "lat": 25.188660000000002,
+            "lng": 55.280215000000005
+          }
+        ]
+      },
+      {
+        "level": 6,
+        "label": "Building",
+        "clue": "Select the supertall tapering skyscraper.",
+        "hint": "Look closely at the monument's distinctive shape on the map.",
+        "source": "https://en.wikipedia.org/wiki/Burj_Khalifa",
+        "answer": "Burj Khalifa",
+        "center": [
+          55.28144,
+          25.19216
+        ],
+        "zoom": 17,
+        "selection": "markers",
+        "choices": [
+          {
+            "id": "burj-khalifa",
+            "name": "Burj Khalifa",
+            "lat": 25.19216,
+            "lng": 55.28144
+          },
+          {
+            "id": "map-point-6-north",
+            "name": "Map point north",
+            "lat": 25.19356,
+            "lng": 55.28193
+          },
+          {
+            "id": "map-point-6-south",
+            "name": "Map point south",
+            "lat": 25.19076,
+            "lng": 55.280950000000004
+          }
+        ]
+      }
+    ]
+  }
+]

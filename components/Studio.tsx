@@ -20,7 +20,8 @@ export default function Studio(){
     const response=await fetch('/api/admin/challenges',{cache:'no-store'});const data=await response.json();
     if(!response.ok)throw new Error(data.error||'Unable to access challenge studio.');
     setList(data.challenges);
-    setDraft(prev=>prev?data.challenges.find((c:Challenge)=>c.id===prev.id)||prev:null);
+    // Preserve local edits; refreshing the library must not overwrite unsaved changes.
+    setDraft(prev=>prev||null);
   };
   useEffect(()=>{if(!supabase)return;supabase.auth.getUser().then(({data})=>{if(data.user?.email)setUser(data.user.email)});const {data:{subscription}}=supabase.auth.onAuthStateChange((_ev,s)=>setUser(s?.user.email||''));return()=>subscription.unsubscribe()},[]);
   useEffect(()=>{if(!user)return;void getLibrary().catch(e=>setError(e.message))},[user]);
@@ -35,7 +36,7 @@ export default function Studio(){
     if(!draft)return;setSaving(true);setError('');setSuccess('');
     try{const response=await fetch('/api/admin/challenges',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(draft)});
       const body=await response.json();if(!response.ok)throw new Error(body.details?.join('\n')||body.error||'Save failed');
-      setSuccess('Saved successfully. '+(draft.status==='published'?'Added to the daily rotation pool.':'Draft saved privately.'));
+      setSuccess('Saved successfully. '+(draft.status==='published'?'Published challenge updated in Supabase and available for future daily rotation.':'Draft saved privately.'));
       const id=body.id;setDraft(p=>p?{...p,id}:p);await getLibrary();
     }catch(e){setError(e instanceof Error?e.message:'Save failed')}
     finally{setSaving(false)}
@@ -73,7 +74,7 @@ export default function Studio(){
     </aside><section className="studio-main">
       {!draft?<div className="studio-empty"><h2>Prepare the next expedition.</h2><p>Select a challenge on the left, or start from the London template to create your own.</p><button className="primary-action" onClick={()=>duplicate()}><Copy size={17}/> Create challenge</button></div>:<>
       <div className="studio-toolbar" style={{justifyContent:'space-between'}}><span className="studio-stat">{draft.id}</span><div className="studio-toolbar"><button onClick={exportJSON}><Download size={15}/> Export</button><button onClick={()=>importFile.current?.click()}><Upload size={15}/> Import</button><input ref={importFile} type="file" accept=".json,application/json" hidden onChange={e=>void importJSON(e.target.files?.[0])}/><button onClick={()=>duplicate(draft)}><Copy size={15}/> Duplicate</button></div></div>
-      <h2 style={{marginTop:22}}>Edit your challenge</h2><p className="studio-subtitle">Changes are saved to Supabase only when you choose Save. Publishing adds this challenge to the random daily pool. A puzzle will not repeat until every eligible published puzzle has appeared.</p>
+      <h2 style={{marginTop:22}}>{draft.status==='published'?'Edit published challenge':'Edit your challenge'}</h2><p className="studio-subtitle">You can edit published challenges directly. Update the clue, hint, correct answer or map choices and click Save to update Supabase. Avoid changing an already-live challenge while players are completing it. Publishing adds new challenges to the random daily pool.</p>
       <div className="studio-grid">
         <div className="studio-field"><label>Challenge title</label><input value={draft.title} maxLength={120} onChange={e=>modify('title',e.target.value)}/></div>
         <div className="studio-field"><label>Country ISO3</label><input value={draft.countryIso3} maxLength={3} onChange={e=>modify('countryIso3',e.target.value.toUpperCase())} placeholder="GBR or USA"/></div>
@@ -84,8 +85,8 @@ export default function Studio(){
       <div className="studio-eyebrow" style={{marginTop:25}}>THE SEVEN STAGES</div><div className="stage-tabs">{draft.stages.map((v,i)=><button title={v.label} key={i} className={tab===i?'active':''} onClick={()=>setTab(i)}>{String(i+1).padStart(2,'0')}</button>)}</div>
       <div className="studio-stage" key={tab}><h3>Stage {tab+1}: {draft.stages[tab].label}</h3><p className="studio-subtitle">Select an appropriate geographic level. Players must identify the place from the statement, not from the map camera.</p>
         <div className="studio-field"><label>Correct answer</label><input value={draft.stages[tab].answer} onChange={e=>modifyStage('answer',e.target.value)}/></div>
-        <div className="studio-field"><label>Fact-checked statement</label><textarea rows={3} value={draft.stages[tab].clue} onChange={e=>modifyStage('clue',e.target.value)}/></div>
-        <div className="studio-field"><label>Hint (costs points, never hearts)</label><input value={draft.stages[tab].hint} onChange={e=>modifyStage('hint',e.target.value)}/></div>
+        <div className="studio-field"><label>Player-facing clue — never reveal the answer</label><textarea rows={3} value={draft.stages[tab].clue} onChange={e=>modifyStage('clue',e.target.value)}/></div>
+        <div className="studio-field"><label>Optional hint — give a nudge, not the answer</label><input value={draft.stages[tab].hint} onChange={e=>modifyStage('hint',e.target.value)}/></div>
         <div className="studio-field"><label>HTTPS evidence / source link</label><input type="url" value={draft.stages[tab].source} onChange={e=>modifyStage('source',e.target.value)}/></div>
         <div className="studio-grid"><div className="studio-field"><label>Camera longitude</label><input type="number" step="any" value={draft.stages[tab].center[0]} onChange={e=>modifyStage('center',[Number(e.target.value),draft.stages[tab].center[1]])}/></div>
           <div className="studio-field"><label>Camera latitude</label><input type="number" step="any" value={draft.stages[tab].center[1]} onChange={e=>modifyStage('center',[draft.stages[tab].center[0],Number(e.target.value)])}/></div></div>
