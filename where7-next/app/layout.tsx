@@ -1,6 +1,0 @@
-import type {Metadata,Viewport} from 'next';
-import './globals.css';
-import 'maplibre-gl/dist/maplibre-gl.css';
-export const metadata:Metadata={title:'WHERE7 — Seven clues. One place.',description:'A daily map mystery. Trace the world down to a single building in seven guesses.',applicationName:'WHERE7',openGraph:{title:'WHERE7 — The Daily Geography Mystery',description:'Seven clues. Seven hearts. One destination.',type:'website'}};
-export const viewport:Viewport={width:'device-width',initialScale:1,themeColor:'#061522'};
-export default function RootLayout({children}:{children:React.ReactNode}){return <html lang="en"><body>{children}</body></html>}

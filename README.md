@@ -176,5 +176,3 @@ A purely local HTML page can have a *visual* admin interface and store progress 
 - **geoBoundaries `gbOpen`**: CC BY 4.0, https://www.geoboundaries.org/ (attribution shown when layer is active).
 - **OpenStreetMap** contributors and **CARTO** basemap: attribution in map controls; follow provider terms.
 - All included demo clues have editable source URLs; these are reference aids, not guarantees of accuracy.
-#   w h e r e 7  
- 

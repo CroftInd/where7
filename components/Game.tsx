@@ -26,7 +26,7 @@ export default function Game(){
     catch(e){setError(e instanceof Error?e.message:'Unable to load game');}
     finally{setLoading(false)}
   };
-  useEffect(()=>{void load('daily','london')},[]);
+  useEffect(()=>{const params=new URLSearchParams(window.location.search);const initialMode=params.get('mode')==='practice'?'practice':'daily';const initialId=params.get('challenge')||'london';setMode(initialMode);setChallenge(initialId);void load(initialMode,initialId)},[]);
   useEffect(()=>{Promise.all(['/world-countries.geojson','/microstates.geojson'].map(url=>fetch(url).then(r=>r.json()))).then(data=>{
     const names=[...new Set(data.flatMap((f:{features:{properties:{name:string}}[]})=>f.features.map(v=>v.properties.name)))].sort((a,b)=>a.localeCompare(b));setCountries(names);
   }).catch(()=>{})},[]);
@@ -82,6 +82,8 @@ export default function Game(){
         <button type="button" className="sound-button" title="Toggle sound" onClick={()=>setSound(v=>!v)} aria-label={sound?'Mute sounds':'Enable sounds'}>{sound?<Volume2 size={19}/>:<VolumeX size={19}/>}</button>
         <button type="button" className="header-link" onClick={()=>setShowHow(true)}><Info size={17}/><span>How to play</span></button>
         <Link className="header-link" href="/leaderboard" aria-label="Open daily leaderboard"><Trophy size={17}/><span>Leaderboard</span></Link>
+        <Link className="header-link" href="/stats" aria-label="Open explorer statistics"><Target size={17}/><span>My stats</span></Link>
+        <Link className="header-link" href="/archive" aria-label="Open challenge archive"><BookOpen size={17}/><span>Archive</span></Link>
         <Link className="admin-link" href="/admin" aria-label="Open Challenge Studio"><Settings2 size={18}/><span>Studio</span></Link>
       </nav>
     </header>

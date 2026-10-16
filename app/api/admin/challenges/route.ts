@@ -19,7 +19,7 @@ export async function POST(req:Request){
   const parsed=validateChallenge(body);if(!parsed.valid)return NextResponse.json({error:'Invalid challenge',details:parsed.errors},{status:400});
   const v=parsed.value;
   const id=v.id&&/^[-a-z0-9]{3,64}$/.test(v.id)?v.id:`custom-${crypto.randomUUID()}`;
-  if(v.status==='published'&&!v.publishDate)return NextResponse.json({error:'Published challenges need a date.'},{status:400});
+  // Published challenges without a date join the random daily rotation pool.
   if(v.status==='published'&&v.stages.some(s=>!s.source||s.choices.length<3&&s.level>0))return NextResponse.json({error:'Please complete and source all stages before publishing.'},{status:400});
   const {error}=await db.from('challenges').upsert({id,title:v.title,description:v.description||'',country_iso3:v.countryIso3,
     status:v.status,difficulty:v.difficulty||'standard',publish_date:v.publishDate||null,stages:v.stages,updated_at:new Date().toISOString()});
