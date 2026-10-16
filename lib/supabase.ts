@@ -13,7 +13,21 @@ export function serviceDb(){
 export async function authClient(){
   if(!url||!anon)return null;
   const jar=await cookies();
-  return createServerClient(url,anon,{cookies:{getAll(){return jar.getAll()},setAll(changes){
+  return createServerClient(url,anon,{cookies:{getAll(){return jar.getAll()},setAll(
+  changes: {
+    name: string;
+    value: string;
+    options?: Parameters<typeof jar.set>[2];
+  }[]
+) {
+  try {
+    changes.forEach(({ name, value, options }) =>
+      jar.set(name, value, options)
+    );
+  } catch {
+    // Read-only Server Component.
+  }
+}
     try{changes.forEach(({name,value,options})=>jar.set(name,value,options))}catch{/* read-only server component */}
   }}});
 }
