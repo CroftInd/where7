@@ -32,7 +32,6 @@ export default function MapCanvas({stage,disabled=false,onSelect,pickMode=false,
     import('maplibre-gl').then(mod=>{
       if(stopped||!holder.current)return;
       const gl=mod.default;
-      if(!gl.supported()){setMapError('WebGL is unavailable in this browser. Enable hardware acceleration or try another browser.');return;}
       // CARTO Voyager is a vector style. The raster style is retained only as
       // an automatic fallback if CARTO's style endpoint is unreachable.
       const fallbackStyle:StyleSpecification={version:8,
