@@ -1,16 +1,14 @@
 import {NextResponse} from 'next/server';
-import {cookies} from 'next/headers';
+import {playerKey,currentAccount,ensureProfile} from '@/lib/player';
 import {selectChallenge,readSession,saveSession,restartPractice,cloudReady} from '@/lib/store';
 import {guess,useHint,abandon,publicGame} from '@/lib/engine';
 import type {Session} from '@/lib/types';
 
 export const dynamic='force-dynamic';
 async function guestKey(){
-  const jar=await cookies();let token=jar.get('where7_guest')?.value;
-  if(!token||!/^[0-9a-f-]{36}$/.test(token)){
-    token=crypto.randomUUID();jar.set('where7_guest',token,{httpOnly:true,secure:process.env.NODE_ENV==='production',sameSite:'lax',path:'/',maxAge:60*60*24*365});
-  }
-  return token;
+  const account=await currentAccount();
+  if(account)await ensureProfile(account.id,account.email);
+  return playerKey();
 }
 function modeAndId(url:URL,body?:Record<string,unknown>){
   const mode=(body?.mode||url.searchParams.get('mode'))==='practice'?'practice':'daily' as Session['mode'];

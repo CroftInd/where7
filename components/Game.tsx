@@ -2,7 +2,7 @@
 import {useEffect,useRef,useState} from 'react';
 import Link from 'next/link';
 import dynamic from 'next/dynamic';
-import {Map,Settings2,Compass,Heart,HeartCrack,Flame,Sparkles,Lightbulb,Flag,Share2,RotateCcw,Check,Lock,ChevronDown,Volume2,VolumeX,Info,ExternalLink,ArrowRight,Trophy,Target,Clock,Menu,Play,X,BookOpen} from 'lucide-react';
+import {Map,Settings2,Compass,CircleHelp,HelpCircle,Flame,Sparkles,Lightbulb,Flag,Share2,RotateCcw,Check,Lock,ChevronDown,Volume2,VolumeX,Info,ExternalLink,ArrowRight,Trophy,Target,Clock,Menu,Play,X,BookOpen} from 'lucide-react';
 import type {PublicGame} from '@/lib/types';
 const MapCanvas=dynamic(()=>import('./MapCanvas'),{ssr:false,loading:()=> <div className="map-loading"><div className="loading-orb"/>Preparing your atlas…</div>});
 const STAGES=['COUNTRY','STATE / REGION','CITY','AREA','DISTRICT','STREET','BUILDING'];
@@ -57,7 +57,7 @@ export default function Game(){
         const right=Boolean(data.correct);setFeedback(right?'right':'wrong');playTone(right);
         if(data.game.hearts<prevLives.current){setBreaking(prevLives.current-1);setTimeout(()=>setBreaking(null),670)}
         prevLives.current=data.game.hearts;
-        setToast(right?`✦ ${answer} — location confirmed`:`${answer} isn't correct · ${data.game.hearts} hearts left`);
+        setToast(right?`✦ ${answer} — location confirmed`:`${answer} isn't correct · ${data.game.hearts} chances left`);
       }
       if(kind==='hint')setToast('Field note opened · 125-point deduction if correct');
       if(kind==='restart'){prevLives.current=7;setToast('Practice expedition restarted');}
@@ -91,6 +91,7 @@ export default function Game(){
         <button type="button" className="sound-button" title="Toggle sound" onClick={()=>setSound(v=>!v)} aria-label={sound?'Mute sounds':'Enable sounds'}>{sound?<Volume2 size={19}/>:<VolumeX size={19}/>}</button>
         <button type="button" className="header-link" onClick={()=>setShowHow(true)}><Info size={17}/><span>How to play</span></button>
         <Link className="header-link" href="/leaderboard" aria-label="Open daily leaderboard"><Trophy size={17}/><span>Leaderboard</span></Link>
+        <Link className="header-link" href="/account"><span>Account</span></Link>
         <Link className="header-link" href="/stats" aria-label="Open explorer statistics"><Target size={17}/><span>My stats</span></Link>
         <Link className="header-link" href="/archive" aria-label="Open challenge archive"><BookOpen size={17}/><span>Archive</span></Link>
       </nav>
@@ -104,9 +105,9 @@ export default function Game(){
           <div className="stage-meta"><span>STEP {String(Math.min((game?.stage||0)+1,7)).padStart(2,'0')} / 07</span><span><Target size={13}/> DESTINATION UNKNOWN</span></div>
           <div className="progress-track" aria-label="Stage progress">{STAGES.map((v,i)=><div key={v} className={i<(game?.stage||0)?'done':i===(game?.stage||0)?'active':''}/>)}</div>
           <div className={`heart-container ${breaking!==null?'heart-loss':''}`}>
-            <span className="heart-caption">LIVES <small>· ONE PER GUESS</small></span>
-            <div className="heart-row">{Array.from({length:7},(_,i)=><span key={i} className={`heart-unit ${i<(game?.hearts??7)?'alive':'spent'} ${i===breaking?'breaking':''}`} title={`Life ${i+1}`}>
-              {i<(game?.hearts??7)?<Heart fill="currentColor" size={20}/>:<HeartCrack size={20}/>}</span>)}</div>
+            <span className="heart-caption">CHANCES <small>· ONE PER GUESS</small></span>
+            <div className="heart-row">{Array.from({length:7},(_,i)=><span key={i} className={`heart-unit ${i<(game?.hearts??7)?'alive':'spent'} ${i===breaking?'breaking':''}`} title={`Chance ${i+1}`}>
+              {i<(game?.hearts??7)?<CircleHelp size={20}/>:<HelpCircle size={20}/>}</span>)}</div>
             <strong className="heart-count">{game?.hearts??7} / 7</strong>
           </div>
           <div className="heart-helper">A flawless run is the only way to reach the final building.</div>
@@ -134,7 +135,7 @@ export default function Game(){
           <div className="mission-bottom">
             <div className="places-title"><span>⌁ PLACES DISCOVERED</span><span>WORLD ↗ DESTINATION</span></div>
             <div className="discovered-trail">{game?.path.length?<>{game.path.map((v,i)=><span key={i} className="path-pill">{v}<ArrowRight size={11}/></span>)}</>:<span>Your journey begins here</span>}</div>
-            <div className="mission-footer">Seven guesses, one destination: every answer costs a heart. Only a perfect run reaches the final building.</div>
+            <div className="mission-footer">Seven guesses, one destination: every guess uses a chance. Only a perfect run reaches the final building.</div>
           </div>
         </div>
       </aside>
@@ -143,12 +144,12 @@ export default function Game(){
         {showOptions&&<div className="mode-dropdown"><button onClick={()=>switchMode('daily')}><Compass size={15}/> Today's daily mystery</button><button onClick={()=>switchMode('practice','london')}>🇬🇧 Westminster practice</button><button onClick={()=>switchMode('practice','nyc')}>🇺🇸 Manhattan practice</button></div>}
       </div>
       <div className="map-status"><span className="ping"/>{game?.demo?'DEMO · LOCAL SERVER':'LIVE · VERIFIED SERVER'}<span>·</span><Clock size={12}/>{fmt(elapsed)}</div>
-      {toast&&<div className={`toast-message ${feedback||''}`} role="status">{feedback==='right'?<Check size={17}/>:feedback==='wrong'?<HeartCrack size={17}/>:<Sparkles size={17}/>} {toast}</div>}
+      {toast&&<div className={`toast-message ${feedback||''}`} role="status">{feedback==='right'?<Check size={17}/>:feedback==='wrong'?<HelpCircle size={17}/>:<Sparkles size={17}/>} {toast}</div>}
       {finished&&<div className="results-backdrop" role="dialog" aria-modal="true" aria-labelledby="results-title"><div className="results-dialog">
         <div className="result-halo"><Trophy size={42}/></div>
         <div className="eyebrow">{game?.status==='won'?'EXPEDITION COMPLETED':'EXPEDITION REPORT'}</div>
         <h2 id="results-title">{game?.status==='won'?'An extraordinary journey.':game?.status==='lost'?'Not quite the final destination.':'The journey ended.'}</h2>
-        <p>{game?.status==='won'?'Seven correct answers, seven hearts used, one amazing discovery.':'One or more incorrect guesses kept the final building out of reach. There is always another journey.'}</p>
+        <p>{game?.status==='won'?'Seven correct answers, seven chances used, one amazing discovery.':'One or more incorrect guesses kept the final building out of reach. There is always another journey.'}</p>
         <div className="result-metrics"><div><strong>{game?.score.toLocaleString()}</strong><span>POINTS</span></div><div><strong>{game?.stage} / 7</strong><span>DISCOVERED</span></div><div><strong>{fmt(elapsed)}</strong><span>TIME</span></div></div>
         <div className="result-stages">{STAGES.map((v,i)=><span title={v} key={i} className={i<(game?.stage||0)?'clear':'closed'}>{i<(game?.stage||0)?<Check size={16}/>:<Lock size={15}/>}</span>)}</div>
         <div className="results-path">{game?.path.join(' → ')||'No locations discovered yet'}</div>
@@ -158,7 +159,7 @@ export default function Game(){
           <button className="secondary-action" onClick={()=>switchMode('practice',game?.challengeId||'london')}><Play size={16}/> Practice</button></div>
         {mode==='practice'&&<button className="result-again" onClick={()=>void action('restart')}><RotateCcw size={15}/> Restart this practice puzzle</button>}
       </div></div>}
-      {showHow&&<div className="modal-scrim" role="dialog" aria-modal="true" aria-labelledby="how-title"><div className="how-modal"><button className="close-modal" aria-label="Close instructions" onClick={closeHow}><X size={19}/></button><div className="eyebrow"><BookOpen size={16}/> YOUR FIELD GUIDE</div><h2 id="how-title">Seven clues. One place.</h2><p>Begin with the entire world. Read each factual statement and select the correct location directly on the interactive map.</p><div className="how-lines"><div><Compass/><span>Correct answers reveal more specific locations.</span></div><div><Heart/><span>Every guess, right or wrong, uses one of seven hearts.</span></div><div><Trophy/><span>Only seven correct answers unlock the final building.</span></div><div><Lightbulb/><span>Hints cost points, but not hearts.</span></div></div><button className="primary-action" onClick={closeHow}>Begin expedition <ArrowRight size={17}/></button></div></div>}
+      {showHow&&<div className="modal-scrim" role="dialog" aria-modal="true" aria-labelledby="how-title"><div className="how-modal"><button className="close-modal" aria-label="Close instructions" onClick={closeHow}><X size={19}/></button><div className="eyebrow"><BookOpen size={16}/> YOUR FIELD GUIDE</div><h2 id="how-title">Seven clues. One place.</h2><p>Begin with the entire world. Read each factual statement and select the correct location directly on the interactive map.</p><div className="how-lines"><div><Compass/><span>Correct answers reveal more specific locations.</span></div><div><CircleHelp/><span>Every guess, right or wrong, uses one of seven chances.</span></div><div><Trophy/><span>Only seven correct answers unlock the final building.</span></div><div><Lightbulb/><span>Hints cost points, but not chances.</span></div></div><button className="primary-action" onClick={closeHow}>Begin expedition <ArrowRight size={17}/></button></div></div>}
     </div>
   </main>
 }

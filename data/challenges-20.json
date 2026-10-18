@@ -11,8 +11,8 @@
       {
         "level": 0,
         "label": "Country",
-        "clue": "A wrought-iron tower was built as the centrepiece of an 1889 world's fair.",
-        "hint": "Consider the landmark's architecture, history and country.",
+        "clue": "This European republic is known for its tricolour flag, vineyards and the language of Molière.",
+        "hint": "Think about the country's geography, history, language or national symbols.",
         "source": "https://en.wikipedia.org/wiki/Eiffel_Tower",
         "answer": "France",
         "center": [
@@ -241,8 +241,8 @@
       {
         "level": 0,
         "label": "Country",
-        "clue": "This museum occupies a former royal palace and is famous for a portrait with an enigmatic smile.",
-        "hint": "Consider the landmark's architecture, history and country.",
+        "clue": "This European country borders both the Atlantic Ocean and the Mediterranean Sea and is famed for haute cuisine.",
+        "hint": "Think about the country's geography, history, language or national symbols.",
         "source": "https://en.wikipedia.org/wiki/Louvre",
         "answer": "France",
         "center": [
@@ -471,8 +471,8 @@
       {
         "level": 0,
         "label": "Country",
-        "clue": "This ancient amphitheatre once hosted gladiatorial contests.",
-        "hint": "Consider the landmark's architecture, history and country.",
+        "clue": "This boot-shaped Mediterranean country contains the independent states of Vatican City and San Marino.",
+        "hint": "Think about the country's geography, history, language or national symbols.",
         "source": "https://en.wikipedia.org/wiki/Colosseum",
         "answer": "Italy",
         "center": [
@@ -701,8 +701,8 @@
       {
         "level": 0,
         "label": "Country",
-        "clue": "Coins tossed into this Baroque fountain are said to ensure a return visit.",
-        "hint": "Consider the landmark's architecture, history and country.",
+        "clue": "This European country includes the islands of Sicily and Sardinia and is associated with the ancient Roman Empire.",
+        "hint": "Think about the country's geography, history, language or national symbols.",
         "source": "https://en.wikipedia.org/wiki/Trevi_Fountain",
         "answer": "Italy",
         "center": [
@@ -931,8 +931,8 @@
       {
         "level": 0,
         "label": "Country",
-        "clue": "Construction of this basilica began in the 19th century and is still continuing.",
-        "hint": "Consider the landmark's architecture, history and country.",
+        "clue": "This Iberian country is famous for flamenco, tapas and the Camino de Santiago.",
+        "hint": "Think about the country's geography, history, language or national symbols.",
         "source": "https://en.wikipedia.org/wiki/Sagrada_Fam%C3%ADlia",
         "answer": "Spain",
         "center": [
@@ -1161,8 +1161,8 @@
       {
         "level": 0,
         "label": "Country",
-        "clue": "A historic post office building houses a famous clock associated with New Year's celebrations.",
-        "hint": "Consider the landmark's architecture, history and country.",
+        "clue": "This European kingdom occupies most of the Iberian Peninsula and has coastlines on the Atlantic and Mediterranean.",
+        "hint": "Think about the country's geography, history, language or national symbols.",
         "source": "https://en.wikipedia.org/wiki/Real_Casa_de_Correos",
         "answer": "Spain",
         "center": [
@@ -1391,8 +1391,8 @@
       {
         "level": 0,
         "label": "Country",
-        "clue": "This neoclassical monument once stood beside the division between East and West.",
-        "hint": "Consider the landmark's architecture, history and country.",
+        "clue": "This central European federal republic is known for Oktoberfest, engineering and the Rhine River.",
+        "hint": "Think about the country's geography, history, language or national symbols.",
         "source": "https://en.wikipedia.org/wiki/Brandenburg_Gate",
         "answer": "Germany",
         "center": [
@@ -1621,8 +1621,8 @@
       {
         "level": 0,
         "label": "Country",
-        "clue": "This parliamentary building has a prominent modern glass dome.",
-        "hint": "Consider the landmark's architecture, history and country.",
+        "clue": "This European country was reunified in 1990 after decades of division into eastern and western states.",
+        "hint": "Think about the country's geography, history, language or national symbols.",
         "source": "https://en.wikipedia.org/wiki/Reichstag_building",
         "answer": "Germany",
         "center": [
@@ -1851,8 +1851,8 @@
       {
         "level": 0,
         "label": "Country",
-        "clue": "A copper-clad statue was gifted by another country and holds a torch aloft.",
-        "hint": "Consider the landmark's architecture, history and country.",
+        "clue": "This North American federal republic has 50 states and borders Canada and Mexico.",
+        "hint": "Think about the country's geography, history, language or national symbols.",
         "source": "https://en.wikipedia.org/wiki/Statue_of_Liberty",
         "answer": "United States",
         "center": [
@@ -2081,8 +2081,8 @@
       {
         "level": 0,
         "label": "Country",
-        "clue": "A seated president is depicted inside a marble temple-like memorial.",
-        "hint": "Consider the landmark's architecture, history and country.",
+        "clue": "This North American country has a federal capital district and a flag with 50 stars.",
+        "hint": "Think about the country's geography, history, language or national symbols.",
         "source": "https://en.wikipedia.org/wiki/Lincoln_Memorial",
         "answer": "United States",
         "center": [
@@ -2311,8 +2311,8 @@
       {
         "level": 0,
         "label": "Country",
-        "clue": "A suspension bridge is famous for its orange-red colour and foggy setting.",
-        "hint": "Consider the landmark's architecture, history and country.",
+        "clue": "This country stretches from the Atlantic to the Pacific and includes Alaska and Hawaii.",
+        "hint": "Think about the country's geography, history, language or national symbols.",
         "source": "https://en.wikipedia.org/wiki/Golden_Gate_Bridge",
         "answer": "United States",
         "center": [
@@ -2541,8 +2541,8 @@
       {
         "level": 0,
         "label": "Country",
-        "clue": "A great clock bell lends its nickname to a famous Gothic Revival tower.",
-        "hint": "Consider the landmark's architecture, history and country.",
+        "clue": "This island country consists of England, Scotland, Wales and Northern Ireland.",
+        "hint": "Think about the country's geography, history, language or national symbols.",
         "source": "https://en.wikipedia.org/wiki/Big_Ben",
         "answer": "United Kingdom",
         "center": [
@@ -2771,8 +2771,8 @@
       {
         "level": 0,
         "label": "Country",
-        "clue": "A medieval fortress houses the Crown Jewels and stands beside a river.",
-        "hint": "Consider the landmark's architecture, history and country.",
+        "clue": "This European island nation has four constituent countries and a monarch as head of state.",
+        "hint": "Think about the country's geography, history, language or national symbols.",
         "source": "https://en.wikipedia.org/wiki/Tower_of_London",
         "answer": "United Kingdom",
         "center": [
@@ -3001,8 +3001,8 @@
       {
         "level": 0,
         "label": "Country",
-        "clue": "A Shinto shrine honours a former emperor and empress within a wooded sanctuary.",
-        "hint": "Consider the landmark's architecture, history and country.",
+        "clue": "This East Asian island country is known for Shinto shrines, bullet trains and cherry blossoms.",
+        "hint": "Think about the country's geography, history, language or national symbols.",
         "source": "https://en.wikipedia.org/wiki/Meiji_Shrine",
         "answer": "Japan",
         "center": [
@@ -3231,8 +3231,8 @@
       {
         "level": 0,
         "label": "Country",
-        "clue": "Twin towers house the headquarters of a major metropolitan government.",
-        "hint": "Consider the landmark's architecture, history and country.",
+        "clue": "This Pacific island nation has a rising-sun flag and is famous for its high-speed rail network.",
+        "hint": "Think about the country's geography, history, language or national symbols.",
         "source": "https://en.wikipedia.org/wiki/Tokyo_Metropolitan_Government_Building",
         "answer": "Japan",
         "center": [
@@ -3461,8 +3461,8 @@
       {
         "level": 0,
         "label": "Country",
-        "clue": "A performing arts venue is famous for its sail-like roof shells.",
-        "hint": "Consider the landmark's architecture, history and country.",
+        "clue": "This country is both a continent and a sovereign state, famous for kangaroos and the Great Barrier Reef.",
+        "hint": "Think about the country's geography, history, language or national symbols.",
         "source": "https://en.wikipedia.org/wiki/Sydney_Opera_House",
         "answer": "Australia",
         "center": [
@@ -3691,8 +3691,8 @@
       {
         "level": 0,
         "label": "Country",
-        "clue": "A sandstone memorial arch honours soldiers of the First World War.",
-        "hint": "Consider the landmark's architecture, history and country.",
+        "clue": "This South Asian country has a tricolour flag with a blue wheel and is the world's most populous democracy.",
+        "hint": "Think about the country's geography, history, language or national symbols.",
         "source": "https://en.wikipedia.org/wiki/India_Gate",
         "answer": "India",
         "center": [
@@ -3921,8 +3921,8 @@
       {
         "level": 0,
         "label": "Country",
-        "clue": "A white marble mausoleum was built by an emperor in memory of his wife.",
-        "hint": "Consider the landmark's architecture, history and country.",
+        "clue": "This South Asian republic is home to the Himalayas, the Ganges and many Mughal-era monuments.",
+        "hint": "Think about the country's geography, history, language or national symbols.",
         "source": "https://en.wikipedia.org/wiki/Taj_Mahal",
         "answer": "India",
         "center": [
@@ -4151,8 +4151,8 @@
       {
         "level": 0,
         "label": "Country",
-        "clue": "An Art Deco statue with outstretched arms overlooks a coastal metropolis.",
-        "hint": "Consider the landmark's architecture, history and country.",
+        "clue": "This South American country is famous for Carnival, samba and the Amazon rainforest.",
+        "hint": "Think about the country's geography, history, language or national symbols.",
         "source": "https://en.wikipedia.org/wiki/Christ_the_Redeemer_(statue)",
         "answer": "Brazil",
         "center": [
@@ -4381,8 +4381,8 @@
       {
         "level": 0,
         "label": "Country",
-        "clue": "A skyscraper holds records for its extraordinary height and mixed-use design.",
-        "hint": "Consider the landmark's architecture, history and country.",
+        "clue": "This federation of seven emirates lies on the Arabian Peninsula beside the Persian Gulf.",
+        "hint": "Think about the country's geography, history, language or national symbols.",
         "source": "https://en.wikipedia.org/wiki/Burj_Khalifa",
         "answer": "United Arab Emirates",
         "center": [

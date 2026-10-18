@@ -29,8 +29,15 @@ export async function selectChallenge(id:string|undefined,mode:'daily'|'practice
     const {data,error}=await db.rpc('where7_assign_daily_challenge',{target_day:date});
     if(error)throw new Error('Daily challenge selection failed: '+error.message+'. Apply supabase/random_daily_rotation.sql in Supabase SQL Editor.');
     const chosen=catalog.find(c=>c.id===data);
-    if(!chosen)throw new Error('Today’s assigned challenge is not available.');
-    return chosen;
+    if(chosen)return chosen;
+    // The geography RPC may have just composed and inserted a new challenge;
+    // reload it rather than relying on the pre-RPC catalog snapshot.
+    const {data:fresh,error:loadError}=await db.from('challenges')
+      .select('id,title,description,country_iso3,status,publish_date,difficulty,stages')
+      .eq('id',data).single();
+    if(loadError||!fresh)throw new Error('Today’s assigned challenge is not available.');
+    return {id:fresh.id,title:fresh.title,description:fresh.description||'',countryIso3:fresh.country_iso3,
+      status:fresh.status,publishDate:fresh.publish_date,difficulty:fresh.difficulty,stages:fresh.stages} as Challenge;
   }
   const published=catalog.filter(c=>c.status==='published');
   const candidates=published.length?published:seed;

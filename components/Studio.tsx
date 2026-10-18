@@ -1,103 +1,67 @@
 'use client';
-import {useEffect,useRef,useState} from 'react';
-import dynamic from 'next/dynamic';
-import Link from 'next/link';
+import {useEffect,useState} from 'react';
 import {createBrowserClient} from '@supabase/ssr';
-import {Settings2,ArrowLeft,ShieldCheck,Plus,Copy,Download,Upload,Trash2,Save,Eye,MapPin,LogIn,LogOut,Calendar,AlertTriangle,CheckCircle2,Lock,Check} from 'lucide-react';
-import type {Challenge,Stage,PublicStage,Choice} from '@/lib/types';
-const MapCanvas=dynamic(()=>import('./MapCanvas'),{ssr:false,loading:()=> <div className="map-loading">Loading map…</div>});
-const envReady=!!process.env.NEXT_PUBLIC_SUPABASE_URL&&!!process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-const supabase=envReady?createBrowserClient(process.env.NEXT_PUBLIC_SUPABASE_URL!,process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!):null;
-const blankStage=(i:number):Stage=>({level:i,label:['Country','State / Region','City','Area','District','Street','Building'][i],clue:'Write a verified geographic statement for this location.',hint:'Add a helpful hint here.',answer:i===0?'United Kingdom':'Example Location',source:'https://www.openstreetmap.org/',center:[-0.1278,51.5074],zoom:[2,4,7,10,12,14,17][i],selection:i===0?'country':i===1?'region':'markers',choices:i===0?[]:[{id:'1',name:'Example Location',lat:51.5074,lng:-0.1278},{id:'2',name:'Alternative One',lat:51.514,lng:-0.132},{id:'3',name:'Alternative Two',lat:51.502,lng:-0.12}]});
-const blank=():Challenge=>({id:'custom-'+crypto.randomUUID(),title:'New geographic mystery',description:'Seven clues lead to one unforgettable destination.',countryIso3:'GBR',status:'draft',publishDate:null,difficulty:'standard',stages:Array.from({length:7},(_,i)=>blankStage(i))});
-function toPublic(stage:Stage,iso:string):PublicStage {const {answer,hint,source,...publicStage}=stage;return {...publicStage,countryIso3:iso}}
+import Link from 'next/link';
+import {ArrowLeft,Plus,Save,LogOut,Database,Layers,CheckCircle2} from 'lucide-react';
+import type {Challenge} from '@/lib/types';
+const url=process.env.NEXT_PUBLIC_SUPABASE_URL,key=process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+const auth=url&&key?createBrowserClient(url,key):null;
+const names=['Country','State / Region','City','Area','District','Street','Building'];
+type Place={id:string;name:string;level:number;parent_id:string|null;clue:string;hint:string;source:string;lat:number;lng:number;iso3:string|null;published:boolean};
+type PlaceDraft=Omit<Place,'id'> & {id?:string};
+const fresh=(level=0):PlaceDraft=>({name:'',level,parent_id:null,clue:'',hint:'',source:'https://www.openstreetmap.org/',lat:0,lng:0,iso3:null,published:true});
 export default function Studio(){
-  const [email,setEmail]=useState(''),[password,setPassword]=useState(''),[user,setUser]=useState('');
-  const [list,setList]=useState<Challenge[]>([]),[draft,setDraft]=useState<Challenge|null>(null),[tab,setTab]=useState(0),[saving,setSaving]=useState(false),[busy,setBusy]=useState(false);
-  const [error,setError]=useState(''),[success,setSuccess]=useState(''),[pick,setPick]=useState(false),[preview,setPreview]=useState(false),[hoverResult,setHoverResult]=useState('');
-  const [choiceText,setChoiceText]=useState('');const importFile=useRef<HTMLInputElement>(null);
-  const getLibrary=async()=>{
-    const response=await fetch('/api/admin/challenges',{cache:'no-store'});const data=await response.json();
-    if(!response.ok)throw new Error(data.error||'Unable to access challenge studio.');
-    setList(data.challenges);
-    // Preserve local edits; refreshing the library must not overwrite unsaved changes.
-    setDraft(prev=>prev||null);
-  };
-  useEffect(()=>{if(!supabase)return;supabase.auth.getUser().then(({data})=>{if(data.user?.email)setUser(data.user.email)});const {data:{subscription}}=supabase.auth.onAuthStateChange((_ev,s)=>setUser(s?.user.email||''));return()=>subscription.unsubscribe()},[]);
-  useEffect(()=>{if(!user)return;void getLibrary().catch(e=>setError(e.message))},[user]);
-  useEffect(()=>{if(draft)setChoiceText(draft.stages[tab].choices.map(v=>`${v.name} | ${v.lat} | ${v.lng}`).join('\n'));setPick(false);setPreview(false);setHoverResult('')},[draft?.id,tab]);
-  const login=async(e:React.FormEvent)=>{e.preventDefault();if(!supabase)return;setBusy(true);setError('');const {error}=await supabase.auth.signInWithPassword({email,password});if(error)setError(error.message);setPassword('');setBusy(false)};
-  const logout=async()=>{await supabase?.auth.signOut();setList([]);setUser('');setDraft(null)};
-  const modify=(key:keyof Challenge,value:unknown)=>{setDraft(p=>p?{...p,[key]:value}:p);setSuccess('')};
-  const modifyStage=(key:keyof Stage,value:unknown)=>setDraft(p=>{if(!p)return p;const stages=p.stages.map((s,i)=>i===tab?{...s,[key]:value}:s);return {...p,stages}});
-  const edit=(c:Challenge)=>{setDraft(structuredClone(c));setTab(0);setError('');setSuccess('');};
-  const duplicate=(c?:Challenge)=>{const base=structuredClone(c||list.find(c=>c.id==='london')||blank());base.id='custom-'+crypto.randomUUID();base.title=base.title+' (New)';base.status='draft';base.publishDate=null;base.builtIn=false;setDraft(base);setTab(0);setSuccess('Template copied — edit every clue, answer and location, then save.')};
-  const save=async()=>{
-    if(!draft)return;setSaving(true);setError('');setSuccess('');
-    try{const response=await fetch('/api/admin/challenges',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(draft)});
-      const body=await response.json();if(!response.ok)throw new Error(body.details?.join('\n')||body.error||'Save failed');
-      setSuccess('Saved successfully. '+(draft.status==='published'?'Published challenge updated in Supabase and available for future daily rotation.':'Draft saved privately.'));
-      const id=body.id;setDraft(p=>p?{...p,id}:p);await getLibrary();
-    }catch(e){setError(e instanceof Error?e.message:'Save failed')}
-    finally{setSaving(false)}
-  };
-  const deleteDraft=async()=>{if(!draft||!confirm('Permanently delete this challenge?'))return;
-    setError('');const response=await fetch('/api/admin/challenges?id='+encodeURIComponent(draft.id),{method:'DELETE'});const data=await response.json();if(!response.ok){setError(data.error||'Delete failed');return;}setDraft(null);await getLibrary();};
-  const exportJSON=()=>{if(!draft)return;const blob=new Blob([JSON.stringify(draft,null,2)],{type:'application/json'});const link=document.createElement('a');link.href=URL.createObjectURL(blob);link.download=`where7-${draft.id}.json`;link.click();URL.revokeObjectURL(link.href)};
-  const importJSON=async(file?:File)=>{if(!file)return;try{const parsed=JSON.parse(await file.text()) as Challenge;if(!Array.isArray(parsed.stages)||parsed.stages.length!==7)throw new Error('An imported challenge must have seven stages.');parsed.id='custom-'+crypto.randomUUID();parsed.status='draft';parsed.publishDate=null;setDraft(parsed);setTab(0);setSuccess('Imported as a new draft. Verify every stage before publishing.')}catch(e){setError(e instanceof Error?e.message:'Invalid JSON')}if(importFile.current)importFile.current.value=''};
-  const parseChoices=()=>{
-    if(!draft||tab===0)return;
-    const lines=choiceText.split('\n').map(l=>l.trim()).filter(Boolean);let failed=false;
-    const choices=lines.map((line,i)=>{const fields=line.split('|').map(v=>v.trim());const lat=Number(fields[1]),lng=Number(fields[2]);if(fields.length!==3||!fields[0]||!Number.isFinite(lat)||!Number.isFinite(lng)){failed=true;return null;}
-      return {id:'choice-'+i,name:fields[0],lat,lng,kind:tab===6?'landmark':'place'} as Choice;
-    }).filter(Boolean) as Choice[];
-    if(failed){setError('Choices must use one line per place: Name | latitude | longitude.');return;}
-    modifyStage('choices',choices);setError('');setSuccess(`${choices.length} selectable map positions applied.`);
-  };
-  const onMapPick=(lat:number,lng:number)=>{
-    if(!draft)return;
-    const current=draft.stages[tab];const answer=current.answer;
-    const existing=current.choices.findIndex(o=>o.name.toLowerCase()===answer.toLowerCase());
-    const choices=[...current.choices];if(tab>0){if(existing>=0)choices[existing]={...choices[existing],lat,lng};else choices.unshift({id:'correct-'+tab,name:answer,lat,lng});}
-    const stages=draft.stages.map((s,i)=>i===tab?{...s,center:[lng,lat] as [number,number],choices}:s);
-    setDraft({...draft,stages});setChoiceText(choices.map(v=>`${v.name} | ${v.lat} | ${v.lng}`).join('\n'));setPick(false);setSuccess(`Position saved: ${lat.toFixed(5)}, ${lng.toFixed(5)}.`);
-  };
-  if(!envReady)return <main className="studio-page"><div className="studio-header"><div className="heading"><Settings2/><h1>WHERE7 · Challenge Studio</h1></div><Link href="/">← Game</Link></div><div className="studio-login"><Lock size={40} color="#59dfcf"/><h1>Connect Supabase to activate Studio</h1><p>The editor is deliberately protected. Add <code>NEXT_PUBLIC_SUPABASE_URL</code>, <code>NEXT_PUBLIC_SUPABASE_ANON_KEY</code>, <code>SUPABASE_SERVICE_ROLE_KEY</code>, and <code>ADMIN_EMAILS</code> to your <code>.env.local</code>, then run the SQL migration and create your admin user.</p><p>Without these credentials, the game remains playable in local demo mode.</p><Link className="primary-action" href="/">Return to WHERE7</Link></div></main>;
-  if(!user)return <main className="studio-page"><div className="studio-header"><div className="heading"><Settings2/><h1>WHERE7 · Challenge Studio</h1></div><Link href="/">← Game</Link></div><div className="studio-login"><ShieldCheck size={42} color="#55dec9"/><h1>Authorised access only</h1><p>Sign in with your Supabase Auth account. Your email must also be listed in the server's <code>ADMIN_EMAILS</code> setting.</p><form onSubmit={login}><div className="studio-field"><label>Email</label><input type="email" required value={email} onChange={e=>setEmail(e.target.value)}/></div><div className="studio-field"><label>Password</label><input type="password" required value={password} onChange={e=>setPassword(e.target.value)}/></div>{error&&<div role="alert" className="studio-error">{error}</div>}<button className="primary-action" type="submit" disabled={busy}><LogIn size={17}/> Sign in to Studio</button></form></div></main>;
-  return <main className="studio-page">
-    <header className="studio-header"><div className="heading"><Settings2 size={29}/><div><h1>WHERE7 / Challenge Studio</h1><p>Curate challenges for the automatic daily rotation.</p></div></div><div className="studio-toolbar"><span className="studio-stat"><ShieldCheck size={13}/> AUTHORISED</span><Link href="/"><ArrowLeft size={15}/> Game</Link><button onClick={logout}><LogOut size={15}/> Sign out</button></div></header>
-    <div className="studio-layout"><aside className="studio-sidebar">
-      <div className="studio-eyebrow">CHALLENGE LIBRARY</div><div className="studio-list">{list.map(c=><button key={c.id} className={draft?.id===c.id?'active':''} onClick={()=>edit(c)}><span>{c.title}<br/><small>{c.status==='published'?'● Published':'○ Draft'} {c.publishDate?`· ${c.publishDate}`:''}</small></span><span>→</span></button>)}{!list.length&&<p className="studio-info">No saved challenges yet.</p>}</div>
-      <button className="primary-action" onClick={()=>duplicate()}><Plus size={17}/> New from template</button>
-      <button className="secondary-action" style={{width:'100%'}} onClick={()=>{setDraft(blank());setTab(0)}}><Plus size={17}/> Blank challenge</button>
-      <p className="studio-info">Published challenges enter the daily pool automatically. Each puzzle appears once per cycle; repeats begin after the pool is exhausted. Author seven factual clues. Each stage requires a source, a correct answer, and at least three selectable locations (except the world stage). Save drafts and preview them before publication.</p>
-    </aside><section className="studio-main">
-      {!draft?<div className="studio-empty"><h2>Prepare the next expedition.</h2><p>Select a challenge on the left, or start from the London template to create your own.</p><button className="primary-action" onClick={()=>duplicate()}><Copy size={17}/> Create challenge</button></div>:<>
-      <div className="studio-toolbar" style={{justifyContent:'space-between'}}><span className="studio-stat">{draft.id}</span><div className="studio-toolbar"><button onClick={exportJSON}><Download size={15}/> Export</button><button onClick={()=>importFile.current?.click()}><Upload size={15}/> Import</button><input ref={importFile} type="file" accept=".json,application/json" hidden onChange={e=>void importJSON(e.target.files?.[0])}/><button onClick={()=>duplicate(draft)}><Copy size={15}/> Duplicate</button></div></div>
-      <h2 style={{marginTop:22}}>{draft.status==='published'?'Edit published challenge':'Edit your challenge'}</h2><p className="studio-subtitle">You can edit published challenges directly. Update the clue, hint, correct answer or map choices and click Save to update Supabase. Avoid changing an already-live challenge while players are completing it. Publishing adds new challenges to the random daily pool.</p>
-      <div className="studio-grid">
-        <div className="studio-field"><label>Challenge title</label><input value={draft.title} maxLength={120} onChange={e=>modify('title',e.target.value)}/></div>
-        <div className="studio-field"><label>Country ISO3</label><input value={draft.countryIso3} maxLength={3} onChange={e=>modify('countryIso3',e.target.value.toUpperCase())} placeholder="GBR or USA"/></div>
-        <div className="studio-field"><label>Legacy publish date (optional; not used by random rotation)</label><input type="date" value={draft.publishDate||''} onChange={e=>modify('publishDate',e.target.value||null)}/></div>
-        <div className="studio-field"><label>Status</label><select value={draft.status} onChange={e=>modify('status',e.target.value)}><option value="draft">Private draft</option><option value="published">Published · Eligible for daily rotation</option></select></div>
-      </div>
-      <div className="studio-field"><label>Description</label><input value={draft.description||''} onChange={e=>modify('description',e.target.value)}/></div>
-      <div className="studio-eyebrow" style={{marginTop:25}}>THE SEVEN STAGES</div><div className="stage-tabs">{draft.stages.map((v,i)=><button title={v.label} key={i} className={tab===i?'active':''} onClick={()=>setTab(i)}>{String(i+1).padStart(2,'0')}</button>)}</div>
-      <div className="studio-stage" key={tab}><h3>Stage {tab+1}: {draft.stages[tab].label}</h3><p className="studio-subtitle">Select an appropriate geographic level. Players must identify the place from the statement, not from the map camera.</p>
-        <div className="studio-field"><label>Correct answer</label><input value={draft.stages[tab].answer} onChange={e=>modifyStage('answer',e.target.value)}/></div>
-        <div className="studio-field"><label>Player-facing clue — never reveal the answer</label><textarea rows={3} value={draft.stages[tab].clue} onChange={e=>modifyStage('clue',e.target.value)}/></div>
-        <div className="studio-field"><label>Optional hint — give a nudge, not the answer</label><input value={draft.stages[tab].hint} onChange={e=>modifyStage('hint',e.target.value)}/></div>
-        <div className="studio-field"><label>HTTPS evidence / source link</label><input type="url" value={draft.stages[tab].source} onChange={e=>modifyStage('source',e.target.value)}/></div>
-        <div className="studio-grid"><div className="studio-field"><label>Camera longitude</label><input type="number" step="any" value={draft.stages[tab].center[0]} onChange={e=>modifyStage('center',[Number(e.target.value),draft.stages[tab].center[1]])}/></div>
-          <div className="studio-field"><label>Camera latitude</label><input type="number" step="any" value={draft.stages[tab].center[1]} onChange={e=>modifyStage('center',[draft.stages[tab].center[0],Number(e.target.value)])}/></div></div>
-        <div className="studio-field"><label>Camera zoom (1–20)</label><input type="number" step="0.5" min="1" max="20" value={draft.stages[tab].zoom} onChange={e=>modifyStage('zoom',Number(e.target.value))}/></div>
-        {tab>0&&<><div className="studio-field"><label>Selectable locations — one per line: Name | latitude | longitude</label><textarea rows={6} spellCheck={false} value={choiceText} onChange={e=>setChoiceText(e.target.value)} onBlur={parseChoices}/></div><button className="secondary-action" onClick={parseChoices}><Check size={15}/> Apply map choices</button></>}
-        <div className="studio-toolbar" style={{marginTop:16}}><button onClick={()=>{setPreview(v=>!v);setPick(false)}}><Eye size={15}/> {preview?'Hide preview':'Preview map'}</button><button onClick={()=>{setPick(v=>!v);setPreview(true)}}><MapPin size={15}/> {pick?'Cancel picking':'Pick correct place on map'}</button></div>
-        {preview&&<><div className="studio-map-pick"><MapCanvas key={`${draft.id}-${tab}`} stage={toPublic(draft.stages[tab],draft.countryIso3)} pickMode={pick} onPick={onMapPick} disabled={!pick} onSelect={name=>setHoverResult('Selected: '+name)}/></div><p className="studio-subtitle">{pick?'Click any point to update the correct answer location and camera.':'Preview only — toggle Pick to set the correct answer coordinate.'} {hoverResult}</p></>}
-      </div>
-      {error&&<div className="studio-error" role="alert"><AlertTriangle size={15}/> {error}</div>}{success&&<div className="studio-success" role="status"><CheckCircle2 size={15}/> {success}</div>}
-      <div className="studio-footer"><div className="studio-toolbar">{draft.id.startsWith('custom-')&&<button className="studio-delete" onClick={()=>void deleteDraft()}><Trash2 size={15}/> Delete</button>}</div><button className="primary-action" disabled={saving} onClick={()=>void save()}><Save size={16}/>{saving?'Saving…':'Save challenge'}</button></div>
-      </>}
-    </section></div>
-  </main>
+ const [user,setUser]=useState(''),[email,setEmail]=useState(''),[password,setPassword]=useState(''),[places,setPlaces]=useState<Place[]>([]),[challenges,setChallenges]=useState<Challenge[]>([]);
+ const [tab,setTab]=useState<'places'|'legacy'>('places'),[place,setPlace]=useState<PlaceDraft>(fresh()),[challenge,setChallenge]=useState<Challenge|null>(null);
+ const [busy,setBusy]=useState(false),[error,setError]=useState(''),[success,setSuccess]=useState('');
+ const refresh=async()=>{
+  const [p,c]=await Promise.all([fetch('/api/admin/places',{cache:'no-store'}),fetch('/api/admin/challenges',{cache:'no-store'})]);
+  const [pd,cd]=await Promise.all([p.json(),c.json()]);
+  if(!p.ok)throw new Error(pd.error||'Could not load geography');if(!c.ok)throw new Error(cd.error||'Could not load published challenges');
+  setPlaces(pd.places||[]);setChallenges(cd.challenges||[]);
+ };
+ useEffect(()=>{if(!auth)return;void auth.auth.getUser().then(({data})=>setUser(data.user?.email||''));const {data:{subscription}}=auth.auth.onAuthStateChange((_e,s)=>setUser(s?.user.email||''));return()=>subscription.unsubscribe()},[]);
+ useEffect(()=>{if(user)void refresh().catch(e=>setError(e.message))},[user]);
+ const login=async(e:React.FormEvent)=>{e.preventDefault();if(!auth)return;setBusy(true);setError('');const {error}=await auth.auth.signInWithPassword({email,password});if(error)setError(error.message);setPassword('');setBusy(false)};
+ const savePlace=async()=>{setBusy(true);setError('');setSuccess('');try{
+  const res=await fetch('/api/admin/places',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(place)});const data=await res.json();if(!res.ok)throw new Error(data.error||'Could not save place');
+  setSuccess('Geography entry saved. Add the next stage beneath it to create a complete path.');setPlace(fresh(place.level));await refresh();
+ }catch(e){setError(e instanceof Error?e.message:'Save failed')}finally{setBusy(false)}};
+ const saveChallenge=async()=>{if(!challenge)return;setBusy(true);setError('');setSuccess('');try{
+  const res=await fetch('/api/admin/challenges',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(challenge)});const data=await res.json();if(!res.ok)throw new Error((data.details||[]).join('; ')||data.error||'Save failed');
+  setSuccess('Existing published challenge updated.');await refresh();
+ }catch(e){setError(e instanceof Error?e.message:'Save failed')}finally{setBusy(false)}};
+ const patchStage=(index:number,key:'answer'|'clue'|'hint'|'source',value:string)=>setChallenge(c=>c?{...c,stages:c.stages.map((s,i)=>i===index?{...s,[key]:value}:s)}:null);
+ const patchPlace=(patch:Partial<PlaceDraft>)=>setPlace(p=>({...p,...patch}));
+ const parentOptions=places.filter(p=>p.level===place.level-1);
+ return <main className="studio-page"><header className="studio-header"><div className="heading"><Database size={28}/><div><h1>WHERE7 / Challenge manager</h1><p>Reusable locations, simple clues, and published puzzle editing.</p></div></div><Link href="/"><ArrowLeft size={16}/> Back to game</Link></header>
+ <div className="leaderboard-content" style={{maxWidth:1120}}>
+ {!auth?<p className="studio-error">Supabase is not configured.</p>:!user?<form className="studio-panel" onSubmit={login} style={{padding:24,display:'grid',gap:14,maxWidth:420}}><h2>Administrator sign in</h2><input required type="email" placeholder="Email" value={email} onChange={e=>setEmail(e.target.value)}/><input required type="password" placeholder="Password" value={password} onChange={e=>setPassword(e.target.value)}/><button className="primary-action" disabled={busy}>Sign in</button></form>:<>
+ <div className="studio-toolbar" style={{marginBottom:20,display:'flex',gap:12,flexWrap:'wrap'}}><button onClick={()=>setTab('places')}><Plus size={16}/> Geography library</button><button onClick={()=>setTab('legacy')}><Layers size={16}/> Published challenges ({challenges.filter(c=>c.status==='published').length})</button><button onClick={()=>void refresh().catch(e=>setError(e.message))}>Refresh</button><button onClick={()=>void auth?.auth.signOut()}><LogOut size={16}/> Sign out</button></div>
+ {tab==='places'?<div style={{display:'grid',gridTemplateColumns:'minmax(240px,1fr) minmax(280px,1.4fr)',gap:20}}>
+ <section className="studio-panel" style={{padding:20}}><h2>Saved locations ({places.length})</h2><p>Select an existing place to edit, or create a new one.</p><div style={{maxHeight:640,overflowY:'auto',display:'grid',gap:6}}>{places.map(p=><button key={p.id} className="secondary-action" style={{justifyContent:'flex-start',textAlign:'left'}} onClick={()=>setPlace({...p})}><small>{names[p.level]} · </small>{p.name}{!p.published?' (draft)':''}</button>)}</div></section>
+ <section className="studio-panel" style={{padding:20,display:'grid',gap:13}}><h2>{place.id?'Edit location':'Add location'}</h2><p>Build a path: country → region → city → area → district → street → building. Each location is reusable in future daily challenges.</p>
+ <label>Stage<select value={place.level} onChange={e=>setPlace(fresh(Number(e.target.value)))}>{names.map((n,i)=><option value={i} key={n}>{i+1}. {n}</option>)}</select></label>
+ {place.level>0&&<label>Inside (parent location)<select value={place.parent_id||''} onChange={e=>patchPlace({parent_id:e.target.value})}><option value="">Select parent…</option>{parentOptions.map(p=><option key={p.id} value={p.id}>{p.name}</option>)}</select></label>}
+ <label>Correct location name<input value={place.name} onChange={e=>patchPlace({name:e.target.value})} placeholder={place.level===0?'United Kingdom':'England, London, Westminster…'}/></label>
+ {place.level===0&&<label>ISO 3-letter country code<input maxLength={3} value={place.iso3||''} onChange={e=>patchPlace({iso3:e.target.value.toUpperCase()})} placeholder="GBR"/></label>}
+ <label>Player-facing clue (do not reveal the answer)<textarea rows={3} value={place.clue} onChange={e=>patchPlace({clue:e.target.value})} placeholder="A country made up of four constituent nations…"/></label>
+ <label>Optional hint<textarea rows={2} value={place.hint} onChange={e=>patchPlace({hint:e.target.value})}/></label>
+ <label>Evidence/source URL<input type="url" value={place.source} onChange={e=>patchPlace({source:e.target.value})}/></label>
+ <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:12}}><label>Latitude<input type="number" step="any" value={place.lat} onChange={e=>patchPlace({lat:Number(e.target.value)})}/></label><label>Longitude<input type="number" step="any" value={place.lng} onChange={e=>patchPlace({lng:Number(e.target.value)})}/></label></div>
+ <label><input type="checkbox" checked={place.published} onChange={e=>patchPlace({published:e.target.checked})}/> Published / available for future paths</label>
+ <button className="primary-action" disabled={busy} onClick={()=>void savePlace()}><Save size={16}/> Save location</button><button className="secondary-action" onClick={()=>setPlace(fresh(place.level))}>New location</button></section></div>:
+ <div style={{display:'grid',gridTemplateColumns:'minmax(230px,1fr) minmax(300px,1.6fr)',gap:20}}><section className="studio-panel" style={{padding:20}}><h2>Existing challenges</h2><p>Published challenges appear immediately, even before being selected for a day.</p><div style={{display:'grid',gap:6,maxHeight:650,overflowY:'auto'}}>{challenges.map(c=><button className="secondary-action" key={c.id} onClick={()=>setChallenge(structuredClone(c))}>{c.title} · {c.status}</button>)}</div></section>
+ <section className="studio-panel" style={{padding:20}}>{challenge?<><h2>Edit: {challenge.title}</h2><label>Title<input value={challenge.title} onChange={e=>setChallenge(c=>c?{...c,title:e.target.value}:c)}/></label><label>Status<select value={challenge.status} onChange={e=>setChallenge(c=>c?{...c,status:e.target.value as 'draft'|'published'}:c)}><option value="draft">Draft</option><option value="published">Published</option></select></label>
+ {challenge.stages.map((s,i)=><div key={i} style={{padding:'12px 0',borderBottom:'1px solid #526274'}}><h3>{i+1}. {names[i]}</h3><label>Answer<input value={s.answer} onChange={e=>patchStage(i,'answer',e.target.value)}/></label><label>Clue<textarea rows={2} value={s.clue} onChange={e=>patchStage(i,'clue',e.target.value)}/></label><label>Hint<input value={s.hint} onChange={e=>patchStage(i,'hint',e.target.value)}/></label><label>Source<input value={s.source} onChange={e=>patchStage(i,'source',e.target.value)}/></label>
+ {i>0&&<label>Map choices (Name | Latitude | Longitude, one per line)<textarea key={`${challenge.id}-${i}`} rows={3} defaultValue={s.choices.map(v=>`${v.name} | ${v.lat} | ${v.lng}`).join('\n')} onBlur={e=>{
+   const lines=e.target.value.split('\n').map(x=>x.trim()).filter(Boolean);
+   const parsed=lines.map((line,j)=>{const [name,latitude,longitude]=line.split('|').map(x=>x.trim());return {id:`choice-${j}`,name,lat:Number(latitude),lng:Number(longitude)};});
+   if(parsed.length<3||parsed.some(x=>!x.name||!Number.isFinite(x.lat)||!Number.isFinite(x.lng))){setError(`Stage ${i+1}: add at least three valid choices`);return;}
+   setChallenge(c=>c?{...c,stages:c.stages.map((st,j)=>j===i?{...st,choices:parsed}:st)}:null);
+ }}/></label>}</div>)}
+ <p>If you change a correct answer, also update its map choices so the new answer is selectable. Changes to a challenge already assigned today can affect active players.</p><button disabled={busy} className="primary-action" onClick={()=>void saveChallenge()}><Save size={16}/> Save published challenge</button></>:<p>Select a challenge on the left to edit it.</p>}</section></div>}
+ </>}
+ {error&&<p className="studio-error" role="alert">{error}</p>}{success&&<p className="studio-success" role="status"><CheckCircle2 size={16}/> {success}</p>}
+ </div></main>;
 }

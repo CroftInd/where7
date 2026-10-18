@@ -19,3 +19,8 @@
 /* Country names track the cursor instead of appearing in a fixed banner. */
 .map-hover-tag{left:0;top:0;transform:translate(-50%,-130%);max-width:230px;text-align:center;white-space:normal;z-index:11}
 .country-search{margin-top:10px;background:#0a2335;color:#e1f7ff;border:1px solid #376378;border-radius:9px;padding:9px 10px;width:100%}.country-list{max-height:155px;overflow:auto;padding:3px}
+
+/* V12: question-mark chance counters use an aqua palette rather than heart pink. */
+.heart-unit.alive{color:#64e1d7;filter:drop-shadow(0 1px 5px #64e1d755)}
+.heart-unit.breaking{color:#ffbe70}
+.ranking-hearts svg{color:#64e1d7}
