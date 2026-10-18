@@ -20,6 +20,16 @@ export async function listChallenges(admin=false):Promise<Challenge[]> {
 }
 export async function selectChallenge(id:string|undefined,mode:'daily'|'practice'){
   const catalog=await listChallenges();
+  if(mode==='practice'&&id?.startsWith('archive:')){
+    const day=id.slice('archive:'.length);
+    if(!/^\d{4}-\d{2}-\d{2}$/.test(day)||day>=currentDate())throw new Error('This archive date is not available.');
+    const db=serviceDb();if(!db)throw new Error('Archive requires Supabase.');
+    const {data,error}=await db.from('daily_challenge_assignments').select('challenge_id').eq('challenge_date',day).maybeSingle();
+    if(error||!data)throw new Error('No completed expedition for this date.');
+    const c=catalog.find(v=>v.id===data.challenge_id&&v.status==='published');
+    if(!c)throw new Error('Archived expedition unavailable.');
+    return c;
+  }
   if(mode==='practice'&&id){const p=catalog.find(v=>v.id===id);if(!p)throw new Error('Challenge not found.');return p;}
   const date=currentDate();
   const db=serviceDb();

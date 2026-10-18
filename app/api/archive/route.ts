@@ -14,10 +14,9 @@ export async function GET(){
       .select('challenge_date,challenge_id').lt('challenge_date',today)
       .order('challenge_date',{ascending:false}).limit(365);
     if(error)throw new Error(error.message);
-    const published=new Map(catalog.filter(c=>c.status==='published').map(c=>[c.id,c]));
+    const published=new Set(catalog.filter(c=>c.status==='published').map(c=>c.id));
     const challenges=(data||[]).flatMap(a=>{
-      const c=published.get(a.challenge_id);
-      return c?[{id:c.id,title:c.title,date:a.challenge_date,difficulty:c.difficulty}]:[];
+      return published.has(a.challenge_id)?[{date:a.challenge_date}]:[];
     });
     return NextResponse.json({challenges},{headers:{'Cache-Control':'no-store'}});
   }catch(e){return NextResponse.json({error:e instanceof Error?e.message:'Archive unavailable'},{status:500})}

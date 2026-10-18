@@ -42,5 +42,8 @@ export async function requireAdmin() {
     .split(',')
     .map((value) => value.trim().toLowerCase())
     .filter(Boolean);
-  return !error && !!user?.email && permitted.includes(user.email.toLowerCase());
+  const allowedUserId = (process.env.ADMIN_USER_ID || '').trim();
+  // Restrict to one exact Supabase Auth user ID when configured.
+  return !error && !!user?.email && permitted.includes(user.email.toLowerCase())
+    && (!allowedUserId || user.id === allowedUserId);
 }
