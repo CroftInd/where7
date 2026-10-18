@@ -19,14 +19,34 @@ export default function Game(){
   const [elapsed,setElapsed]=useState(0),[showHow,setShowHow]=useState(false),[showOptions,setShowOptions]=useState(false);
   const [countries,setCountries]=useState<string[]>([]),[countryQuery,setCountryQuery]=useState('');
   const pendingAction=useRef(false);
+  const loadRequestId=useRef(0);
+  const currentLoad=useRef<AbortController|null>(null);
   const prevLives=useRef(7),[breaking,setBreaking]=useState<number|null>(null),timer=useRef<ReturnType<typeof setTimeout>|null>(null);
   const sessionStart=game?.startedAt;
   useEffect(()=>{if(!sessionStart)return;const update=()=>setElapsed(Math.max(0,Date.now()-new Date(sessionStart).getTime()));update();const id=setInterval(update,1000);return()=>clearInterval(id)},[sessionStart]);
-  const load=async(m=mode,id=challenge)=>{
-    setLoading(true);setError('');setSelected(null);setFeedback(null);
-    try{const response=await fetch(`/api/game?mode=${m}&challenge=${encodeURIComponent(id)}`,{cache:'no-store'});const data=await response.json();if(!response.ok)throw new Error(data.error||'Unable to load game');setGame(data.game);prevLives.current=data.game.hearts;}
-    catch(e){setError(e instanceof Error?e.message:'Unable to load game');}
-    finally{setLoading(false)}
+  const load=async(m:'daily'|'practice'=mode,id=challenge)=>{
+    // Keep responses from old daily/practice requests from overwriting the
+    // user's latest selection. Otherwise UI mode and server session can differ.
+    const requestId=++loadRequestId.current;
+    currentLoad.current?.abort();
+    const controller=new AbortController();
+    currentLoad.current=controller;
+    setLoading(true);setGame(null);setError('');setSelected(null);setFeedback(null);
+    try{
+      const response=await fetch(`/api/game?mode=${m}&challenge=${encodeURIComponent(id)}`,{
+        cache:'no-store',signal:controller.signal
+      });
+      const data=await response.json();
+      if(!response.ok)throw new Error(data.error||'Unable to load game');
+      if(requestId!==loadRequestId.current)return;
+      if(data.game.mode!==m)throw new Error('The server returned the wrong expedition mode. Please reload.');
+      setGame(data.game);prevLives.current=data.game.hearts;
+    }catch(e){
+      if(requestId!==loadRequestId.current||controller.signal.aborted)return;
+      setError(e instanceof Error?e.message:'Unable to load game');
+    }finally{
+      if(requestId===loadRequestId.current){setLoading(false);currentLoad.current=null;}
+    }
   };
   useEffect(()=>{
     try {
@@ -37,7 +57,7 @@ export default function Game(){
     try{window.localStorage.setItem('where7-how-to-play-seen-v1','yes')}catch{}
     setShowHow(false);
   };
-  useEffect(()=>{const params=new URLSearchParams(window.location.search);const initialMode=params.get('mode')==='practice'?'practice':'daily';const initialId=params.get('challenge')||'london';setMode(initialMode);setChallenge(initialId);void load(initialMode,initialId)},[]);
+  useEffect(()=>{const params=new URLSearchParams(window.location.search);const initialMode=params.get('mode')==='practice'?'practice':'daily';const initialId=params.get('challenge')||'london';setMode(initialMode);setChallenge(initialId);void load(initialMode,initialId);return()=>{loadRequestId.current++;currentLoad.current?.abort();}},[]);
   useEffect(()=>{Promise.all(['/world-countries.geojson','/microstates.geojson'].map(url=>fetch(url).then(r=>r.json()))).then(data=>{
     const names=[...new Set(data.flatMap((f:{features:{properties:{name:string}}[]})=>f.features.map(v=>v.properties.name)))].sort((a,b)=>a.localeCompare(b));setCountries(names);
   }).catch(()=>{})},[]);
@@ -47,7 +67,10 @@ export default function Game(){
     try{const Ctx=window.AudioContext;const ctx=new Ctx();const notes=correct?[440,554,660]:[270,200];notes.forEach((n,i)=>{const o=ctx.createOscillator(),g=ctx.createGain();o.type='sine';o.frequency.value=n;g.gain.setValueAtTime(0.00001,ctx.currentTime+i*0.09);g.gain.exponentialRampToValueAtTime(0.055,ctx.currentTime+i*0.09+0.012);g.gain.exponentialRampToValueAtTime(0.00001,ctx.currentTime+i*0.09+0.2);o.connect(g).connect(ctx.destination);o.start(ctx.currentTime+i*0.09);o.stop(ctx.currentTime+i*0.09+0.21)});setTimeout(()=>void ctx.close(),950)}catch{}
   };
   const action=async(kind:'guess'|'hint'|'giveup'|'restart',answer?:string)=>{
-    if(!game||busy||pendingAction.current||(game.status!=='playing'&&kind!=='restart'))return;
+    if(!game||loading||busy||pendingAction.current||(game.status!=='playing'&&kind!=='restart'))return;
+    // Never issue a restart request for the official daily session. The server
+    // must keep its existing anti-reset protection.
+    if(kind==='restart'&&game.mode!=='practice')return;
     if(kind==='giveup'&&!confirm('End this expedition? Your daily run cannot be restarted.'))return;
     pendingAction.current=true;setBusy(true);setError('');
     if(kind==='guess')setSelected(answer||'');
@@ -164,7 +187,7 @@ export default function Game(){
         {game?.mode==='daily'&&<div className="leaderboard-submit"><label htmlFor="public-name">JOIN TODAY’S LEADERBOARD</label><div><input id="public-name" maxLength={24} placeholder="Explorer name" value={displayName} onChange={e=>setDisplayName(e.target.value)}/><button disabled={nameSaving||!displayName.trim()} onClick={()=>void submitLeaderboard()}><Trophy size={15}/> Submit</button></div>{nameStatus&&<small role="status">{nameStatus}</small>}</div>}
         <div className="result-buttons"><button className="primary-action" onClick={()=>void share()}><Share2 size={17}/> Copy share card</button>
           <button className="secondary-action" onClick={()=>switchMode('practice',game?.challengeId||'london')}><Play size={16}/> Practice</button></div>
-        {mode==='practice'&&<button className="result-again" onClick={()=>void action('restart')}><RotateCcw size={15}/> Restart this practice puzzle</button>}
+        {game?.mode==='practice'&&<button className="result-again" onClick={()=>void action('restart')}><RotateCcw size={15}/> Restart this practice puzzle</button>}
       </div></div>}
       {showHow&&<div className="modal-scrim" role="dialog" aria-modal="true" aria-labelledby="how-title"><div className="how-modal"><button className="close-modal" aria-label="Close instructions" onClick={closeHow}><X size={19}/></button><div className="eyebrow"><BookOpen size={16}/> YOUR FIELD GUIDE</div><h2 id="how-title">Seven clues. One place.</h2><p>Begin with the entire world. Read each factual statement and select the correct location directly on the interactive map.</p><div className="how-lines"><div><Compass/><span>Correct answers reveal more specific locations.</span></div><div><CircleHelp/><span>Every guess, right or wrong, uses one of seven chances.</span></div><div><Trophy/><span>Only seven correct answers unlock the final building.</span></div><div><Lightbulb/><span>Hints cost points, but not chances.</span></div></div><button className="primary-action" onClick={closeHow}>Begin expedition <ArrowRight size={17}/></button></div></div>}
     </div>
