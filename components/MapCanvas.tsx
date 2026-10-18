@@ -124,6 +124,7 @@ export default function MapCanvas({stage,disabled=false,onSelect,pickMode=false,
   useEffect(()=>{
     const map=mapRef.current;
     if(!ready||!map)return;
+    const mapInstance = map;
     const active=stage&&!disabled;
     map.setPaintProperty('countries','fill-opacity',active&&stage.selection==='country'?0.17:0.03);
     map.setLayoutProperty('microstates','visibility',active&&stage.selection==='country'?'visible':'none');
@@ -161,7 +162,7 @@ export default function MapCanvas({stage,disabled=false,onSelect,pickMode=false,
     addChoiceMarkers(stage);
     return()=>clearMarkers();
     function addChoiceMarkers(s:PublicStage){
-      const source=map.getSource('choice-points') as GeoJSONSource|undefined;
+const source = mapInstance.getSource('choice-points') as GeoJSONSource | undefined;
       if(!source)return;
       source.setData({type:'FeatureCollection',features:s.choices.map(choice=>({type:'Feature',properties:{name:choice.name,id:choice.id},geometry:{type:'Point',coordinates:[choice.lng,choice.lat]}}))} as GeoJSON.FeatureCollection);
     }
