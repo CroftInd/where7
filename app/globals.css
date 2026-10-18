@@ -80,3 +80,9 @@
 }
 @media(max-width:390px){.header-link{padding:8px}.header-actions{gap:1px}.brand strong{font-size:20px}.reward-strip span{font-size:8px}}
 @media(prefers-reduced-motion:reduce){*,*:before,*:after{animation-duration:.01ms!important;transition-duration:.01ms!important;scroll-behavior:auto!important}.discovery-burst{display:none}}
+
+/* V15.1: MapLibre must own touch gestures, not browser page scrolling. */
+.map-container,.map-container .maplibregl-canvas-container,.map-container canvas.maplibregl-canvas{touch-action:none!important}
+.map-root{min-width:0;min-height:0}
+.map-boundary-note{pointer-events:none}
+@media(max-width:700px){.map-container,.map-container .maplibregl-canvas-container,.map-container canvas.maplibregl-canvas{touch-action:none!important}}

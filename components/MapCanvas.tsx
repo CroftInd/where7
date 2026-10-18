@@ -46,14 +46,20 @@ export default function MapCanvas({stage,disabled=false,onSelect,pickMode=false,
         if(!map.isStyleLoaded()&&!fallbackStarted&&(message.includes('style')||message.includes('fetch')||message.includes('HTTP'))){
           fallbackStarted=true;
           setWarning('Vector basemap unavailable — using the fallback map.');
+          layersInitialised=false;
+          setReady(false);
           map.setStyle(fallbackStyle);
         }
       });
       instance=map;mapRef.current=map;
       map.addControl(new gl.AttributionControl({compact:true}),'bottom-left');
       map.on('error',e=>{const text=String(e.error?.message||'');if(text.includes('style')||text.includes('WebGL'))setMapError('The map renderer is unavailable. Try refreshing or enabling hardware acceleration.');});
-      map.on('load',()=>{
-        if(stopped)return;
+      // A fallback setStyle() can replace the initial style before its first load.
+      // Initialise our interactive layers on the first fully loaded style.
+      let layersInitialised=false;
+      const initialiseLayers=()=>{
+        if(stopped||layersInitialised||!map.isStyleLoaded())return;
+        layersInitialised=true;
         map.addSource('countries',{type:'geojson',data:'/world-countries.geojson'});
         map.addLayer({id:'countries',type:'fill',source:'countries',paint:{'fill-color':'#52aabb','fill-opacity':0.12}});
         map.addLayer({id:'country-lines',type:'line',source:'countries',paint:{'line-color':'#77d4de','line-opacity':0.6,'line-width':['interpolate',['linear'],['zoom'],1,0.45,5,1.4]}});
@@ -117,7 +123,10 @@ export default function MapCanvas({stage,disabled=false,onSelect,pickMode=false,
         });
         map.on('click',e=>{if(pickRef.current)onPickRef.current?.(e.lngLat.lat,e.lngLat.lng)});
         setReady(true);
-      });
+        requestAnimationFrame(()=>{if(!stopped)map.resize()});
+      };
+      map.on('load',initialiseLayers);
+      map.on('style.load',initialiseLayers);
     }).catch(()=>{setMapError('Unable to initialise the map. Install dependencies and reload.');});
     return()=>{stopped=true;instance?.remove();mapRef.current=null;};
   },[]);
