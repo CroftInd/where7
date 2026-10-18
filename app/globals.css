@@ -49,3 +49,34 @@
   .map-choice{touch-action:manipulation}
 }
 @media(max-width:380px){.map-toolbar{bottom:98px}.map-action-hint{bottom:95px}}
+
+/* V15 • refined expedition experience */
+:root{--aqua:#6bf2da;--gold:#ffd98d}
+.site-header{backdrop-filter:blur(18px);background:linear-gradient(90deg,#071321f7,#102a3af5)}
+.mission-panel{background:linear-gradient(165deg,#132f45fa,#0b192af9 74%);border-color:#47748a;box-shadow:0 28px 80px #000a,inset 0 1px 0 #ffffff13}
+.clue-card{background:linear-gradient(135deg,#1a4555,#103146 85%);box-shadow:0 12px 30px #04121e70,inset 0 1px 0 #ffffff12}
+.clue-card:after{content:'✧';position:absolute;right:14px;bottom:0;color:#70ddce19;font-size:100px;pointer-events:none}
+.progress-track>div.done{animation:stage-pop .48s ease both}.progress-track>div.active{box-shadow:0 0 15px #65e9d477}
+@keyframes stage-pop{from{transform:scaleX(.35);opacity:.3}to{transform:scaleX(1);opacity:1}}
+.reward-strip{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:0 0 22px}
+.reward-strip>div{display:grid;grid-template-columns:18px 1fr;gap:3px 7px;padding:12px;background:linear-gradient(145deg,#1c394c,#112a3a);border:1px solid #386073;border-radius:12px;min-width:0}
+.reward-strip svg{grid-row:span 2;color:#ffd98d}.reward-strip span{font-size:9px;color:#9dbbc9;font-weight:900;letter-spacing:.8px}.reward-strip b{font-size:13px;color:#f5fcff}
+.xp-earned{display:flex;align-items:center;justify-content:center;gap:10px;padding:15px;border:1px solid #8c7047;background:linear-gradient(105deg,#392f25,#263b39);border-radius:13px;margin:15px 0;flex-wrap:wrap}.xp-earned svg,.xp-earned strong{color:#ffdf9d}.xp-earned span{font-size:10px;letter-spacing:1px;font-weight:800}.xp-earned strong{font-size:20px}
+.reward-milestones{display:flex;flex-wrap:wrap;justify-content:center;gap:9px;margin:14px 0}.reward-milestones span{display:flex;gap:5px;align-items:center;background:#17354a;border:1px solid #315b69;padding:8px 10px;border-radius:99px;font-size:11px}.reward-milestones svg{color:var(--gold)}.reward-milestones a{color:var(--aqua);text-decoration:none}
+.discovery-burst{position:absolute;z-index:16;inset:0;display:grid;place-items:center;pointer-events:none;overflow:hidden}.discovery-burst span{position:absolute;color:#83ffe6;font-size:25px;text-shadow:0 0 18px #47edcf;animation:burst-ray 1s ease-out forwards;--angle:calc(var(--ray)*30deg)}
+@keyframes burst-ray{0%{opacity:0;transform:rotate(var(--angle)) translateY(0) scale(.2)}22%{opacity:1}100%{opacity:0;transform:rotate(var(--angle)) translateY(-150px) scale(1.5)}}
+.stage-celebrate .progress-track>div.active{filter:brightness(1.5)}
+.toast-message{animation:toast-appear .3s cubic-bezier(.2,1.6,.4,1) both}@keyframes toast-appear{from{opacity:0;transform:translate(-50%,-15px) scale(.88)}to{opacity:1;transform:translate(-50%,0) scale(1)}}
+.explorer-hero{display:grid;grid-template-columns:72px 1fr auto;gap:14px;align-items:center;padding:25px;border-radius:22px;border:1px solid #3e6b77;background:radial-gradient(ellipse at top right,#1c5657,#10283d 62%);margin-bottom:15px;box-shadow:0 15px 40px #0005}.explorer-avatar{height:68px;width:68px;border-radius:20px;display:grid;place-items:center;color:#ffe0a4;background:linear-gradient(135deg,#315a5b,#1a3d4b);border:1px solid #669c91}.explorer-identity h2{margin:7px 0 3px}.explorer-identity p{margin:0;color:#bbd7de}.explorer-xp{text-align:right;display:grid;gap:5px}.explorer-xp strong{color:#ffe1a5;font-size:20px}.explorer-xp span{font-size:11px;color:#9dbcc9}.explorer-progress{height:10px;grid-column:1/-1;background:#071c2b;border:1px solid #3c6070;border-radius:99px;overflow:hidden}.explorer-progress div{height:100%;background:linear-gradient(90deg,#4ccdb9,#ffe3a3);border-radius:99px;transition:width .8s ease}.explorer-signin{grid-column:1/-1;display:flex;align-items:center;gap:7px;color:var(--aqua);font-weight:800}.streak-banner{display:flex;align-items:center;gap:14px;border:1px solid #755a40;background:linear-gradient(100deg,#3d2c27,#173447);padding:17px 21px;border-radius:16px;margin-bottom:28px}.streak-banner>svg{color:#ffb26d}.streak-banner>div{display:grid;gap:4px;flex:1}.streak-banner b{font-size:16px}.streak-banner span{font-size:11px;color:#d3bbac}.streak-banner a{display:flex;align-items:center;gap:6px;color:#ffdfa7;text-decoration:none;font-weight:800}.achievement-total{font-size:12px;color:#90dcd1;font-weight:600;margin-left:8px}
+@media(max-width:700px){
+ .site-header{padding:0 10px;gap:6px}.brand small,.brand-separator,.season-chip{display:none}.header-actions{gap:3px}.header-link,.sound-button{padding:9px;border-radius:10px}
+ .game-canvas{height:100%;overflow:hidden}.map-container{touch-action:pan-x pan-y}
+ .mission-panel{height:min(62dvh,530px);max-height:min(62dvh,530px);border-radius:24px 24px 0 0;border-left:0;border-right:0;box-shadow:0 -14px 55px #000b}
+ .mission-panel.minimised{height:110px;max-height:110px;min-height:110px}
+ .mobile-grip{height:48px;min-height:48px;background:#102b3f;justify-content:flex-start;padding:0 19px}.mobile-grip:before{content:'';position:absolute;top:5px;left:calc(50% - 19px);width:38px;height:4px;border-radius:5px;background:#5e9da3}.mobile-grip>span:first-child{display:none}.mobile-grip-label{font-size:12px;max-width:calc(100% - 45px)}
+ .mission-panel.minimised .mission-inside{display:block;height:62px;padding:5px 16px;overflow:hidden}.mission-panel.minimised .mission-inside .expedition-eyebrow{display:flex}.mission-panel.minimised .mission-inside .progress-track{display:grid;margin:8px 0 0}.mission-panel.minimised .mission-inside .heart-container{display:none}
+ .mission-inside{padding:10px 17px 32px}.reward-strip{margin-bottom:14px}.stage-meta{margin-top:13px}.mission-heading{font-size:25px}.clue-card p{font-size:16px}.map-toolbar{bottom:128px;right:12px}.map-action-hint{bottom:125px;right:60px;left:10px}.map-stage-badge{top:65px;right:12px}.game-mode-bar{top:12px;left:10px}
+ .explorer-hero{grid-template-columns:55px 1fr;padding:17px}.explorer-avatar{width:54px;height:54px}.explorer-xp{grid-column:1/-1;text-align:left}.streak-banner{flex-wrap:wrap}.streak-banner a{width:100%}
+}
+@media(max-width:390px){.header-link{padding:8px}.header-actions{gap:1px}.brand strong{font-size:20px}.reward-strip span{font-size:8px}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation-duration:.01ms!important;transition-duration:.01ms!important;scroll-behavior:auto!important}.discovery-burst{display:none}}

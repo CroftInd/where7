@@ -2,8 +2,9 @@
 import {useEffect,useRef,useState} from 'react';
 import Link from 'next/link';
 import dynamic from 'next/dynamic';
-import {Map,Settings2,Compass,CircleHelp,HelpCircle,Flame,Sparkles,Lightbulb,Flag,Share2,RotateCcw,Check,Lock,ChevronDown,Volume2,VolumeX,Info,ExternalLink,ArrowRight,Trophy,Target,Clock,Menu,Play,X,BookOpen} from 'lucide-react';
+import {Map,Settings2,Compass,CircleHelp,HelpCircle,Flame,Sparkles,Lightbulb,Flag,Share2,RotateCcw,Check,Lock,ChevronDown,Volume2,VolumeX,Info,ExternalLink,ArrowRight,Trophy,Target,Clock,Menu,Play,X,BookOpen,Gift,Zap,Medal,TrendingUp} from 'lucide-react';
 import type {PublicGame} from '@/lib/types';
+import {xpFromScore} from '@/lib/ranks';
 const MapCanvas=dynamic(()=>import('./MapCanvas'),{ssr:false,loading:()=> <div className="map-loading"><div className="loading-orb"/>Preparing your atlas…</div>});
 const STAGES=['COUNTRY','STATE / REGION','CITY','AREA','DISTRICT','STREET','BUILDING'];
 const fmt=(t:number)=>{let seconds=Math.floor(t/1000);return `${String(Math.floor(seconds/60)).padStart(2,'0')}:${String(seconds%60).padStart(2,'0')}`};
@@ -14,6 +15,7 @@ export default function Game(){
   const [mode,setMode]=useState<'daily'|'practice'>('daily'),[challenge,setChallenge]=useState('london');
   const [error,setError]=useState(''),[toast,setToast]=useState(''),[selected,setSelected]=useState<string|null>(null);
   const [feedback,setFeedback]=useState<'right'|'wrong'|null>(null),[mobileOpen,setMobileOpen]=useState(false),[sound,setSound]=useState(false);
+  const [celebrate,setCelebrate]=useState(false);
   const [elapsed,setElapsed]=useState(0),[showHow,setShowHow]=useState(false),[showOptions,setShowOptions]=useState(false);
   const [countries,setCountries]=useState<string[]>([]),[countryQuery,setCountryQuery]=useState('');
   const pendingAction=useRef(false);
@@ -55,6 +57,7 @@ export default function Game(){
       const data=await response.json();if(!response.ok)throw new Error(data.error||'Unable to submit');
       if(kind==='guess'){
         const right=Boolean(data.correct);setFeedback(right?'right':'wrong');playTone(right);
+        if(right){setCelebrate(true);window.setTimeout(()=>setCelebrate(false),1100)}
         if(data.game.hearts<prevLives.current){setBreaking(prevLives.current-1);setTimeout(()=>setBreaking(null),670)}
         prevLives.current=data.game.hearts;
         setToast(right?`✦ ${answer} — location confirmed`:`${answer} isn't correct · ${data.game.hearts} chances left`);
@@ -96,7 +99,8 @@ export default function Game(){
         <Link className="header-link" href="/archive" aria-label="Open challenge archive"><BookOpen size={17}/><span>Archive</span></Link>
       </nav>
     </header>
-    <div className="game-canvas">
+    <div className={`game-canvas ${celebrate?'stage-celebrate':''}`}>
+      {celebrate&&<div className="discovery-burst" aria-hidden="true">{Array.from({length:12},(_,i)=><span key={i} style={{'--ray':i} as React.CSSProperties}>✦</span>)}</div>}
       <MapCanvas stage={stage||null} disabled={loading||finished||busy} selected={selected} onSelect={name=>void action('guess',name)}/>
       <aside className={`mission-panel ${mobileOpen?'':'minimised'}`} aria-live="polite">
         <button className="mobile-grip" aria-label={mobileOpen?'Minimise clues':'Expand clues'} aria-expanded={mobileOpen} onClick={()=>setMobileOpen(v=>!v)}><span className="mobile-grip-label">{stage?`STAGE ${stage.level+1} · ${stage.label.toUpperCase()}`:"EXPEDITION CLUES"}</span><ChevronDown size={18}/></button>
@@ -110,7 +114,8 @@ export default function Game(){
               {i<(game?.hearts??7)?<CircleHelp size={20}/>:<HelpCircle size={20}/>}</span>)}</div>
             <strong className="heart-count">{game?.hearts??7} / 7</strong>
           </div>
-          <div className="heart-helper">A flawless run is the only way to reach the final building.</div>
+          <div className="heart-helper">Every choice matters. Discover all seven places to reach the destination.</div>
+          <div className="reward-strip" aria-label="Daily rewards"><div><Zap size={16}/><span>XP IN PLAY</span><b>+{xpFromScore(game?.score||0)}</b></div><div><Gift size={16}/><span>DAILY REWARD</span><b>{mode==='daily'?'1 run / day':'Practice'}</b></div></div>
           {loading?<div className="clue-loading"><div className="skeleton"/><div className="skeleton wide"/><div className="skeleton"/></div>:
             game&&game.status==='playing'&&stage?<>
               <div className="stage-ident"><span>STAGE {stage.level+1} OF 7 · {stage.label.toUpperCase()}</span></div>
@@ -150,7 +155,9 @@ export default function Game(){
         <div className="eyebrow">{game?.status==='won'?'EXPEDITION COMPLETED':'EXPEDITION REPORT'}</div>
         <h2 id="results-title">{game?.status==='won'?'An extraordinary journey.':game?.status==='lost'?'Not quite the final destination.':'The journey ended.'}</h2>
         <p>{game?.status==='won'?'Seven correct answers, seven chances used, one amazing discovery.':'One or more incorrect guesses kept the final building out of reach. There is always another journey.'}</p>
+        <div className="xp-earned" role="status"><Zap size={20}/> <span>{game?.mode==='daily'?'DAILY XP EARNED':'PRACTICE XP ESTIMATE'}</span><strong>+{xpFromScore(game?.score||0).toLocaleString()} XP</strong></div>
         <div className="result-metrics"><div><strong>{game?.score.toLocaleString()}</strong><span>POINTS</span></div><div><strong>{game?.stage} / 7</strong><span>DISCOVERED</span></div><div><strong>{fmt(elapsed)}</strong><span>TIME</span></div></div>
+        <div className="reward-milestones"><span><Medal size={15}/> {game?.status==='won'?'Perfect expedition!':'Every stage counts'}</span><span><TrendingUp size={15}/> <Link href="/stats">View ranks & streaks →</Link></span></div>
         <div className="result-stages">{STAGES.map((v,i)=><span title={v} key={i} className={i<(game?.stage||0)?'clear':'closed'}>{i<(game?.stage||0)?<Check size={16}/>:<Lock size={15}/>}</span>)}</div>
         <div className="results-path">{game?.path.join(' → ')||'No locations discovered yet'}</div>
         {!!game?.sources?.length&&<details className="result-sources"><summary><ExternalLink size={13}/> Review factual sources</summary>{game.sources.map(s=><a key={s.stage} href={s.url} rel="noreferrer noopener" target="_blank">Stage {s.stage+1}: {s.answer} ↗</a>)}</details>}

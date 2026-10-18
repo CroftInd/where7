@@ -1,7 +1,8 @@
 'use client';
 import {useEffect,useState} from 'react';
 import Link from 'next/link';
-import {ArrowLeft,BarChart3,Flame,Trophy,MapPin,Star,Medal} from 'lucide-react';
+
+import {ArrowLeft,BarChart3,Flame,Trophy,MapPin,Star,Medal,Zap,ArrowUpRight} from 'lucide-react';
 type Stats={completed:number;dailyCompleted:number;practiceCompleted:number;perfect:number;bestScore:number;totalPoints:number;averageScore:number;currentStreak:number;longestStreak:number;locationsFound:number};
 type Achievement={id:string;name:string;description:string;earned:boolean};
 type Profile={signedIn:boolean;name:string;xp:number;level:number;rankName:string};
@@ -11,6 +12,11 @@ export default function StatsPage(){
   const [error,setError]=useState('');
   useEffect(()=>{fetch('/api/stats',{cache:'no-store'}).then(async r=>{const d=await r.json();if(!r.ok)throw new Error(d.error||'Unable to load statistics');setData(d)}).catch(e=>setError(e.message))},[]);
   const stats=data?.stats;
+  const xp=data?.profile.xp??0;
+  const level=data?.profile.level??1;
+  const currentLevelXp=level>=100?0:10*(level-1)*(level-1);
+  const nextLevelXp=level>=100?xp:10*level*level;
+  const xpProgress=level>=100?100:Math.min(100,Math.max(0,(xp-currentLevelXp)/(nextLevelXp-currentLevelXp)*100));
   const metrics=stats?[
     ['Expeditions',stats.completed,BarChart3],['Daily games',stats.dailyCompleted,MapPin],
     ['Perfect runs',stats.perfect,Star],['Current streak',`${stats.currentStreak} days`,Flame],
@@ -22,11 +28,11 @@ export default function StatsPage(){
     {error&&<div className="studio-error" role="alert">{error}</div>}
     {!data&&!error&&<p>Loading your explorer profile…</p>}
     {data&&<>
-      <div className="studio-panel" style={{padding:22,marginBottom:24}}><h2>{data.profile.name} · Level {data.profile.level}</h2><p>{data.profile.rankName} · {data.profile.xp.toLocaleString()} XP</p>{!data.profile.signedIn&&<p><Link href="/account">Create an account to keep your XP across devices →</Link></p>}</div>
+      <div className="explorer-hero"><div className="explorer-avatar"><Zap size={34}/></div><div className="explorer-identity"><span className="eyebrow">YOUR EXPLORER PASSPORT</span><h2>{data.profile.name}</h2><p>Level {level} · <strong>{data.profile.rankName}</strong></p></div><div className="explorer-xp"><strong>{xp.toLocaleString()} XP</strong><span>{level===100?"MAX LEVEL":`${(nextLevelXp-xp).toLocaleString()} XP to next level`}</span></div><div className="explorer-progress"><div style={{width:`${xpProgress}%`}}/></div>{!data.profile.signedIn&&<Link className="explorer-signin" href="/account">Save progress with an account <ArrowUpRight size={15}/></Link>}</div><div className="streak-banner"><Flame size={24}/><div><b>{stats?.currentStreak??0}-day streak</b><span>{stats?.currentStreak?"Keep the journey alive by playing each day.":"Play today to begin your daily streak."}</span></div><Link href="/">Play today <ArrowUpRight size={15}/></Link></div>
       <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(175px,1fr))',gap:14,marginBottom:32}}>
         {metrics.map(([name,value,Icon])=><div key={name} style={{border:'1px solid rgba(155,188,212,.22)',borderRadius:15,padding:20,background:'rgba(20,38,52,.72)'}}><Icon size={20}/><p style={{opacity:.7,margin:'12px 0 5px'}}>{name}</p><strong style={{fontSize:27}}>{value}</strong></div>)}
       </div>
-      <h2 style={{marginBottom:15}}>Achievements</h2>
+      <h2 style={{marginBottom:15}}>Achievement collection <span className="achievement-total">{data.achievements.filter(a=>a.earned).length}/{data.achievements.length} unlocked</span></h2>
       <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(240px,1fr))',gap:12,marginBottom:32}}>
         {data.achievements.map(a=><div key={a.id} style={{padding:18,borderRadius:14,border:'1px solid rgba(155,188,212,.2)',opacity:a.earned?1:.45}}><strong>{a.earned?'🏅':'🔒'} {a.name}</strong><p style={{margin:'8px 0 0',opacity:.8}}>{a.description}</p></div>)}
       </div>
