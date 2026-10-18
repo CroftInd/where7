@@ -32,14 +32,15 @@ export default function MapCanvas({stage,disabled=false,onSelect,pickMode=false,
     import('maplibre-gl').then(mod=>{
       if(stopped||!holder.current)return;
       const gl=mod.default;
+      if(!gl.supported()){setMapError('WebGL is unavailable in this browser. Enable hardware acceleration or try another browser.');return;}
       // CARTO Voyager is a vector style. The raster style is retained only as
       // an automatic fallback if CARTO's style endpoint is unreachable.
       const fallbackStyle:StyleSpecification={version:8,
         sources:{basemap:{type:'raster',tiles:[FALLBACK_TILE],tileSize:256,attribution:ATTRIBUTION}},
         layers:[{id:'backdrop',type:'background',paint:{'background-color':'#132c3a'}},
           {id:'basemap',type:'raster',source:'basemap',paint:{'raster-opacity':1}}]};
-      const map=new gl.Map({container:holder.current,style:CARTO_STYLE_URL,center:[-17,24],zoom:1.75,minZoom:1,maxZoom:19,attributionControl:false,pitchWithRotate:false,dragRotate:false,touchPitch:false,fadeDuration:0,renderWorldCopies:false,interactive:true});
-      let fallbackStarted=false;
+      const map=new gl.Map({container:holder.current,style:fallbackStyle,center:[-17,24],zoom:1.75,minZoom:1,maxZoom:19,attributionControl:false,pitchWithRotate:false,dragRotate:false,touchPitch:false,fadeDuration:0,renderWorldCopies:false,interactive:true});
+      let fallbackStarted=true; // Stable raster basemap is primary: avoids remote vector-style and font failures.
       map.on('error',event=>{
         const message=String(event.error?.message||'');
         // A failed vector style should not prevent the entire game loading.
@@ -53,7 +54,7 @@ export default function MapCanvas({stage,disabled=false,onSelect,pickMode=false,
       });
       instance=map;mapRef.current=map;
       map.addControl(new gl.AttributionControl({compact:true}),'bottom-left');
-      map.on('error',e=>{const text=String(e.error?.message||'');if(text.includes('style')||text.includes('WebGL'))setMapError('The map renderer is unavailable. Try refreshing or enabling hardware acceleration.');});
+      map.on('error',e=>{const message=String(e.error?.message||'');console.error('[WHERE7 map]',e.error);if(message.includes('WebGL')||message.includes('style'))setMapError('The map could not render. Check browser hardware acceleration and reload.');else if(message.includes('tile')||message.includes('fetch')||message.includes('HTTP'))setWarning('Some map tiles could not load. Check network or tile-provider access.');});
       // A fallback setStyle() can replace the initial style before its first load.
       // Initialise our interactive layers on the first fully loaded style.
       let layersInitialised=false;
@@ -127,7 +128,9 @@ export default function MapCanvas({stage,disabled=false,onSelect,pickMode=false,
       };
       map.on('load',initialiseLayers);
       map.on('style.load',initialiseLayers);
-    }).catch(()=>{setMapError('Unable to initialise the map. Install dependencies and reload.');});
+      // Avoid an indefinitely blank map if a style event was missed.
+      map.once('idle',initialiseLayers);
+    }).catch(error=>{console.error('[WHERE7 map initialization]',error);setMapError('Unable to initialise the map. Check the browser console and reload.');});
     return()=>{stopped=true;instance?.remove();mapRef.current=null;};
   },[]);
   useEffect(()=>{
