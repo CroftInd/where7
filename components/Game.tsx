@@ -13,7 +13,7 @@ export default function Game(){
   const [displayName,setDisplayName]=useState(''),[nameSaving,setNameSaving]=useState(false),[nameStatus,setNameStatus]=useState('');
   const [mode,setMode]=useState<'daily'|'practice'>('daily'),[challenge,setChallenge]=useState('london');
   const [error,setError]=useState(''),[toast,setToast]=useState(''),[selected,setSelected]=useState<string|null>(null);
-  const [feedback,setFeedback]=useState<'right'|'wrong'|null>(null),[mobileOpen,setMobileOpen]=useState(true),[sound,setSound]=useState(false);
+  const [feedback,setFeedback]=useState<'right'|'wrong'|null>(null),[mobileOpen,setMobileOpen]=useState(false),[sound,setSound]=useState(false);
   const [elapsed,setElapsed]=useState(0),[showHow,setShowHow]=useState(false),[showOptions,setShowOptions]=useState(false);
   const [countries,setCountries]=useState<string[]>([]),[countryQuery,setCountryQuery]=useState('');
   const pendingAction=useRef(false);
@@ -99,7 +99,7 @@ export default function Game(){
     <div className="game-canvas">
       <MapCanvas stage={stage||null} disabled={loading||finished||busy} selected={selected} onSelect={name=>void action('guess',name)}/>
       <aside className={`mission-panel ${mobileOpen?'':'minimised'}`} aria-live="polite">
-        <button className="mobile-grip" aria-label={mobileOpen?'Minimise clues':'Show clues'} onClick={()=>setMobileOpen(v=>!v)}><span/><ChevronDown size={18}/></button>
+        <button className="mobile-grip" aria-label={mobileOpen?'Minimise clues':'Expand clues'} aria-expanded={mobileOpen} onClick={()=>setMobileOpen(v=>!v)}><span className="mobile-grip-label">{stage?`STAGE ${stage.level+1} · ${stage.label.toUpperCase()}`:"EXPEDITION CLUES"}</span><ChevronDown size={18}/></button>
         <div className="mission-inside">
           <div className="eyebrow expedition-eyebrow"><span className="glow-diamond"/> {mode==='daily'?"TODAY'S EXPEDITION":"PRACTICE EXPEDITION"}<span className="score-value"><Sparkles size={17}/> {(game?.score||0).toLocaleString()} <small>PTS</small></span></div>
           <div className="stage-meta"><span>STEP {String(Math.min((game?.stage||0)+1,7)).padStart(2,'0')} / 07</span><span><Target size={13}/> DESTINATION UNKNOWN</span></div>
