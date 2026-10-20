@@ -8,7 +8,14 @@ type Props={stage:PublicStage|null; disabled?:boolean; onSelect?:(name:string)=>
 const emptyFC={type:'FeatureCollection',features:[]};
 // CARTO basemap key is read automatically at build time from .env.local / Vercel.
 const CARTO_API_KEY = process.env.NEXT_PUBLIC_CARTO_API_KEY?.trim();
-const BASE_TILE_URL = process.env.NEXT_PUBLIC_MAP_TILE_URL?.trim() || 'https://basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png';
+// Restore the original detailed Voyager VECTOR cartography (roads, labels, parks).
+// Unlike V15.5, the basemap must never be rendered at 4% opacity.
+const CARTO_VECTOR_STYLE = 'https://basemaps.cartocdn.com/gl/voyager-gl-style/style.json';
+const CARTO_STYLE_URL = CARTO_API_KEY
+  ? `${CARTO_VECTOR_STYLE}?key=${encodeURIComponent(CARTO_API_KEY)}`
+  : CARTO_VECTOR_STYLE;
+// A full-colour Voyager raster fallback, not the V15.5 dark_all 4%-opacity fallback.
+const BASE_TILE_URL = process.env.NEXT_PUBLIC_MAP_TILE_URL?.trim() || 'https://basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}@2x.png';
 const FALLBACK_TILE = CARTO_API_KEY && BASE_TILE_URL.includes('cartocdn.com')
   ? `${BASE_TILE_URL}${BASE_TILE_URL.includes('?') ? '&' : '?'}key=${encodeURIComponent(CARTO_API_KEY)}`
   : BASE_TILE_URL;
@@ -30,40 +37,54 @@ export default function MapCanvas({stage,disabled=false,onSelect,pickMode=false,
     import('maplibre-gl').then(mod=>{
       if(stopped||!holder.current)return;
       const gl=mod.default;
-      // Start with an entirely local style. The interactive country/marker layers
-      // must NOT depend on a third-party tile or vector style request completing.
-      const baseStyle:StyleSpecification={
+      // The map container sizing fix from V15.5 stays intact in globals.css.
+      // Voyager is the detailed map used before the blank-map repair.
+      const fallbackStyle:StyleSpecification={
         version:8,
-        glyphs:'https://tiles.basemaps.cartocdn.com/fonts/{fontstack}/{range}.pbf',
-        sources:{},
-        layers:[{id:'ocean',type:'background',paint:{'background-color':'#123146'}}]
+        sources:{basemap:{type:'raster',tiles:[FALLBACK_TILE],tileSize:256,attribution:ATTRIBUTION}},
+        layers:[
+          {id:'ocean',type:'background',paint:{'background-color':'#e8f1f3'}},
+          {id:'basemap',type:'raster',source:'basemap',paint:{'raster-opacity':1}}
+        ]
       };
-      const map=new gl.Map({container:holder.current,style:baseStyle,center:[-17,24],zoom:1.75,minZoom:1,maxZoom:19,attributionControl:false,pitchWithRotate:false,dragRotate:false,touchPitch:false,fadeDuration:0,renderWorldCopies:false,interactive:true});
+      const map=new gl.Map({container:holder.current,style:CARTO_STYLE_URL,center:[-17,24],zoom:1.75,minZoom:1,maxZoom:19,attributionControl:false,pitchWithRotate:false,dragRotate:false,touchPitch:false,fadeDuration:80,renderWorldCopies:false,interactive:true});
       instance=map;
       mapRef.current=map;
       map.addControl(new gl.AttributionControl({compact:true}),'bottom-left');
+      let layersInitialised=false;
+      let fallbackStarted=false;
+      let mapStyleTimeout:number|undefined;
+      const fallbackToRaster=()=>{
+        if(stopped||fallbackStarted||layersInitialised)return;
+        fallbackStarted=true;
+        setWarning('Detailed vector map unavailable — using Voyager map imagery.');
+        map.setStyle(fallbackStyle);
+      };
       map.on('error',e=>{
         const message=String(e.error?.message||'');
-        console.error('[WHERE7 map]',e.error);
-        if(message.toLowerCase().includes('webgl')||message.toLowerCase().includes('context lost')){
+        console.warn('[WHERE7 map]',message);
+        if(/webgl|context lost/i.test(message)){
           setMapError('Unable to render the interactive map. Check browser WebGL / hardware acceleration and reload.');
-        }else if(message.includes('tile')||message.includes('fetch')||message.includes('HTTP')||message.includes('NetworkError')){
-          // Raster basemap/glyph failures must never hide country polygons or choices.
-          setWarning(prev=>prev||'Detailed map tiles unavailable. Interactive locations remain usable.');
+        }else if(!layersInitialised&&!fallbackStarted&&/style|fetch|network|http|request|load/i.test(message)){
+          fallbackToRaster();
+        }else if(/tile|fetch|http|network/i.test(message)){
+          // Preserve rendered countries/choices even if some external tiles fail.
+          setWarning(prev=>prev||'Some map details could not load; selections remain available.');
         }
       });
-      // A fallback setStyle() can replace the initial style before its first load.
-      // Initialise our interactive layers on the first fully loaded style.
-      let layersInitialised=false;
+      // A failed third-party style must not indefinitely block country selection.
+      mapStyleTimeout=window.setTimeout(fallbackToRaster,6500);
+      // Initialise the game layers on style.load; don't wait for every tile.
       const initialiseLayers=()=>{
         // `style.load` means the style graph is ready for layers. Do not use
         // `isStyleLoaded()` here: it can stay false while raster tiles are failing,
         // which previously prevented ALL interactive sources from being added.
         if(stopped||layersInitialised)return;
         layersInitialised=true;
+        if(mapStyleTimeout!==undefined)window.clearTimeout(mapStyleTimeout);
         map.addSource('countries',{type:'geojson',data:'/world-countries.geojson'});
-        map.addLayer({id:'countries',type:'fill',source:'countries',paint:{'fill-color':'#388c9a','fill-opacity':0.55}});
-        map.addLayer({id:'country-lines',type:'line',source:'countries',paint:{'line-color':'#80d9df','line-opacity':0.85,'line-width':['interpolate',['linear'],['zoom'],1,0.45,5,1.4]}});
+        map.addLayer({id:'countries',type:'fill',source:'countries',paint:{'fill-color':'#31a3aa','fill-opacity':0.12}});
+        map.addLayer({id:'country-lines',type:'line',source:'countries',paint:{'line-color':'#238d9d','line-opacity':0.72,'line-width':['interpolate',['linear'],['zoom'],1,0.45,5,1.4]}});
         map.addLayer({id:'country-highlight',type:'line',source:'countries',filter:['==',['get','name'],'§never§'],paint:{'line-color':'#55f2d8','line-width':3,'line-opacity':1}});
         // Tiny sovereign states do not appear in the low-resolution Natural Earth polygon dataset.
         // Provide genuine map-position targets rather than invented polygons.
@@ -126,13 +147,6 @@ export default function MapCanvas({stage,disabled=false,onSelect,pickMode=false,
         // Gameplay is available before any external raster tiles are fetched.
         setReady(true);
         requestAnimationFrame(()=>{if(!stopped)map.resize()});
-        // Optional street-level imagery. Insert UNDER our local land polygons.
-        // It can time out / 403 without stopping the local interactive map.
-        try{
-          map.addSource('basemap',{type:'raster',tiles:[FALLBACK_TILE],tileSize:256,attribution:ATTRIBUTION});
-          map.addLayer({id:'basemap',type:'raster',source:'basemap',paint:{'raster-opacity':detailRef.current?0.85:0.04}},'countries');
-        }catch(error){console.warn('[WHERE7 optional basemap]',error);}
-
       };
       map.on('style.load',initialiseLayers);
       map.on('load',initialiseLayers);
@@ -144,7 +158,7 @@ export default function MapCanvas({stage,disabled=false,onSelect,pickMode=false,
       const onVisible=()=>{if(!document.hidden&&!stopped)map.resize()};
       document.addEventListener('visibilitychange',onVisible);
       // Remove observers even if React unmounts before style.load.
-      teardownExtra=()=>{observer.disconnect();window.clearTimeout(firstResize);document.removeEventListener('visibilitychange',onVisible)};
+      teardownExtra=()=>{observer.disconnect();window.clearTimeout(firstResize);if(mapStyleTimeout!==undefined)window.clearTimeout(mapStyleTimeout);document.removeEventListener('visibilitychange',onVisible)};
     }).catch(error=>{console.error('[WHERE7 map initialization]',error);setMapError('Unable to initialise the map. Check the browser console and reload.');});
     return()=>{stopped=true;teardownExtra();instance?.remove();mapRef.current=null;};
   },[]);
@@ -153,15 +167,13 @@ export default function MapCanvas({stage,disabled=false,onSelect,pickMode=false,
     if(!ready||!map)return;
     const mapInstance=map; // Capture the non-null map for nested callbacks.
     const active=stage&&!disabled;
-    map.setPaintProperty('countries','fill-opacity',active&&stage.selection==='country'?0.32:0.30);
+    map.setPaintProperty('countries','fill-opacity',detailRef.current?(active&&stage.selection==='country'?0.14:0.025):0.025);
     map.setLayoutProperty('microstates','visibility',active&&stage.selection==='country'?'visible':'none');
     map.setLayoutProperty('microstates-highlight','visibility',active&&stage.selection==='country'?'visible':'none');
-    map.setPaintProperty('country-lines','line-opacity',active&&stage.selection==='country'?0.95:0.48);
+    map.setPaintProperty('country-lines','line-opacity',detailRef.current?(active&&stage.selection==='country'?0.78:0.22):0.10);
     map.setLayoutProperty('regions-fill','visibility',active&&stage.selection==='region'?'visible':'none');
     map.setLayoutProperty('regions-lines','visibility',active&&stage.selection==='region'?'visible':'none');
     map.setLayoutProperty('region-highlight','visibility',active&&stage.selection==='region'?'visible':'none');
-    // CARTO's vector style has no layer named 'basemap'. Only change the
-    // raster fallback layer if it actually exists.
 
     const point=stage?.center||[-14,27];
     map.flyTo({center:point,zoom:stage?.zoom||1.9,duration:window.matchMedia('(prefers-reduced-motion: reduce)').matches?0:550,essential:true});
@@ -200,7 +212,13 @@ export default function MapCanvas({stage,disabled=false,onSelect,pickMode=false,
     if(stage?.selection==='country')map.setFilter('country-highlight',['==',['get','name'],selected]);
     if(stage?.selection==='region')map.setFilter('region-highlight',['==',['get','name'],selected]);
   },[selected,stage?.selection,ready]);
-  useEffect(()=>{const map=mapRef.current;if(ready&&map?.getLayer('basemap'))map.setPaintProperty('basemap','raster-opacity',detail?1:0.04)},[ready,detail]);
+  useEffect(()=>{
+    const map=mapRef.current;if(!ready||!map)return;
+    // The Layers button now toggles the highlighted borders, not the actual map.
+    // It must never turn streets/place names almost invisible again.
+    if(map.getLayer('countries'))map.setPaintProperty('countries','fill-opacity',detail?(stage?.selection==='country'?0.14:0.025):0.025);
+    if(map.getLayer('country-lines'))map.setPaintProperty('country-lines','line-opacity',detail?(stage?.selection==='country'?0.78:0.22):0.10);
+  },[ready,detail,stage?.selection]);
   const zoom=(n:number)=>mapRef.current?.zoomTo((mapRef.current?.getZoom()||2)+n,{duration:260});
   return <div className="map-root">
     <div ref={holder} className="map-container" aria-label="Interactive geography map" role="application"/>
@@ -212,7 +230,7 @@ export default function MapCanvas({stage,disabled=false,onSelect,pickMode=false,
       <button type="button" onClick={()=>zoom(1)} aria-label="Zoom in"><Plus size={19}/></button>
       <button type="button" onClick={()=>zoom(-1)} aria-label="Zoom out"><Minus size={19}/></button>
       <button type="button" onClick={()=>mapRef.current?.flyTo({center:stage?.center||[-17,24],zoom:stage?.zoom||2,duration:500})} aria-label="Recenter"><LocateFixed size={18}/></button>
-      <button type="button" onClick={()=>setDetail(v=>!v)} aria-label={detail?'Hide fallback map detail':'Show fallback map detail'} title="Toggle fallback map detail"><Layers size={18}/></button>
+      <button type="button" onClick={()=>setDetail(v=>!v)} aria-label={detail?'Reduce country border highlights':'Show country border highlights'} title="Toggle border highlights"><Layers size={18}/></button>
     </div>
     <div className="map-corner-title"><Compass size={17}/> {pickMode?'CHOOSE A POSITION':stage?.label?.toUpperCase()||'THE EXPEDITION'}</div>
     {stage&&!disabled&&!pickMode&&<div className="map-action-hint">✦ {stage.selection==='country'?'Hover countries · Click to answer':stage.selection==='region'?'Select a region on the map':'Choose a highlighted location'}</div>}
