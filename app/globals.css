@@ -91,3 +91,27 @@
 .map-load-error{width:min(340px,calc(100% - 26px));text-align:center;pointer-events:auto}
 .map-boundary-note{pointer-events:none;max-width:min(320px,calc(100% - 24px));z-index:9}
 @media(max-width:700px){.map-load-error{top:24%;left:50%}.map-boundary-note{top:58px;right:12px;font-size:10px}}
+
+/* V15.5 — critical MapLibre layout fix.
+   MapLibre adds .maplibregl-map { position: relative } to its container.
+   That overrides WHERE7's previous .map-container { position: absolute }
+   at equal specificity when CSS chunks load after the app stylesheet,
+   causing the map element to collapse to 0px high with no JS error.
+   Deliberately target the same element after MapLibre attaches its class. */
+.game-canvas .map-root > .map-container.maplibregl-map,
+.studio-map-pick .map-root > .map-container.maplibregl-map {
+  position: absolute !important;
+  top: 0; right: 0; bottom: 0; left: 0;
+  width: 100%;
+  height: 100%;
+  min-width: 0;
+  min-height: 0;
+}
+/* Keep the parent dimensioned and positioned on desktop, mobile and admin. */
+.game-canvas > .map-root,
+.studio-map-pick .map-root {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
