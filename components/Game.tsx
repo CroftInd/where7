@@ -16,13 +16,13 @@ export default function Game(){
   const [mode,setMode]=useState<'daily'|'practice'>('daily'),[challenge,setChallenge]=useState('london');
   const [error,setError]=useState(''),[toast,setToast]=useState(''),[selected,setSelected]=useState<string|null>(null);
   const [feedback,setFeedback]=useState<'right'|'wrong'|null>(null),[feedbackText,setFeedbackText]=useState(''),[mobileOpen,setMobileOpen]=useState(false);
-  const [settingsOpen,setSettingsOpen]=useState(false),[settingsReady,setSettingsReady]=useState(false);
+  const [settingsOpen,setSettingsOpen]=useState(false),[mobileNavOpen,setMobileNavOpen]=useState(false),[settingsReady,setSettingsReady]=useState(false);
   const [preferences,setPreferences]=useState({sound:false,haptics:false,reduceMotion:false});
   const [animatedScore,setAnimatedScore]=useState(0);
   const touchStartY=useRef<number|null>(null),ignoreGripClick=useRef(false);
 
   const [celebrate,setCelebrate]=useState(false);
-  const timers=useRef<ReturnType<typeof setTimeout>[]>([]);
+  const timers=useRef<number[]>([]);
   const [elapsed,setElapsed]=useState(0),[showHow,setShowHow]=useState(false),[showOptions,setShowOptions]=useState(false);
   const [countries,setCountries]=useState<string[]>([]),[countryQuery,setCountryQuery]=useState('');
   const pendingAction=useRef(false);
@@ -47,7 +47,7 @@ export default function Game(){
   useEffect(()=>{
     const onKey=(e:KeyboardEvent)=>{
       if(e.key!=='Escape')return;
-      setSelected(null);setSettingsOpen(false);setShowOptions(false);
+      setSelected(null);setSettingsOpen(false);setMobileNavOpen(false);setShowOptions(false);
     };
     window.addEventListener('keydown',onKey);
     return()=>window.removeEventListener('keydown',onKey);
@@ -186,13 +186,21 @@ export default function Game(){
       <nav className="header-actions" aria-label="Main menu">
         <span className="header-date"><Flame size={14}/> Daily expedition</span>
         <button type="button" className="sound-button" title="Toggle sound" onClick={()=>setPreferences(p=>({...p,sound:!p.sound}))} aria-label={preferences.sound?'Mute sounds':'Enable sounds'}>{preferences.sound?<Volume2 size={19}/>:<VolumeX size={19}/>}</button>
-        <button type="button" className="sound-button settings-toggle" title="Game preferences" aria-expanded={settingsOpen} aria-controls="game-preferences" onClick={()=>setSettingsOpen(v=>!v)}><Settings2 size={19}/><span className="sr-only">Game preferences</span></button>
+        <button type="button" className="sound-button settings-toggle" title="Game preferences" aria-expanded={settingsOpen} aria-controls="game-preferences" onClick={()=>{setSettingsOpen(v=>!v);setMobileNavOpen(false)}}><Settings2 size={19}/><span className="sr-only">Game preferences</span></button>
         <button type="button" className="header-link" onClick={()=>setShowHow(true)}><Info size={17}/><span>How to play</span></button>
         <Link className="header-link" href="/leaderboard" aria-label="Open daily leaderboard"><Trophy size={17}/><span>Leaderboard</span></Link>
         <Link className="header-link" href="/account"><span>Account</span></Link>
         <Link className="header-link" href="/stats" aria-label="Open explorer statistics"><Target size={17}/><span>My stats</span></Link>
         <Link className="header-link" href="/archive" aria-label="Open challenge archive"><BookOpen size={17}/><span>Archive</span></Link>
+        <button type="button" className="mobile-menu-toggle" aria-label="Open navigation" aria-expanded={mobileNavOpen} aria-controls="mobile-navigation" onClick={()=>{setMobileNavOpen(v=>!v);setSettingsOpen(false)}}>{mobileNavOpen?<X size={20}/>:<Menu size={20}/>}</button>
       </nav>
+      {mobileNavOpen&&<nav id="mobile-navigation" className="mobile-nav-panel" aria-label="Game navigation">
+        <button type="button" onClick={()=>{setShowHow(true);setMobileNavOpen(false)}}><Info size={18}/> How to play</button>
+        <Link href="/leaderboard"><Trophy size={18}/> Leaderboard</Link>
+        <Link href="/account"><Target size={18}/> My account</Link>
+        <Link href="/stats"><TrendingUp size={18}/> My statistics</Link>
+        <Link href="/archive"><BookOpen size={18}/> Challenge archive</Link>
+      </nav>}
       {settingsOpen&&<section id="game-preferences" className="game-settings-panel" aria-label="Game preferences">
         <div className="game-settings-heading"><b>EXPEDITION SETTINGS</b><button type="button" onClick={()=>setSettingsOpen(false)} aria-label="Close preferences"><X size={18}/></button></div>
         <label><span><Volume2 size={17}/> Sound effects</span><input type="checkbox" checked={preferences.sound} onChange={e=>setPreferences(p=>({...p,sound:e.target.checked}))}/></label>

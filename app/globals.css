@@ -203,3 +203,15 @@
 /* Explicit user reduced-motion choice; also honours system accessibility settings. */
 .app-shell.reduce-motion *, .app-shell.reduce-motion *::before,.app-shell.reduce-motion *::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}
 @media(prefers-reduced-motion:reduce){.map-confirm-card,.stage-feedback-banner{animation:none!important}}
+
+/* Phone navigation has deliberate space for the WHERE7 wordmark and preferences. */
+.mobile-menu-toggle{display:none}
+.mobile-nav-panel{display:none}
+@media(max-width:700px){
+ .site-header .header-actions .header-link{display:none!important}
+ .mobile-menu-toggle{display:grid;place-items:center;flex-shrink:0;min-width:42px;min-height:42px;color:#e7fffb;background:#123344;border:1px solid #436f7d;border-radius:10px}
+ .mobile-nav-panel{position:absolute;z-index:39;top:calc(100% + 7px);right:8px;width:min(310px,calc(100vw - 16px));display:flex;flex-direction:column;gap:3px;padding:9px;background:linear-gradient(145deg,#102c40,#081d2b);border:1px solid #578797;border-radius:15px;box-shadow:0 21px 60px #000c}
+ .mobile-nav-panel a,.mobile-nav-panel button{display:flex;align-items:center;gap:12px;text-align:left;text-decoration:none;width:100%;min-height:47px;padding:11px 13px;border:0;border-radius:10px;background:transparent;color:#effaff;font-size:13px;font-weight:760}
+ .mobile-nav-panel a:hover,.mobile-nav-panel button:hover{background:#245063}
+ .mobile-nav-panel svg{color:#89e2d6}
+}
