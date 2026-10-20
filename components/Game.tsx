@@ -68,7 +68,7 @@ export default function Game(){
     const start=touchStartY.current;touchStartY.current=null;
     if(start===null)return;
     const difference=start-(e.changedTouches[0]?.clientY??start);
-    if(Math.abs(difference)>36){setMobileOpen(difference>0);ignoreGripClick.current=true;}
+    if(Math.abs(difference)>36){setMobileOpen(difference>0);ignoreGripClick.current=true;window.setTimeout(()=>{ignoreGripClick.current=false},450);}
   };
   const sessionStart=game?.startedAt;
   useEffect(()=>{if(!sessionStart)return;const update=()=>setElapsed(Math.max(0,Date.now()-new Date(sessionStart).getTime()));update();const id=setInterval(update,1000);return()=>clearInterval(id)},[sessionStart]);
@@ -138,8 +138,8 @@ export default function Game(){
     // must keep its existing anti-reset protection.
     if(kind==='restart'&&game.mode!=='practice')return;
     if(kind==='giveup'&&!confirm('End this expedition? Your daily run cannot be restarted.'))return;
-    pendingAction.current=true;setBusy(true);setError('');
     if(kind==='guess'&&!answer)return;
+    pendingAction.current=true;setBusy(true);setError('');
     try{
       const response=await fetch('/api/game',{method:'POST',headers:{'Content-Type':'application/json'},
         body:JSON.stringify({action:kind,mode:game.mode,challengeId:game.challengeId,stage:game.stage,answer})});
@@ -284,7 +284,7 @@ export default function Game(){
           <button className="secondary-action" onClick={()=>switchMode('practice',game?.challengeId||'london')}><Play size={16}/> Practice</button></div>
         {game?.mode==='practice'&&<button className="result-again" onClick={()=>void action('restart')}><RotateCcw size={15}/> Restart this practice puzzle</button>}
       </div></div>}
-      {showHow&&<div className="modal-scrim" role="dialog" aria-modal="true" aria-labelledby="how-title"><div className="how-modal"><button className="close-modal" aria-label="Close instructions" onClick={closeHow}><X size={19}/></button><div className="eyebrow"><BookOpen size={16}/> YOUR FIELD GUIDE</div><h2 id="how-title">Seven clues. One place.</h2><p>Begin with the entire world. Read each factual statement and select the correct location directly on the interactive map.</p><div className="how-lines"><div><Compass/><span>Correct answers reveal more specific locations.</span></div><div><CircleHelp/><span>Every guess, right or wrong, uses one of seven chances.</span></div><div><Trophy/><span>Only seven correct answers unlock the final building.</span></div><div><Lightbulb/><span>Hints cost points, but not chances.</span></div></div><button className="primary-action" onClick={closeHow}>Begin expedition <ArrowRight size={17}/></button></div></div>}
+      {showHow&&<div className="modal-scrim" role="dialog" aria-modal="true" aria-labelledby="how-title"><div className="how-modal"><button className="close-modal" aria-label="Close instructions" onClick={closeHow}><X size={19}/></button><div className="eyebrow"><BookOpen size={16}/> YOUR FIELD GUIDE</div><h2 id="how-title">Seven clues. One place.</h2><p>Begin with the entire world. Read each factual statement, tap the location on the interactive map, then confirm your choice before using a chance.</p><div className="how-lines"><div><Compass/><span>Correct answers reveal more specific locations.</span></div><div><CircleHelp/><span>Every guess, right or wrong, uses one of seven chances.</span></div><div><Trophy/><span>Only seven correct answers unlock the final building.</span></div><div><Lightbulb/><span>Hints cost points, but not chances.</span></div></div><button className="primary-action" onClick={closeHow}>Begin expedition <ArrowRight size={17}/></button></div></div>}
     </div>
   </main>
 }
