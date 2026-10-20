@@ -2,9 +2,10 @@
 import {useEffect,useRef,useState} from 'react';
 import Link from 'next/link';
 import dynamic from 'next/dynamic';
-import {Map,Settings2,Compass,CircleHelp,HelpCircle,Flame,Sparkles,Lightbulb,Flag,Share2,RotateCcw,Check,Lock,ChevronDown,Volume2,VolumeX,Info,ExternalLink,ArrowRight,Trophy,Target,Clock,Menu,Play,X,BookOpen,Gift,Zap,Medal,TrendingUp} from 'lucide-react';
+import {Map,Settings2,Compass,CircleHelp,HelpCircle,Flame,Sparkles,Lightbulb,Flag,Share2,RotateCcw,Check,Lock,ChevronDown,Volume2,VolumeX,Info,ChevronUp,CheckCircle2,ExternalLink,ArrowRight,Trophy,Target,Clock,Menu,Play,X,BookOpen,Gift,Zap,Medal,TrendingUp} from 'lucide-react';
 import type {PublicGame} from '@/lib/types';
 import {xpFromScore} from '@/lib/ranks';
+import {formatScore,shouldAnimate} from '@/lib/presentation';
 const MapCanvas=dynamic(()=>import('./MapCanvas'),{ssr:false,loading:()=> <div className="map-loading"><div className="loading-orb"/>Preparing your atlas…</div>});
 const STAGES=['COUNTRY','STATE / REGION','CITY','AREA','DISTRICT','STREET','BUILDING'];
 const fmt=(t:number)=>{let seconds=Math.floor(t/1000);return `${String(Math.floor(seconds/60)).padStart(2,'0')}:${String(seconds%60).padStart(2,'0')}`};
@@ -14,16 +15,81 @@ export default function Game(){
   const [displayName,setDisplayName]=useState(''),[nameSaving,setNameSaving]=useState(false),[nameStatus,setNameStatus]=useState('');
   const [mode,setMode]=useState<'daily'|'practice'>('daily'),[challenge,setChallenge]=useState('london');
   const [error,setError]=useState(''),[toast,setToast]=useState(''),[selected,setSelected]=useState<string|null>(null);
-  const [feedback,setFeedback]=useState<'right'|'wrong'|null>(null),[mobileOpen,setMobileOpen]=useState(false),[sound,setSound]=useState(false);
+  const [feedback,setFeedback]=useState<'right'|'wrong'|null>(null),[feedbackText,setFeedbackText]=useState(''),[mobileOpen,setMobileOpen]=useState(false);
+  const [settingsOpen,setSettingsOpen]=useState(false),[settingsReady,setSettingsReady]=useState(false);
+  const [preferences,setPreferences]=useState({sound:false,haptics:false,reduceMotion:false});
+  const [animatedScore,setAnimatedScore]=useState(0);
+  const touchStartY=useRef<number|null>(null),ignoreGripClick=useRef(false);
+
   const [celebrate,setCelebrate]=useState(false);
+  const timers=useRef<ReturnType<typeof setTimeout>[]>([]);
   const [elapsed,setElapsed]=useState(0),[showHow,setShowHow]=useState(false),[showOptions,setShowOptions]=useState(false);
   const [countries,setCountries]=useState<string[]>([]),[countryQuery,setCountryQuery]=useState('');
   const pendingAction=useRef(false);
   const loadRequestId=useRef(0);
   const currentLoad=useRef<AbortController|null>(null);
   const prevLives=useRef(7),[breaking,setBreaking]=useState<number|null>(null),timer=useRef<ReturnType<typeof setTimeout>|null>(null);
+  useEffect(()=>{
+    try{
+      const saved=window.localStorage.getItem('where7-preferences-v1');
+      if(saved){const parsed=JSON.parse(saved) as Record<string,unknown>;
+        setPreferences({sound:parsed.sound===true,haptics:parsed.haptics===true,reduceMotion:parsed.reduceMotion===true});
+      } else if(window.matchMedia('(prefers-reduced-motion: reduce)').matches){
+        setPreferences(p=>({...p,reduceMotion:true}));
+      }
+    }catch{/* Storage is optional: the game must work without it. */}
+    setSettingsReady(true);
+  },[]);
+  useEffect(()=>{
+    if(!settingsReady)return;
+    try{window.localStorage.setItem('where7-preferences-v1',JSON.stringify(preferences));}catch{}
+  },[settingsReady,preferences]);
+  useEffect(()=>{
+    const onKey=(e:KeyboardEvent)=>{
+      if(e.key!=='Escape')return;
+      setSelected(null);setSettingsOpen(false);setShowOptions(false);
+    };
+    window.addEventListener('keydown',onKey);
+    return()=>window.removeEventListener('keydown',onKey);
+  },[]);
+  useEffect(()=>()=>{timers.current.forEach(clearTimeout);timers.current=[];},[]);
+  const motionAllowed=shouldAnimate(preferences.reduceMotion);
+  const bump= (success:boolean)=>{
+    if(!preferences.haptics)return;
+    try{navigator.vibrate?.(success?[14,40,26]:[35]);}catch{}
+  };
+  const choose=(name:string)=>{
+    if(!game||game.status!=='playing'||busy||loading)return;
+    setSelected(name);setFeedback(null);
+    if(preferences.haptics){try{navigator.vibrate?.(8);}catch{}}
+  };
+  const handleGripTouchStart=(e:React.TouchEvent<HTMLButtonElement>)=>{touchStartY.current=e.touches[0]?.clientY??null};
+  const handleGripTouchEnd=(e:React.TouchEvent<HTMLButtonElement>)=>{
+    const start=touchStartY.current;touchStartY.current=null;
+    if(start===null)return;
+    const difference=start-(e.changedTouches[0]?.clientY??start);
+    if(Math.abs(difference)>36){setMobileOpen(difference>0);ignoreGripClick.current=true;}
+  };
   const sessionStart=game?.startedAt;
   useEffect(()=>{if(!sessionStart)return;const update=()=>setElapsed(Math.max(0,Date.now()-new Date(sessionStart).getTime()));update();const id=setInterval(update,1000);return()=>clearInterval(id)},[sessionStart]);
+  useEffect(()=>{
+    const target=game?.score??0;
+    if(!motionAllowed){setAnimatedScore(target);return;}
+    let frame=0;
+    const from=animatedScore;
+    const delta=target-from;
+    if(delta===0)return;
+    const started=performance.now();
+    const tick=(now:number)=>{
+      const progress=Math.min(1,(now-started)/620);
+      const eased=1-Math.pow(1-progress,3);
+      setAnimatedScore(Math.round(from+delta*eased));
+      if(progress<1)frame=requestAnimationFrame(tick);
+    };
+    frame=requestAnimationFrame(tick);
+    return()=>cancelAnimationFrame(frame);
+    // Start a new count-up only when the server's score changes.
+  },[game?.score,motionAllowed]);
   const load=async(m:'daily'|'practice'=mode,id=challenge)=>{
     // Keep responses from old daily/practice requests from overwriting the
     // user's latest selection. Otherwise UI mode and server session can differ.
@@ -63,7 +129,7 @@ export default function Game(){
   }).catch(()=>{})},[]);
   useEffect(()=>{if(!toast)return;const id=setTimeout(()=>setToast(''),3500);return()=>clearTimeout(id)},[toast]);
   const playTone=(correct:boolean)=>{
-    if(!sound)return;
+    if(!preferences.sound)return;
     try{const Ctx=window.AudioContext;const ctx=new Ctx();const notes=correct?[440,554,660]:[270,200];notes.forEach((n,i)=>{const o=ctx.createOscillator(),g=ctx.createGain();o.type='sine';o.frequency.value=n;g.gain.setValueAtTime(0.00001,ctx.currentTime+i*0.09);g.gain.exponentialRampToValueAtTime(0.055,ctx.currentTime+i*0.09+0.012);g.gain.exponentialRampToValueAtTime(0.00001,ctx.currentTime+i*0.09+0.2);o.connect(g).connect(ctx.destination);o.start(ctx.currentTime+i*0.09);o.stop(ctx.currentTime+i*0.09+0.21)});setTimeout(()=>void ctx.close(),950)}catch{}
   };
   const action=async(kind:'guess'|'hint'|'giveup'|'restart',answer?:string)=>{
@@ -73,21 +139,23 @@ export default function Game(){
     if(kind==='restart'&&game.mode!=='practice')return;
     if(kind==='giveup'&&!confirm('End this expedition? Your daily run cannot be restarted.'))return;
     pendingAction.current=true;setBusy(true);setError('');
-    if(kind==='guess')setSelected(answer||'');
+    if(kind==='guess'&&!answer)return;
     try{
       const response=await fetch('/api/game',{method:'POST',headers:{'Content-Type':'application/json'},
         body:JSON.stringify({action:kind,mode:game.mode,challengeId:game.challengeId,stage:game.stage,answer})});
       const data=await response.json();if(!response.ok)throw new Error(data.error||'Unable to submit');
       if(kind==='guess'){
-        const right=Boolean(data.correct);setFeedback(right?'right':'wrong');playTone(right);
-        if(right){setCelebrate(true);window.setTimeout(()=>setCelebrate(false),1100)}
+        const right=Boolean(data.correct);setFeedback(right?'right':'wrong');setFeedbackText(right?`${answer} confirmed`:`Not quite — try another place`);playTone(right);bump(right);
+        if(right&&motionAllowed){setCelebrate(true);timers.current.push(window.setTimeout(()=>setCelebrate(false),1100));}
         if(data.game.hearts<prevLives.current){setBreaking(prevLives.current-1);setTimeout(()=>setBreaking(null),670)}
         prevLives.current=data.game.hearts;
         setToast(right?`✦ ${answer} — location confirmed`:`${answer} isn't correct · ${data.game.hearts} chances left`);
       }
       if(kind==='hint')setToast('Field note opened · 125-point deduction if correct');
       if(kind==='restart'){prevLives.current=7;setToast('Practice expedition restarted');}
-      setGame(data.game);setTimeout(()=>{setSelected(null);setFeedback(null)},850);
+      setGame(data.game);
+      setSelected(null);
+      timers.current.push(window.setTimeout(()=>{setFeedback(null);setFeedbackText('');},motionAllowed?950:320));
     }catch(e){setError(e instanceof Error?e.message:'Unable to submit');setSelected(null)}
     finally{setBusy(false);pendingAction.current=false}
   };
@@ -108,27 +176,45 @@ export default function Game(){
     try{await navigator.clipboard.writeText(str);setToast('Shareable result copied')}catch{setToast('Clipboard unavailable. Select and copy the results instead.')}
   };
   const stage=game?.current;const finished=!!game&&game.status!=='playing';
-  return <main className="app-shell">
+  const toggleGrip=()=>{if(ignoreGripClick.current){ignoreGripClick.current=false;return}setMobileOpen(v=>!v)};
+  const chosenStage=selected&&stage&&!finished&&!feedback;
+
+  return <main className={`app-shell ${preferences.reduceMotion?'reduce-motion':''}`}>
     <header className="site-header">
       <a href="/" className="brand" aria-label="WHERE7 home"><div className="brand-icon"><Compass size={22}/></div><strong>WHERE<span>7</span></strong><span className="brand-separator"/><small>THE DAILY GEOGRAPHY GAME</small></a>
       <div className="season-chip">SEASON 01 <span className="live-dot"/></div>
       <nav className="header-actions" aria-label="Main menu">
         <span className="header-date"><Flame size={14}/> Daily expedition</span>
-        <button type="button" className="sound-button" title="Toggle sound" onClick={()=>setSound(v=>!v)} aria-label={sound?'Mute sounds':'Enable sounds'}>{sound?<Volume2 size={19}/>:<VolumeX size={19}/>}</button>
+        <button type="button" className="sound-button" title="Toggle sound" onClick={()=>setPreferences(p=>({...p,sound:!p.sound}))} aria-label={preferences.sound?'Mute sounds':'Enable sounds'}>{preferences.sound?<Volume2 size={19}/>:<VolumeX size={19}/>}</button>
+        <button type="button" className="sound-button settings-toggle" title="Game preferences" aria-expanded={settingsOpen} aria-controls="game-preferences" onClick={()=>setSettingsOpen(v=>!v)}><Settings2 size={19}/><span className="sr-only">Game preferences</span></button>
         <button type="button" className="header-link" onClick={()=>setShowHow(true)}><Info size={17}/><span>How to play</span></button>
         <Link className="header-link" href="/leaderboard" aria-label="Open daily leaderboard"><Trophy size={17}/><span>Leaderboard</span></Link>
         <Link className="header-link" href="/account"><span>Account</span></Link>
         <Link className="header-link" href="/stats" aria-label="Open explorer statistics"><Target size={17}/><span>My stats</span></Link>
         <Link className="header-link" href="/archive" aria-label="Open challenge archive"><BookOpen size={17}/><span>Archive</span></Link>
       </nav>
+      {settingsOpen&&<section id="game-preferences" className="game-settings-panel" aria-label="Game preferences">
+        <div className="game-settings-heading"><b>EXPEDITION SETTINGS</b><button type="button" onClick={()=>setSettingsOpen(false)} aria-label="Close preferences"><X size={18}/></button></div>
+        <label><span><Volume2 size={17}/> Sound effects</span><input type="checkbox" checked={preferences.sound} onChange={e=>setPreferences(p=>({...p,sound:e.target.checked}))}/></label>
+        <label><span><Zap size={17}/> Haptic feedback</span><input type="checkbox" checked={preferences.haptics} onChange={e=>setPreferences(p=>({...p,haptics:e.target.checked}))}/></label>
+        <label><span><Sparkles size={17}/> Reduce animations</span><input type="checkbox" checked={preferences.reduceMotion} onChange={e=>setPreferences(p=>({...p,reduceMotion:e.target.checked}))}/></label>
+        <small>Saved on this device. Haptics work on supported browsers.</small>
+      </section>}
     </header>
-    <div className={`game-canvas ${celebrate?'stage-celebrate':''}`}>
+    <div className={`game-canvas ${celebrate?'stage-celebrate':''} ${mobileOpen?'sheet-expanded':'sheet-compact'}`}>
       {celebrate&&<div className="discovery-burst" aria-hidden="true">{Array.from({length:12},(_,i)=><span key={i} style={{'--ray':i} as React.CSSProperties}>✦</span>)}</div>}
-      <MapCanvas stage={stage||null} disabled={loading||finished||busy} selected={selected} onSelect={name=>void action('guess',name)}/>
-      <aside className={`mission-panel ${mobileOpen?'':'minimised'}`} aria-live="polite">
-        <button className="mobile-grip" aria-label={mobileOpen?'Minimise clues':'Expand clues'} aria-expanded={mobileOpen} onClick={()=>setMobileOpen(v=>!v)}><span className="mobile-grip-label">{stage?`STAGE ${stage.level+1} · ${stage.label.toUpperCase()}`:"EXPEDITION CLUES"}</span><ChevronDown size={18}/></button>
-        <div className="mission-inside">
-          <div className="eyebrow expedition-eyebrow"><span className="glow-diamond"/> {mode==='daily'?"TODAY'S EXPEDITION":"PRACTICE EXPEDITION"}<span className="score-value"><Sparkles size={17}/> {(game?.score||0).toLocaleString()} <small>PTS</small></span></div>
+      <MapCanvas stage={stage||null} disabled={loading||finished||busy||!!feedback} selected={selected} reduceMotion={preferences.reduceMotion} onSelect={choose}/>
+      {chosenStage&&<div className="map-confirm-card" role="group" aria-label="Confirm your map selection">
+        <div className="map-confirm-marker"><Target size={19}/></div>
+        <div className="map-confirm-text"><span>YOUR SELECTION · 1 CHANCE</span><strong title={selected||''}>{selected}</strong></div>
+        <div className="map-confirm-buttons"><button type="button" className="confirm-clear" onClick={()=>setSelected(null)} aria-label="Cancel selected location"><X size={19}/></button><button type="button" className="confirm-submit" disabled={busy} onClick={()=>void action('guess',selected||undefined)}><Check size={17}/> Confirm</button></div>
+      </div>}
+      {feedback&&<div className={`stage-feedback-banner ${feedback}`} role="status" aria-live="polite">{feedback==='right'?<CheckCircle2 size={22}/>:<HelpCircle size={22}/>}<span>{feedbackText}</span></div>}
+      <aside className={`mission-panel ${mobileOpen?'':'minimised'}`} aria-live="off">
+        <button type="button" className="mobile-grip" aria-label={mobileOpen?'Collapse clue sheet':'Expand clue sheet'} aria-expanded={mobileOpen} aria-controls="mission-details" onClick={toggleGrip} onTouchStart={handleGripTouchStart} onTouchEnd={handleGripTouchEnd}><span className="grip-pill" aria-hidden="true"/><span className="mobile-grip-label">{stage?`STAGE ${stage.level+1} · ${stage.label.toUpperCase()}`:'EXPEDITION CLUES'}</span>{mobileOpen?<ChevronDown size={19}/>:<ChevronUp size={19}/>}</button>
+        {!mobileOpen&&<div className="sheet-peek"><div><span className="peek-eyebrow"><CircleHelp size={13}/> {game?.hearts??7} chances left · {formatScore(animatedScore)} pts</span><strong>{stage?.clue|| (loading?'Preparing today’s clue…':finished?'Your expedition report is ready.':'Choose a destination to explore.')}</strong></div><button type="button" onClick={()=>setMobileOpen(true)}>Read clue <ChevronUp size={16}/></button></div>}
+        <div className="mission-inside" id="mission-details">
+          <div className="eyebrow expedition-eyebrow"><span className="glow-diamond"/> {mode==='daily'?"TODAY'S EXPEDITION":"PRACTICE EXPEDITION"}<span className="score-value"><Sparkles size={17}/> {formatScore(animatedScore)} <small>PTS</small></span></div>
           <div className="stage-meta"><span>STEP {String(Math.min((game?.stage||0)+1,7)).padStart(2,'0')} / 07</span><span><Target size={13}/> DESTINATION UNKNOWN</span></div>
           <div className="progress-track" aria-label="Stage progress">{STAGES.map((v,i)=><div key={v} className={i<(game?.stage||0)?'done':i===(game?.stage||0)?'active':''}/>)}</div>
           <div className={`heart-container ${breaking!==null?'heart-loss':''}`}>
@@ -149,14 +235,15 @@ export default function Game(){
                 {stage.hint&&<div className="hint-content"><Lightbulb size={17}/> {stage.hint}</div>}
               </section>
 
-              <div className="select-helper">{stage.selection==='country'?'Choose a country. Hover to see its name.':stage.selection==='region'?'Select the correct state or region.':'Explore the map and choose the correct location.'}</div>
+              <div className="select-helper">{stage.selection==='country'?'Tap a country, then confirm before spending a chance.':stage.selection==='region'?'Tap a region or marker, then confirm your selection.':'Explore the map, select a marker, then confirm your choice.'}</div>
+              {chosenStage&&<div className="selected-inline"><Target size={15}/> Selected: <strong>{selected}</strong><div className="selected-actions"><button type="button" className="confirm-clear" onClick={()=>setSelected(null)}><X size={16}/> Change</button><button type="button" className="confirm-submit" disabled={busy} onClick={()=>void action('guess',selected||undefined)}><Check size={16}/> Confirm guess</button></div></div>}
               <div className="mission-actions">
                 <button className="primary-action" disabled={busy||!!stage.hint} onClick={()=>void action('hint')}><Lightbulb size={17}/>{stage.hint?'Hint revealed':'Hint (−125 pts)'}</button>
                 <button className="secondary-action" disabled={busy} onClick={()=>void action('giveup')}><Flag size={16}/> Give up</button>
               </div>
               <details className="accessible-options"><summary>Need a list of selectable locations?</summary>
-                {stage.selection==='country'?<><input className="country-search" placeholder="Search a country…" value={countryQuery} onChange={e=>setCountryQuery(e.target.value)} aria-label="Search country names"/><div className="options-list country-list">{countries.filter(v=>v.toLowerCase().includes(countryQuery.trim().toLowerCase())).slice(0,25).map(v=><button key={v} onClick={()=>void action('guess',v)} disabled={busy}>{v}</button>)}</div></>:
-                <div className="options-list">{stage.choices.map(v=><button key={v.id} onClick={()=>void action('guess',v.name)} disabled={busy}>{v.name}</button>)}</div>}
+                {stage.selection==='country'?<><input className="country-search" placeholder="Search a country…" value={countryQuery} onChange={e=>setCountryQuery(e.target.value)} aria-label="Search country names"/><div className="options-list country-list">{countries.filter(v=>v.toLowerCase().includes(countryQuery.trim().toLowerCase())).slice(0,25).map(v=><button key={v} onClick={()=>choose(v)} disabled={busy}>{v}</button>)}</div></>:
+                <div className="options-list">{stage.choices.map(v=><button key={v.id} onClick={()=>choose(v.name)} disabled={busy}>{v.name}</button>)}</div>}
               </details>
             </>:game&&<div className="inline-result"><Trophy size={32}/><h2>{game.status==='won'?'Perfect discovery!':game.status==='lost'?'Journey complete':'Expedition ended'}</h2><p>{game.status==='won'?'Seven flawless choices. You reached the final destination.':'The destination remains a mystery. Try a practice expedition.'}</p><button onClick={()=>void share()} className="primary-action"><Share2 size={17}/> Share result</button></div>}
           {error&&<div className="form-error" role="alert">{error}</div>}

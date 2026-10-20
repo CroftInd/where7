@@ -2,9 +2,10 @@
 import {useCallback,useEffect,useRef,useState} from 'react';
 import type {PublicStage} from '@/lib/types';
 import type {Map as MaplibreMap,StyleSpecification,GeoJSONSource} from 'maplibre-gl';
-import {Compass,LocateFixed,Plus,Minus,Layers,AlertCircle} from 'lucide-react';
+import {Compass,LocateFixed,Plus,Minus,Layers,AlertCircle,RefreshCw} from 'lucide-react';
+import {mapCameraOffset,shouldAnimate} from '@/lib/presentation';
 
-type Props={stage:PublicStage|null; disabled?:boolean; onSelect?:(name:string)=>void; pickMode?:boolean; onPick?:(lat:number,lng:number)=>void; selected?:string|null;};
+type Props={stage:PublicStage|null; disabled?:boolean; onSelect?:(name:string)=>void; pickMode?:boolean; onPick?:(lat:number,lng:number)=>void; selected?:string|null; reduceMotion?:boolean;};
 const emptyFC={type:'FeatureCollection',features:[]};
 // CARTO basemap key is read automatically at build time from .env.local / Vercel.
 const CARTO_API_KEY = process.env.NEXT_PUBLIC_CARTO_API_KEY?.trim();
@@ -20,14 +21,17 @@ const FALLBACK_TILE = CARTO_API_KEY && BASE_TILE_URL.includes('cartocdn.com')
   ? `${BASE_TILE_URL}${BASE_TILE_URL.includes('?') ? '&' : '?'}key=${encodeURIComponent(CARTO_API_KEY)}`
   : BASE_TILE_URL;
 const ATTRIBUTION=process.env.NEXT_PUBLIC_MAP_ATTRIBUTION||'© OpenStreetMap contributors · © CARTO';
-export default function MapCanvas({stage,disabled=false,onSelect,pickMode=false,onPick,selected}:Props){
+export default function MapCanvas({stage,disabled=false,onSelect,pickMode=false,onPick,selected,reduceMotion=false}:Props){
   const holder=useRef<HTMLDivElement>(null);
   const mapRef=useRef<MaplibreMap|null>(null);
 
   const onSelectRef=useRef(onSelect),onPickRef=useRef(onPick),stageRef=useRef(stage),disabledRef=useRef(disabled),pickRef=useRef(pickMode);
   const [ready,setReady]=useState(false),[warning,setWarning]=useState(''),[hover,setHover]=useState(''),[hoverPos,setHoverPos]=useState<[number,number]>([0,0]),[detail,setDetail]=useState(true);
   const [mapError,setMapError]=useState('');
+  const [renderStatus,setRenderStatus]=useState<'loading'|'ready'|'error'>('loading');
   const detailRef=useRef(detail);
+  const motionRef=useRef(reduceMotion);
+  motionRef.current=reduceMotion;
   detailRef.current=detail;
   onSelectRef.current=onSelect;onPickRef.current=onPick;stageRef.current=stage;disabledRef.current=disabled;pickRef.current=pickMode;
   const clearMarkers=useCallback(()=>{const map=mapRef.current;const source=map?.getSource('choice-points') as GeoJSONSource|undefined;if(source)source.setData(emptyFC as GeoJSON.FeatureCollection)},[]);
@@ -64,7 +68,7 @@ export default function MapCanvas({stage,disabled=false,onSelect,pickMode=false,
         const message=String(e.error?.message||'');
         console.warn('[WHERE7 map]',message);
         if(/webgl|context lost/i.test(message)){
-          setMapError('Unable to render the interactive map. Check browser WebGL / hardware acceleration and reload.');
+          setRenderStatus('error');setMapError('The interactive map could not render. Check WebGL / hardware acceleration and retry.');
         }else if(!layersInitialised&&!fallbackStarted&&/style|fetch|network|http|request|load/i.test(message)){
           fallbackToRaster();
         }else if(/tile|fetch|http|network/i.test(message)){
@@ -97,7 +101,8 @@ export default function MapCanvas({stage,disabled=false,onSelect,pickMode=false,
         // geographical coordinates on every pan/zoom frame, including touch gestures.
         map.addSource('choice-points',{type:'geojson',data:emptyFC as GeoJSON.FeatureCollection});
         map.addLayer({id:'choice-halo',type:'circle',source:'choice-points',paint:{'circle-radius':16,'circle-color':'#3be6ce','circle-opacity':0.17}});
-        map.addLayer({id:'choice-dots',type:'circle',source:'choice-points',paint:{'circle-radius':8,'circle-color':'#a8fff1','circle-stroke-color':'#073343','circle-stroke-width':3}});
+        map.addLayer({id:'choice-dots',type:'circle',source:'choice-points',paint:{'circle-radius':['interpolate',['linear'],['zoom'],2,8,13,12],'circle-color':'#a8fff1','circle-stroke-color':'#073343','circle-stroke-width':3}});
+        map.addLayer({id:'choice-selected-ring',type:'circle',source:'choice-points',filter:['==',['get','name'],'§never§'],paint:{'circle-radius':17,'circle-color':'#d9fffb','circle-opacity':0.2,'circle-stroke-color':'#50efd7','circle-stroke-width':3}});
         map.addLayer({id:'choice-labels',type:'symbol',source:'choice-points',layout:{'text-field':['get','name'],'text-size':12,'text-font':['Open Sans Regular'],'text-offset':[0,-1.8],'text-anchor':'bottom','text-allow-overlap':false},paint:{'text-color':'#ffffff','text-halo-color':'#092737','text-halo-width':2.5}});
         const pickChoice=(e:any)=>{if(disabledRef.current||pickRef.current)return;const name=String(e.features?.[0]?.properties?.name||'');if(name)onSelectRef.current?.(name)};
         map.on('click','choice-dots',pickChoice);
@@ -145,7 +150,7 @@ export default function MapCanvas({stage,disabled=false,onSelect,pickMode=false,
         });
         map.on('click',e=>{if(pickRef.current)onPickRef.current?.(e.lngLat.lat,e.lngLat.lng)});
         // Gameplay is available before any external raster tiles are fetched.
-        setReady(true);
+        setRenderStatus('ready');setMapError('');setReady(true);
         requestAnimationFrame(()=>{if(!stopped)map.resize()});
       };
       map.on('style.load',initialiseLayers);
@@ -159,14 +164,15 @@ export default function MapCanvas({stage,disabled=false,onSelect,pickMode=false,
       document.addEventListener('visibilitychange',onVisible);
       // Remove observers even if React unmounts before style.load.
       teardownExtra=()=>{observer.disconnect();window.clearTimeout(firstResize);if(mapStyleTimeout!==undefined)window.clearTimeout(mapStyleTimeout);document.removeEventListener('visibilitychange',onVisible)};
-    }).catch(error=>{console.error('[WHERE7 map initialization]',error);setMapError('Unable to initialise the map. Check the browser console and reload.');});
+    }).catch(error=>{console.error('[WHERE7 map initialization]',error);setRenderStatus('error');setMapError('Unable to initialise the map. Try reloading this page.');});
     return()=>{stopped=true;teardownExtra();instance?.remove();mapRef.current=null;};
   },[]);
   useEffect(()=>{
     const map=mapRef.current;
     if(!ready||!map)return;
     const mapInstance=map; // Capture the non-null map for nested callbacks.
-    const active=stage&&!disabled;
+    // Busy submissions disable interaction, not rendering; do not clear markers.
+    const active=stage!==null;
     map.setPaintProperty('countries','fill-opacity',detailRef.current?(active&&stage.selection==='country'?0.14:0.025):0.025);
     map.setLayoutProperty('microstates','visibility',active&&stage.selection==='country'?'visible':'none');
     map.setLayoutProperty('microstates-highlight','visibility',active&&stage.selection==='country'?'visible':'none');
@@ -175,8 +181,6 @@ export default function MapCanvas({stage,disabled=false,onSelect,pickMode=false,
     map.setLayoutProperty('regions-lines','visibility',active&&stage.selection==='region'?'visible':'none');
     map.setLayoutProperty('region-highlight','visibility',active&&stage.selection==='region'?'visible':'none');
 
-    const point=stage?.center||[-14,27];
-    map.flyTo({center:point,zoom:stage?.zoom||1.9,duration:window.matchMedia('(prefers-reduced-motion: reduce)').matches?0:550,essential:true});
     clearMarkers();
     if(!active||stage.selection==='country')return;
     if(stage.selection==='region'){
@@ -206,11 +210,20 @@ export default function MapCanvas({stage,disabled=false,onSelect,pickMode=false,
       source.setData({type:'FeatureCollection',features:s.choices.map(choice=>({type:'Feature',properties:{name:choice.name,id:choice.id},geometry:{type:'Point',coordinates:[choice.lng,choice.lat]}}))} as GeoJSON.FeatureCollection);
     }
 
-  },[ready,stage?.level,stage?.selection,stage?.clue,stage?.center?.[0],stage?.center?.[1],stage?.zoom,disabled,clearMarkers]);
+  },[ready,stage?.level,stage?.selection,stage?.clue,stage?.center?.[0],stage?.center?.[1],stage?.zoom,clearMarkers]);
+  // Camera moves happen only when the stage/position changes, never on busy/hint toggles.
   useEffect(()=>{
-    const map=mapRef.current;if(!ready||!map||!selected)return;
-    if(stage?.selection==='country')map.setFilter('country-highlight',['==',['get','name'],selected]);
-    if(stage?.selection==='region')map.setFilter('region-highlight',['==',['get','name'],selected]);
+    const map=mapRef.current;if(!ready||!map||pickMode)return;
+    const point=stage?.center||[-14,27];
+    map.flyTo({center:point,zoom:stage?.zoom||1.9,
+      offset:mapCameraOffset(map.getContainer().clientWidth,false),
+      duration:shouldAnimate(motionRef.current)?760:0,essential:false});
+  },[ready,stage?.level,stage?.center?.[0],stage?.center?.[1],stage?.zoom,pickMode]);
+  useEffect(()=>{
+    const map=mapRef.current;if(!ready||!map)return;
+    if(stage?.selection==='country')map.setFilter('country-highlight',['==',['get','name'],selected||'§never§']);
+    if(stage?.selection==='region')map.setFilter('region-highlight',['==',['get','name'],selected||'§never§']);
+    if(map.getLayer('choice-selected-ring'))map.setFilter('choice-selected-ring',['==',['get','name'],selected||'§never§']);
   },[selected,stage?.selection,ready]);
   useEffect(()=>{
     const map=mapRef.current;if(!ready||!map)return;
@@ -219,20 +232,23 @@ export default function MapCanvas({stage,disabled=false,onSelect,pickMode=false,
     if(map.getLayer('countries'))map.setPaintProperty('countries','fill-opacity',detail?(stage?.selection==='country'?0.14:0.025):0.025);
     if(map.getLayer('country-lines'))map.setPaintProperty('country-lines','line-opacity',detail?(stage?.selection==='country'?0.78:0.22):0.10);
   },[ready,detail,stage?.selection]);
-  const zoom=(n:number)=>mapRef.current?.zoomTo((mapRef.current?.getZoom()||2)+n,{duration:260});
+  const zoom=(n:number)=>mapRef.current?.zoomTo((mapRef.current?.getZoom()||2)+n,{duration:shouldAnimate(reduceMotion)?260:0});
+  const recenter=()=>{const map=mapRef.current;if(!map)return;map.flyTo({center:stage?.center||[-17,24],zoom:stage?.zoom||2,
+    offset:mapCameraOffset(map.getContainer().clientWidth,pickMode),duration:shouldAnimate(reduceMotion)?620:0,essential:false});};
   return <div className="map-root">
-    <div ref={holder} className="map-container" aria-label="Interactive geography map" role="application"/>
+    <div ref={holder} className="map-container" aria-label="Interactive geography map. Select a location, then confirm your guess." role="application"/>
     <div className="map-vignette" aria-hidden="true"/>
     {hover&&<div className="map-hover-tag" style={{left:hoverPos[0],top:hoverPos[1]}}><span className="mini-pulse"/>{hover}</div>}
     {warning&&<div className="map-boundary-note"><AlertCircle size={13}/>{warning}</div>}
-    {mapError&&<div className="map-load-error" role="alert">{mapError}</div>}
+    {renderStatus==='loading'&&<div className="map-render-loading" role="status"><div className="loading-orb"/><span>Loading your interactive atlas…</span></div>}
+    {mapError&&<div className="map-load-error" role="alert"><AlertCircle size={20}/><span>{mapError}</span><button type="button" onClick={()=>window.location.reload()}><RefreshCw size={15}/> Retry</button></div>}
     <div className="map-toolbar" aria-label="Map controls">
       <button type="button" onClick={()=>zoom(1)} aria-label="Zoom in"><Plus size={19}/></button>
       <button type="button" onClick={()=>zoom(-1)} aria-label="Zoom out"><Minus size={19}/></button>
-      <button type="button" onClick={()=>mapRef.current?.flyTo({center:stage?.center||[-17,24],zoom:stage?.zoom||2,duration:500})} aria-label="Recenter"><LocateFixed size={18}/></button>
+      <button type="button" onClick={recenter} aria-label="Recenter"><LocateFixed size={18}/></button>
       <button type="button" onClick={()=>setDetail(v=>!v)} aria-label={detail?'Reduce country border highlights':'Show country border highlights'} title="Toggle border highlights"><Layers size={18}/></button>
     </div>
     <div className="map-corner-title"><Compass size={17}/> {pickMode?'CHOOSE A POSITION':stage?.label?.toUpperCase()||'THE EXPEDITION'}</div>
-    {stage&&!disabled&&!pickMode&&<div className="map-action-hint">✦ {stage.selection==='country'?'Hover countries · Click to answer':stage.selection==='region'?'Select a region on the map':'Choose a highlighted location'}</div>}
+    {stage&&!disabled&&!pickMode&&<div className="map-action-hint">✦ {stage.selection==='country'?'Tap or click a country to preview':stage.selection==='region'?'Select a region or marker to preview':'Choose a marker, then confirm your guess'}</div>}
   </div>
 }

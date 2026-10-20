@@ -1,0 +1,30 @@
+name: WHERE7 quality checks
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+permissions:
+  contents: read
+jobs:
+  verify:
+    name: Tests, atlas assets, types and build
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install dependencies
+        run: npm install --no-audit --no-fund
+      - name: Test game rules and presentation
+        run: npm test
+      - name: Verify interactive map files and layout safeguards
+        run: node scripts/verify-atlas.mjs
+      - name: Check TypeScript
+        run: npm run typecheck
+      - name: Compile production app
+        run: npm run build
+        env:
+          NEXT_TELEMETRY_DISABLED: '1'
