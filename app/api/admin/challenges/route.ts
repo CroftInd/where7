@@ -1,7 +1,7 @@
 import {NextResponse} from 'next/server';
 import {requireAdmin,serviceDb} from '@/lib/supabase';
 import {listChallenges} from '@/lib/store';
-import {validateChallenge} from '@/lib/engine';
+import {validateChallenge,publicationChoiceErrors} from '@/lib/engine';
 export const dynamic='force-dynamic';
 const reject=()=>NextResponse.json({error:'Admin login required.'},{status:403});
 export async function GET(){
@@ -20,7 +20,8 @@ export async function POST(req:Request){
   const v=parsed.value;
   const id=v.id&&/^[-a-z0-9]{3,64}$/.test(v.id)?v.id:`custom-${crypto.randomUUID()}`;
   // Published challenges without a date join the random daily rotation pool.
-  if(v.status==='published'&&v.stages.some((s,i)=>!s.source||(i>0&&(s.choices.length!==5||s.choices.some(c=>/^map point\b/i.test(c.name))))))return NextResponse.json({error:'Published challenges require exactly five real, distinct, named choices at every stage after Country.'},{status:400});
+  const publicationErrors=publicationChoiceErrors(v.stages);
+  if(v.status==='published'&&publicationErrors.length)return NextResponse.json({error:'Published challenges require exactly five distinct, real places at each stage after Country.',details:publicationErrors},{status:400});
   const {error}=await db.from('challenges').upsert({id,title:v.title,description:v.description||'',country_iso3:v.countryIso3,
     status:v.status,difficulty:v.difficulty||'standard',publish_date:v.publishDate||null,stages:v.stages,updated_at:new Date().toISOString()});
   return error?NextResponse.json({error:error.message},{status:400}):NextResponse.json({id,success:true});
