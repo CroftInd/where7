@@ -6,6 +6,7 @@ import {Map,Settings2,Compass,CircleHelp,HelpCircle,Flame,Sparkles,Lightbulb,Fla
 import type {PublicGame} from '@/lib/types';
 import {xpFromScore} from '@/lib/ranks';
 import {formatScore,shouldAnimate} from '@/lib/presentation';
+import ProgressionClient from './ProgressionClient';
 const MapCanvas=dynamic(()=>import('./MapCanvas'),{ssr:false,loading:()=> <div className="map-loading"><div className="loading-orb"/>Preparing your atlas…</div>});
 const STAGES=['COUNTRY','STATE / REGION','CITY','AREA','DISTRICT','STREET','BUILDING'];
 const fmt=(t:number)=>{let seconds=Math.floor(t/1000);return `${String(Math.floor(seconds/60)).padStart(2,'0')}:${String(seconds%60).padStart(2,'0')}`};
@@ -191,6 +192,7 @@ export default function Game(){
         <Link className="header-link" href="/leaderboard" aria-label="Open daily leaderboard"><Trophy size={17}/><span>Leaderboard</span></Link>
         <Link className="header-link" href="/account"><span>Account</span></Link>
         <Link className="header-link" href="/stats" aria-label="Open explorer statistics"><Target size={17}/><span>My stats</span></Link>
+        <Link className="header-link" href="/rewards" aria-label="Open your Explorer Passport"><Gift size={17}/><span>Rewards</span></Link>
         <Link className="header-link" href="/archive" aria-label="Open challenge archive"><BookOpen size={17}/><span>Archive</span></Link>
         <button type="button" className="mobile-menu-toggle" aria-label="Open navigation" aria-expanded={mobileNavOpen} aria-controls="mobile-navigation" onClick={()=>{setMobileNavOpen(v=>!v);setSettingsOpen(false)}}>{mobileNavOpen?<X size={20}/>:<Menu size={20}/>}</button>
       </nav>
@@ -199,6 +201,7 @@ export default function Game(){
         <Link href="/leaderboard"><Trophy size={18}/> Leaderboard</Link>
         <Link href="/account"><Target size={18}/> My account</Link>
         <Link href="/stats"><TrendingUp size={18}/> My statistics</Link>
+        <Link href="/rewards"><Gift size={18}/> Missions & Rewards</Link>
         <Link href="/archive"><BookOpen size={18}/> Challenge archive</Link>
       </nav>}
       {settingsOpen&&<section id="game-preferences" className="game-settings-panel" aria-label="Game preferences">
@@ -274,8 +277,9 @@ export default function Game(){
         <h2 id="results-title">{game?.status==='won'?'An extraordinary journey.':game?.status==='lost'?'Not quite the final destination.':'The journey ended.'}</h2>
         <p>{game?.status==='won'?'Seven correct answers, seven chances used, one amazing discovery.':'One or more incorrect guesses kept the final building out of reach. There is always another journey.'}</p>
         <div className="xp-earned" role="status"><Zap size={20}/> <span>{game?.mode==='daily'?'DAILY XP EARNED':'PRACTICE XP ESTIMATE'}</span><strong>+{xpFromScore(game?.score||0).toLocaleString()} XP</strong></div>
+        {game?.mode==='daily'&&<ProgressionClient compact/>}
         <div className="result-metrics"><div><strong>{game?.score.toLocaleString()}</strong><span>POINTS</span></div><div><strong>{game?.stage} / 7</strong><span>DISCOVERED</span></div><div><strong>{fmt(elapsed)}</strong><span>TIME</span></div></div>
-        <div className="reward-milestones"><span><Medal size={15}/> {game?.status==='won'?'Perfect expedition!':'Every stage counts'}</span><span><TrendingUp size={15}/> <Link href="/stats">View ranks & streaks →</Link></span></div>
+        <div className="reward-milestones"><span><Medal size={15}/> {game?.status==='won'?'Perfect expedition!':'Every stage counts'}</span><span><TrendingUp size={15}/> <Link href="/rewards">Passport & streaks →</Link></span></div>
         <div className="result-stages">{STAGES.map((v,i)=><span title={v} key={i} className={i<(game?.stage||0)?'clear':'closed'}>{i<(game?.stage||0)?<Check size={16}/>:<Lock size={15}/>}</span>)}</div>
         <div className="results-path">{game?.path.join(' → ')||'No locations discovered yet'}</div>
         {!!game?.sources?.length&&<details className="result-sources"><summary><ExternalLink size={13}/> Review factual sources</summary>{game.sources.map(s=><a key={s.stage} href={s.url} rel="noreferrer noopener" target="_blank">Stage {s.stage+1}: {s.answer} ↗</a>)}</details>}

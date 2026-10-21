@@ -2,7 +2,7 @@
 import {useEffect,useState} from 'react';
 import Link from 'next/link';
 
-import {ArrowLeft,BarChart3,Flame,Trophy,MapPin,Star,Medal,Zap,ArrowUpRight} from 'lucide-react';
+import {ArrowLeft,BarChart3,Flame,Trophy,MapPin,Star,Medal,Zap,ArrowUpRight,Gift,ShieldCheck} from 'lucide-react';
 type Stats={completed:number;dailyCompleted:number;practiceCompleted:number;perfect:number;bestScore:number;totalPoints:number;averageScore:number;currentStreak:number;longestStreak:number;locationsFound:number};
 type Achievement={id:string;name:string;description:string;earned:boolean};
 type Profile={signedIn:boolean;name:string;xp:number;level:number;rankName:string};
@@ -32,6 +32,7 @@ export default function StatsPage(){
       <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(175px,1fr))',gap:14,marginBottom:32}}>
         {metrics.map(([name,value,Icon])=><div key={name} style={{border:'1px solid rgba(155,188,212,.22)',borderRadius:15,padding:20,background:'rgba(20,38,52,.72)'}}><Icon size={20}/><p style={{opacity:.7,margin:'12px 0 5px'}}>{name}</p><strong style={{fontSize:27}}>{value}</strong></div>)}
       </div>
+      <Link href="/rewards" className="stats-reward-link"><div><Gift size={24}/><span><strong>Explorer Passport & field rewards</strong><small>Daily missions · Weekly quests · Streak shields · Collectible badges</small></span></div><span>Open your passport →</span></Link>
       <h2 style={{marginBottom:15}}>Achievement collection <span className="achievement-total">{data.achievements.filter(a=>a.earned).length}/{data.achievements.length} unlocked</span></h2>
       <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(240px,1fr))',gap:12,marginBottom:32}}>
         {data.achievements.map(a=><div key={a.id} style={{padding:18,borderRadius:14,border:'1px solid rgba(155,188,212,.2)',opacity:a.earned?1:.45}}><strong>{a.earned?'🏅':'🔒'} {a.name}</strong><p style={{margin:'8px 0 0',opacity:.8}}>{a.description}</p></div>)}

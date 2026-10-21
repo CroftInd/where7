@@ -2,11 +2,11 @@ import {NextResponse} from 'next/server';
 import {playerKey,currentAccount,ensureProfile} from '@/lib/player';
 import {levelFromXp,rankFromLevel} from '@/lib/ranks';
 import {serviceDb} from '@/lib/supabase';
+import {computeStreak,dayForCompletion,type Completion} from '@/lib/progression';
 
 export const dynamic='force-dynamic';
 const headers={'Cache-Control':'private, no-store'};
-const day=(date:string)=>date.slice(0,10);
-const previousDay=(date:string)=>new Date(Date.parse(date+'T12:00:00Z')-86400000).toISOString().slice(0,10);
+
 
 export async function GET(){
   const account=await currentAccount();
@@ -23,16 +23,17 @@ export async function GET(){
     const records=results||[];
     const daily=records.filter(r=>r.mode==='daily'&&r.finished_at);
     const practice=records.filter(r=>r.mode==='practice'&&r.finished_at);
-    const dates=[...new Set(daily.map(r=>day(r.finished_at as string)))].sort().reverse();
+    // Official challenge dates (not completion timestamps) are authoritative.
+    // A finished expedition submitted just after midnight still belongs to its assigned day.
+    const {data:protectionRows,error:protectionError}=account?await db.from('player_streak_protections')
+      .select('protected_date').eq('user_id',account.id).limit(600):{data:[],error:null};
+    if(protectionError)throw protectionError;
+    const dates=new Set(daily.map(r=>dayForCompletion(r as Completion)).filter((d):d is string=>!!d));
+    const protections=new Set((protectionRows||[]).map(p=>p.protected_date));
     const today=new Date().toISOString().slice(0,10);
-    let cursor=dates.includes(today)?today:previousDay(today);
-    let streak=0;
-    while(dates.includes(cursor)){streak++;cursor=previousDay(cursor)}
-    let longest=0,run=0,prior='';
-    for(const date of [...dates].reverse()){
-      run=prior&&previousDay(date)===prior?run+1:1;
-      longest=Math.max(longest,run);prior=date;
-    }
+    const streakStats=computeStreak(dates,protections,today);
+    const streak=streakStats.current;
+    const longest=streakStats.best;
     const total=records.length;
     const perfect=daily.filter(r=>r.perfect).length;
     const best=Math.max(0,...records.map(r=>r.score));
