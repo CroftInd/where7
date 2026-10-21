@@ -1,3 +1,4 @@
+import './studio.css';
 import Studio from '@/components/Studio';
 import {authClient,requireAdmin} from '@/lib/supabase';
 import Link from 'next/link';
