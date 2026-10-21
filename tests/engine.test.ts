@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {guess,newSession,normalized,publicGame,useHint,validateChallenge} from '../lib/engine.ts';
+import {guess,newSession,normalized,publicGame,useHint,validateChallenge,publicationChoiceErrors} from '../lib/engine.ts';
 import originals from '../data/challenges.json' with {type:'json'};
 import type {Challenge} from '../lib/types.ts';
 const challenge=originals.find(c=>c.id==='london') as Challenge;
@@ -59,4 +59,28 @@ test('playing sessions do not expose future answers or clue evidence URLs',()=>{
   assert(!payload.includes('Empire State Building'));
   assert(!payload.includes('esbnyc.com'));
   assert(!payload.includes('One Vanderbilt'));
+});
+
+test('five-choice publication gate requires real, unique, correctly sourced options',()=>{
+  const ready=structuredClone(challenge);
+  ready.stages=ready.stages.map((stage,i)=>i===0?stage:{
+    ...stage,choices:Array.from({length:5},(_,j)=>({
+      id:`choice-${i}-${j}`,
+      name:j===0?stage.answer:`Neighbouring location ${i}-${j}`,
+      lat:stage.center[1]+j*0.01,
+      lng:stage.center[0]+j*0.01
+    }))
+  });
+  assert.deepEqual(publicationChoiceErrors(ready.stages),[]);
+  const missing=structuredClone(ready);missing.stages[2].choices.pop();
+  assert(publicationChoiceErrors(missing.stages).some(x=>x.includes('exactly five')));
+  const fake=structuredClone(ready);fake.stages[3].choices[1].name='Map point north';
+  assert(publicationChoiceErrors(fake.stages).some(x=>x.includes('real named')));
+  const duplicate=structuredClone(ready);duplicate.stages[5].choices[2].name=duplicate.stages[5].choices[1].name;
+  assert(publicationChoiceErrors(duplicate.stages).some(x=>x.includes('repeats')));
+});
+test('international place names remain distinct during guess normalization',()=>{
+  assert.notEqual(normalized('東京'),normalized('大阪'));
+  assert.notEqual(normalized('القاهرة'),normalized('الإسكندرية'));
+  assert.equal(normalized('Île-de-France'),normalized('Ile de France'));
 });
