@@ -73,7 +73,7 @@ export function validateChallenge(input:unknown):{valid:true;value:Challenge}|{v
     if(!Array.isArray(s.center)||s.center.length!==2||!s.center.every(n=>typeof n==='number'&&Number.isFinite(n)))errors.push(`Stage ${i+1}: invalid map center.`);
     if(typeof s.zoom!=='number'||s.zoom<1||s.zoom>20)errors.push(`Stage ${i+1}: zoom must be 1–20.`);
     if(i>0){
-      if(!Array.isArray(s.choices)||s.choices.length!==(x.status==='published'?5:s.choices.length)||s.choices.length<3||s.choices.length>40)errors.push(`Stage ${i+1}: ${x.status==='published'?'published challenges require exactly five':'provide 3–40'} map choices.`);
+      if(!Array.isArray(s.choices)||s.choices.length<3||s.choices.length>40)errors.push(`Stage ${i+1}: provide 3–40 map choices.`);
       else {
         const names=new Set<string>(); let match=false;
         s.choices.forEach((c)=>{
