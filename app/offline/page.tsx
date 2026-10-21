@@ -1,0 +1,2 @@
+import Link from 'next/link';import {Compass,WifiOff} from 'lucide-react';
+export default function Offline(){return <main style={{minHeight:'100vh',display:'grid',placeItems:'center',padding:28,textAlign:'center'}}><section style={{maxWidth:480}}><Compass size={56} color="#5bdbc3"/><h1>Temporarily off the map</h1><p>WHERE7 needs an internet connection for fresh map tiles, official results and securely saved games. Your daily progress has not been reset.</p><Link href="/" style={{color:'#78e8d1'}}>Retry WHERE7 →</Link></section></main>}

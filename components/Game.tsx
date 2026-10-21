@@ -201,6 +201,7 @@ export default function Game(){
         <Link className="header-link" href="/stats" aria-label="Open explorer statistics"><Target size={17}/><span>My stats</span></Link>
         <Link className="header-link" href="/rewards" aria-label="Open your Explorer Passport"><Gift size={17}/><span>Rewards</span></Link>
         <Link className="header-link" href="/social" aria-label="Open friends and leagues"><Trophy size={17}/><span>Social</span></Link>
+        <Link className="header-link" href="/plus" aria-label="Themes and WHERE7 Plus"><Sparkles size={17}/><span>Plus</span></Link>
         <Link className="header-link" href="/explore" aria-label="Practice Explorer"><Map size={17}/><span>Explore</span></Link>
         <Link className="header-link" href="/arcade" aria-label="Play time attack and duels"><Clock size={17}/><span>Arcade</span></Link>
         <Link className="header-link" href="/archive" aria-label="Open challenge archive"><BookOpen size={17}/><span>Archive</span></Link>
@@ -213,6 +214,7 @@ export default function Game(){
         <Link href="/stats"><TrendingUp size={18}/> My statistics</Link>
         <Link href="/rewards"><Gift size={18}/> Missions & Rewards</Link>
         <Link href="/social"><Trophy size={18}/> Friends & leagues</Link>
+        <Link href="/plus"><Sparkles size={18}/> Themes & Plus</Link>
         <Link href="/explore"><Map size={18}/> Practice Explorer</Link>
         <Link href="/arcade"><Clock size={18}/> Time Attack & Duels</Link>
         <Link href="/archive"><BookOpen size={18}/> Challenge archive</Link>

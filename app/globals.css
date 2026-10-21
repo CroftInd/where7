@@ -248,3 +248,9 @@
 .five-choice-grid button:disabled{opacity:.65;cursor:not-allowed}
 .five-choice-panel p{font-size:10px;line-height:1.5;color:#a6c5cf;margin:9px 0 0}
 @media(max-width:390px){.five-choice-grid{grid-template-columns:1fr}.five-choice-panel{padding:11px}}
+
+/* Optional user-selected visual themes; cosmetic only, never modifies game logic. */
+:root[data-atlas-theme="atlas"]{--aqua:#9ac1ed;--cyan:#71a1cf}
+:root[data-atlas-theme="aurora"]{--aqua:#b9a8f5;--cyan:#a2d7f7;--gold:#eac7ff}
+:root[data-atlas-theme="sunset"]{--aqua:#ffaf86;--cyan:#e4a1a3;--gold:#ffdf92}
+:root[data-atlas-theme="midnight"]{--aqua:#d0bae8;--cyan:#92afdd;--gold:#cfc0fe}
