@@ -37,7 +37,7 @@ export async function readSocial(accountId:string,db:NonNullable<ReturnType<type
  const outgoing=connections.filter(x=>x.status==='pending'&&x.requester===accountId).map(x=>({id:x.a===accountId?x.b:x.a,handle:handles.get(x.a===accountId?x.b:x.a)||'Explorer'}));
  const accepted=friends.map(id=>({id,handle:handles.get(id)||'Explorer'}));
  const q=sanitizeHandle(term);
- const search=q.length>=3&&q.length<=18&&isValidHandle(q.replace(/[^a-z0-9_]/g,''))?
+ const search=q.length>=3&&q.length<=18&&isValidHandle(q)?
    await db.from('social_profiles').select('user_id,handle').eq('discoverable',true).ilike('handle',q+'%').neq('user_id',accountId).limit(12):
    {data:[],error:null};
  if(search.error)throw search.error;
