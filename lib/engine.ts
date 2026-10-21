@@ -1,7 +1,7 @@
 import {BASE_POINTS,MAX_GUESSES,type Challenge,type PublicGame,type Session} from './types.ts';
 
 export function normalized(name:string):string {
-  const value=name.toLowerCase().normalize('NFKD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]/g,'');
+  const value=name.toLowerCase().normalize('NFKD').replace(/[\u0300-\u036f]/g,'').replace(/[^\p{L}\p{N}]/gu,'');
   const aliases:Record<string,string>={usa:'unitedstates',us:'unitedstates',unitedstatesofamerica:'unitedstates',
     uk:'unitedkingdom',greatbritain:'unitedkingdom',britain:'unitedkingdom',nyc:'newyorkcity',
     cityofnewyork:'newyorkcity',cityofwestminsterlondon:'cityofwestminster'};
@@ -87,4 +87,22 @@ export function validateChallenge(input:unknown):{valid:true;value:Challenge}|{v
   if(errors.length)return{valid:false,errors};
   // Strip unknown fields, and tightly limit payload size server-side before calling this helper.
   return{valid:true,value:x as unknown as Challenge};
+}
+
+/** Publishing requires exactly one correct location among five real map choices. */
+export function publicationChoiceErrors(stages:Challenge['stages']):string[] {
+  const problems:string[]=[];
+  for(let i=1;i<stages.length;i++){
+    const stage=stages[i];
+    if(stage.choices.length!==5){problems.push(`Stage ${i+1} must have exactly five choices.`);continue;}
+    const names=new Set<string>();
+    for(const option of stage.choices){
+      const name=normalized(option.name);
+      if(!name||/^map point\b/i.test(option.name))problems.push(`Stage ${i+1} must use real named locations.`);
+      if(names.has(name))problems.push(`Stage ${i+1} repeats a location.`);
+      names.add(name);
+    }
+    if(!names.has(normalized(stage.answer)))problems.push(`Stage ${i+1} is missing its correct answer.`);
+  }
+  return problems;
 }
