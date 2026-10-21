@@ -171,10 +171,17 @@ export default function Game(){
     finally{setNameSaving(false)}
   };
   const share=async()=>{
-    if(!game)return;
-    const pieces=Array.from({length:7},(_,i)=>i<game.stage?spentByStage(game,i)===1?'🟩':'🟨':game.status==='playing'?'⬜':'🔒').join('');
-    const str=`WHERE7 • The Daily Geography Mystery\n${pieces}\n${game.stage}/7 locations · ${game.guesses}/7 guesses · ${game.score.toLocaleString()} points\nCan you find the destination?`;
-    try{await navigator.clipboard.writeText(str);setToast('Shareable result copied')}catch{setToast('Clipboard unavailable. Select and copy the results instead.')}
+    if(!game||game.status==='playing')return;
+    const cells=Array.from({length:7},(_,i)=>{
+      const attempts=game.history.filter(v=>v.stage===i);
+      return attempts.some(v=>v.correct)?attempts.length===1?'🟩':'🟨':'⬛';
+    }).join('');
+    const date=new Date().toISOString().slice(0,10);
+    const message='WHERE7 🌍 '+date+'\n'+cells+'\n'+game.stage+'/7 locations · '+game.guesses+'/7 chances used · '+game.score.toLocaleString()+' points\nPlay the same mystery: https://www.where7.world';
+    try{
+      if(navigator.share){await navigator.share({title:'WHERE7 Daily Geography',text:message,url:'https://www.where7.world'});setToast('Result shared');return;}
+      await navigator.clipboard.writeText(message);setToast('Spoiler-free result copied');
+    }catch(e){if((e as Error).name!=='AbortError')setToast('Share unavailable — try again.')}
   };
   const stage=game?.current;const finished=!!game&&game.status!=='playing';
   const toggleGrip=()=>{if(ignoreGripClick.current){ignoreGripClick.current=false;return}setMobileOpen(v=>!v)};
@@ -193,6 +200,7 @@ export default function Game(){
         <Link className="header-link" href="/account"><span>Account</span></Link>
         <Link className="header-link" href="/stats" aria-label="Open explorer statistics"><Target size={17}/><span>My stats</span></Link>
         <Link className="header-link" href="/rewards" aria-label="Open your Explorer Passport"><Gift size={17}/><span>Rewards</span></Link>
+        <Link className="header-link" href="/social" aria-label="Open friends and leagues"><Trophy size={17}/><span>Social</span></Link>
         <Link className="header-link" href="/archive" aria-label="Open challenge archive"><BookOpen size={17}/><span>Archive</span></Link>
         <button type="button" className="mobile-menu-toggle" aria-label="Open navigation" aria-expanded={mobileNavOpen} aria-controls="mobile-navigation" onClick={()=>{setMobileNavOpen(v=>!v);setSettingsOpen(false)}}>{mobileNavOpen?<X size={20}/>:<Menu size={20}/>}</button>
       </nav>
@@ -202,6 +210,7 @@ export default function Game(){
         <Link href="/account"><Target size={18}/> My account</Link>
         <Link href="/stats"><TrendingUp size={18}/> My statistics</Link>
         <Link href="/rewards"><Gift size={18}/> Missions & Rewards</Link>
+        <Link href="/social"><Trophy size={18}/> Friends & leagues</Link>
         <Link href="/archive"><BookOpen size={18}/> Challenge archive</Link>
       </nav>}
       {settingsOpen&&<section id="game-preferences" className="game-settings-panel" aria-label="Game preferences">
