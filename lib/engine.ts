@@ -73,12 +73,12 @@ export function validateChallenge(input:unknown):{valid:true;value:Challenge}|{v
     if(!Array.isArray(s.center)||s.center.length!==2||!s.center.every(n=>typeof n==='number'&&Number.isFinite(n)))errors.push(`Stage ${i+1}: invalid map center.`);
     if(typeof s.zoom!=='number'||s.zoom<1||s.zoom>20)errors.push(`Stage ${i+1}: zoom must be 1–20.`);
     if(i>0){
-      if(!Array.isArray(s.choices)||s.choices.length<3||s.choices.length>40)errors.push(`Stage ${i+1}: provide 3–40 map choices.`);
+      if(!Array.isArray(s.choices)||s.choices.length!==(x.status==='published'?5:s.choices.length)||s.choices.length<3||s.choices.length>40)errors.push(`Stage ${i+1}: ${x.status==='published'?'published challenges require exactly five':'provide 3–40'} map choices.`);
       else {
         const names=new Set<string>(); let match=false;
         s.choices.forEach((c)=>{
           if(!c||typeof c.name!=='string'||typeof c.lat!=='number'||typeof c.lng!=='number'||!Number.isFinite(c.lat)||!Number.isFinite(c.lng)||Math.abs(c.lat)>90||Math.abs(c.lng)>180)errors.push(`Stage ${i+1}: invalid map choice.`);
-          else{ const name=normalized(c.name);if(names.has(name))errors.push(`Stage ${i+1}: duplicate location.`);names.add(name);if(name===normalized(String(s.answer)))match=true;}
+          else{ const name=normalized(c.name);if(names.has(name))errors.push(`Stage ${i+1}: duplicate location.`);if(/^map point\b/i.test(c.name))errors.push(`Stage ${i+1}: placeholder map points cannot be published.`);names.add(name);if(name===normalized(String(s.answer)))match=true;}
         });
         if(!match)errors.push(`Stage ${i+1}: correct answer must appear among choices.`);
       }
