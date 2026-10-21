@@ -235,3 +235,16 @@
 @media(prefers-reduced-motion:reduce){.quest-card,.passport-xp-bar>span,.quest-progress span,.reward-notice,.levelup-flash{transition:none!important;animation:none!important}}
 
 .stats-reward-link{display:flex;align-items:center;justify-content:space-between;gap:13px;margin:-12px 0 28px;padding:17px 19px;border:1px solid #4f9c8d;border-radius:15px;background:linear-gradient(110deg,#184950,#102738);text-decoration:none;color:#d6fff3}.stats-reward-link>div{display:flex;align-items:center;gap:12px}.stats-reward-link svg{color:#f8d88b}.stats-reward-link strong{display:block;font-size:15px}.stats-reward-link small{display:block;color:#a3c5cc;font-size:11px;margin-top:4px}.stats-reward-link>span{color:#a5f4d9;font-weight:900;font-size:12px;white-space:nowrap}@media(max-width:550px){.stats-reward-link{flex-direction:column;align-items:flex-start}.stats-reward-link>span{margin-left:auto}}
+
+/* Five visible, keyboard-accessible options at every non-country stage. */
+.five-choice-panel{border:1px solid #447987;border-radius:15px;background:linear-gradient(140deg,#102d3e,#102538);padding:13px;margin:11px 0 15px}
+.five-choice-header{display:flex;justify-content:space-between;gap:8px;align-items:center;margin:0 0 11px;font-size:10px;color:#afebe4;font-weight:850;letter-spacing:1px}
+.five-choice-header b{color:#f9e0a2;white-space:nowrap}
+.five-choice-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.five-choice-grid button{display:flex;align-items:center;gap:9px;min-width:0;min-height:44px;border:1px solid #3a6474;border-radius:10px;background:#17364a;color:#ecfaff;text-align:left;padding:9px 11px;font-size:12px;font-weight:750;overflow-wrap:anywhere;cursor:pointer}
+.five-choice-grid button:hover,.five-choice-grid button:focus-visible{border-color:#8df1dc;background:#245269;outline:0}
+.five-choice-grid button.is-selected{background:#23645c;border-color:#8cf2d8;box-shadow:0 0 0 1px #8cf2d8}
+.five-choice-grid button span{display:grid;place-items:center;flex:0 0 25px;height:25px;border-radius:7px;background:#285569;color:#b9f9e4;font-size:11px;font-weight:950}
+.five-choice-grid button:disabled{opacity:.65;cursor:not-allowed}
+.five-choice-panel p{font-size:10px;line-height:1.5;color:#a6c5cf;margin:9px 0 0}
+@media(max-width:390px){.five-choice-grid{grid-template-columns:1fr}.five-choice-panel{padding:11px}}

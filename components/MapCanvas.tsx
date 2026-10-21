@@ -211,14 +211,28 @@ export default function MapCanvas({stage,disabled=false,onSelect,pickMode=false,
     }
 
   },[ready,stage?.level,stage?.selection,stage?.clue,stage?.center?.[0],stage?.center?.[1],stage?.zoom,clearMarkers]);
-  // Camera moves happen only when the stage/position changes, never on busy/hint toggles.
-  useEffect(()=>{
+  // Keep ALL five legitimate candidates on screen. Previously, flying directly
+  // to the correct answer could hide distractors and effectively reveal the solution.
+  const frameStage=()=>{
     const map=mapRef.current;if(!ready||!map||pickMode)return;
-    const point=stage?.center||[-14,27];
-    map.flyTo({center:point,zoom:stage?.zoom||1.9,
-      offset:mapCameraOffset(map.getContainer().clientWidth,false),
-      duration:shouldAnimate(motionRef.current)?760:0,essential:false});
-  },[ready,stage?.level,stage?.center?.[0],stage?.center?.[1],stage?.zoom,pickMode]);
+    const candidates=stage?.selection!=='country' ? stage?.choices?.filter(c=>
+      Number.isFinite(c.lat)&&Number.isFinite(c.lng)&&Math.abs(c.lat)<=90&&Math.abs(c.lng)<=180) : [];
+    const duration=shouldAnimate(motionRef.current)?750:0;
+    if(candidates&&candidates.length>=2){
+      const minLng=Math.min(...candidates.map(c=>c.lng)),maxLng=Math.max(...candidates.map(c=>c.lng));
+      const minLat=Math.min(...candidates.map(c=>c.lat)),maxLat=Math.max(...candidates.map(c=>c.lat));
+      if(maxLng-minLng>0.00001||maxLat-minLat>0.00001){
+        const isDesktop=map.getContainer().clientWidth>900;
+        const padding=isDesktop?{top:74,right:56,bottom:80,left:430}:{top:93,right:35,bottom:190,left:35};
+        map.fitBounds([[minLng,minLat],[maxLng,maxLat]],{padding,maxZoom:stage?.zoom||17,duration,essential:false});
+        return;
+      }
+    }
+    map.flyTo({center:stage?.center||[-14,27],zoom:stage?.zoom||1.9,
+      offset:mapCameraOffset(map.getContainer().clientWidth,false),duration,essential:false});
+  };
+  // Change framing only when the stage/options change, not during submissions.
+  useEffect(frameStage,[ready,stage?.level,stage?.center?.[0],stage?.center?.[1],stage?.zoom,stage?.choices,pickMode]);
   useEffect(()=>{
     const map=mapRef.current;if(!ready||!map)return;
     if(stage?.selection==='country')map.setFilter('country-highlight',['==',['get','name'],selected||'§never§']);
@@ -233,8 +247,7 @@ export default function MapCanvas({stage,disabled=false,onSelect,pickMode=false,
     if(map.getLayer('country-lines'))map.setPaintProperty('country-lines','line-opacity',detail?(stage?.selection==='country'?0.78:0.22):0.10);
   },[ready,detail,stage?.selection]);
   const zoom=(n:number)=>mapRef.current?.zoomTo((mapRef.current?.getZoom()||2)+n,{duration:shouldAnimate(reduceMotion)?260:0});
-  const recenter=()=>{const map=mapRef.current;if(!map)return;map.flyTo({center:stage?.center||[-17,24],zoom:stage?.zoom||2,
-    offset:mapCameraOffset(map.getContainer().clientWidth,pickMode),duration:shouldAnimate(reduceMotion)?620:0,essential:false});};
+  const recenter=()=>{if(pickMode){const map=mapRef.current;map?.flyTo({center:stage?.center||[-17,24],zoom:stage?.zoom||2,duration:shouldAnimate(reduceMotion)?620:0});return;}frameStage();};
   return <div className="map-root">
     <div ref={holder} className="map-container" aria-label="Interactive geography map. Select a location, then confirm your guess." role="application"/>
     <div className="map-vignette" aria-hidden="true"/>

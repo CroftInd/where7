@@ -246,7 +246,12 @@ export default function Game(){
                 {stage.hint&&<div className="hint-content"><Lightbulb size={17}/> {stage.hint}</div>}
               </section>
 
-              <div className="select-helper">{stage.selection==='country'?'Tap a country, then confirm before spending a chance.':stage.selection==='region'?'Tap a region or marker, then confirm your selection.':'Explore the map, select a marker, then confirm your choice.'}</div>
+              <div className="select-helper">{stage.selection==='country'?'Tap a country, then confirm before spending a chance.':stage.selection==='region'?'Choose one of five regions, then confirm.':'Choose one of five locations, then confirm. All map markers are selectable.'}</div>
+              {stage.selection!=='country'&&<section className="five-choice-panel" aria-label="Five possible locations">
+                <div className="five-choice-header"><span>FIVE POSSIBLE LOCATIONS</span><b>{stage.choices.length} OPTIONS</b></div>
+                <div className="five-choice-grid">{stage.choices.map((v,i)=><button type="button" key={v.id} className={selected===v.name?'is-selected':''} aria-pressed={selected===v.name} disabled={busy} onClick={()=>choose(v.name)}><span>{String.fromCharCode(65+i)}</span>{v.name}</button>)}</div>
+                <p>Selecting a location previews your guess. Only Confirm spends a Chance.</p>
+              </section>}
               {chosenStage&&<div className="selected-inline"><Target size={15}/> Selected: <strong>{selected}</strong><div className="selected-actions"><button type="button" className="confirm-clear" onClick={()=>setSelected(null)}><X size={16}/> Change</button><button type="button" className="confirm-submit" disabled={busy} onClick={()=>void action('guess',selected||undefined)}><Check size={16}/> Confirm guess</button></div></div>}
               <div className="mission-actions">
                 <button className="primary-action" disabled={busy||!!stage.hint} onClick={()=>void action('hint')}><Lightbulb size={17}/>{stage.hint?'Hint revealed':'Hint (−125 pts)'}</button>
