@@ -1,0 +1,16 @@
+import type {Challenge,Stage} from './types.ts';
+import type {Geometry} from 'geojson';
+export type PlaceEvidence={id:string;parentId:string|null;lat:number;lng:number;source:string;relationshipSource?:string;relation?:'within'|'accessed_from';geometry?:Geometry;attribution?:string};
+export type StageCheck={facts:boolean;uniqueAnswer:boolean;source:boolean;alternatives:boolean;hierarchy:boolean;coordinates:boolean;aliases:boolean};
+export const REVIEW_CHECKS=['facts','uniqueAnswer','source','alternatives','hierarchy','coordinates','aliases'] as const;
+export const REVIEW_LABELS:Record<typeof REVIEW_CHECKS[number],string>={facts:'Clue fact checked',uniqueAnswer:'Exactly one defensible answer',source:'Specific supporting source read',alternatives:'Plausible alternatives at the same scale',hierarchy:'Parent relationship verified',coordinates:'Coordinates and geometry checked',aliases:'Spelling variants and aliases checked'};
+export type ReviewChecklist={stages:StageCheck[];mobileTested:boolean;notes:string;minutesSpent?:number};
+export type ReviewStatus='draft'|'in_review'|'approved'|'changes_requested';
+export type ContentMeta={revision?:number;reviewStatus?:ReviewStatus;checklist?:ReviewChecklist;reviewedAt?:string|null;reserve?:boolean};
+export type QualityIssue={stage:number|null;code:string;message:string;severity:'error'|'warning'};
+export const emptyChecklist=():ReviewChecklist=>({stages:Array.from({length:7},()=>Object.fromEntries(REVIEW_CHECKS.map(key=>[key,false])) as StageCheck),mobileTested:false,notes:''});
+export type ScheduleEntry={day:string;challengeId:string;revision:number;countryIso3:string};
+export type ClueReport={id:string;challenge_id:string;revision:number;stage:number;category:string;notes:string;status:'open'|'reviewing'|'resolved'|'dismissed';created_at:string;resolution:string};
+export const REPORT_CATEGORIES=['inaccurate','ambiguous','map','spelling','other'] as const;
+export type EditorialStage=Stage & {place?:PlaceEvidence};
+export type EditorialChallenge=Challenge & ContentMeta;

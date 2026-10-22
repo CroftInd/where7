@@ -5,6 +5,7 @@ import type {Map as MaplibreMap,StyleSpecification,GeoJSONSource} from 'maplibre
 import {Compass,LocateFixed,Plus,Minus,Layers,AlertCircle,RefreshCw} from 'lucide-react';
 import {mapCameraOffset,shouldAnimate} from '@/lib/presentation';
 import {normalized} from '@/lib/engine';
+import {validGeometry} from '@/lib/content-quality';
 
 type Props={stage:PublicStage|null; disabled?:boolean; onSelect?:(name:string)=>void; pickMode?:boolean; onPick?:(lat:number,lng:number)=>void; selected?:string|null; reduceMotion?:boolean;};
 const emptyFC={type:'FeatureCollection',features:[]};
@@ -30,7 +31,7 @@ export default function MapCanvas({stage,disabled=false,onSelect,pickMode=false,
   const [ready,setReady]=useState(false),[warning,setWarning]=useState(''),[hover,setHover]=useState(''),[hoverPos,setHoverPos]=useState<[number,number]>([0,0]),[detail,setDetail]=useState(true);
   const [mapError,setMapError]=useState(''),[mapAttempt,setMapAttempt]=useState(0),[boundaryAttempt,setBoundaryAttempt]=useState(0),[boundaryFailed,setBoundaryFailed]=useState(false);
   const selectedRef=useRef(selected);selectedRef.current=selected;
-  const stageKey=JSON.stringify([stage?.level,stage?.selection,stage?.countryIso3,stage?.choices,stage?.center,stage?.zoom]);
+  const stageKey=JSON.stringify([stage?.level,stage?.selection,stage?.countryIso3,stage?.boundaryLevel,stage?.choices,stage?.center,stage?.zoom]);
   const [renderStatus,setRenderStatus]=useState<'loading'|'ready'|'error'>('loading');
   const detailRef=useRef(detail);
   const motionRef=useRef(reduceMotion);
@@ -103,6 +104,11 @@ export default function MapCanvas({stage,disabled=false,onSelect,pickMode=false,
           paint:{'circle-radius':10,'circle-color':'#fff5c5','circle-stroke-color':'#40e1d0','circle-stroke-width':3}});
         // Draw choices in WebGL rather than as DOM markers. They remain locked to
         // geographical coordinates on every pan/zoom frame, including touch gestures.
+        map.addSource('choice-geometry',{type:'geojson',data:emptyFC as GeoJSON.FeatureCollection});
+        map.addLayer({id:'choice-areas',type:'fill',source:'choice-geometry',filter:['==',['geometry-type'],'Polygon'],paint:{'fill-color':'#36c6bf','fill-opacity':0.15}});
+        map.addLayer({id:'choice-outlines',type:'line',source:'choice-geometry',paint:{'line-color':'#278f94','line-width':3}});
+        map.addLayer({id:'choice-line-targets',type:'line',source:'choice-geometry',paint:{'line-color':'#278f94','line-width':16,'line-opacity':0.01}});
+        map.addLayer({id:'choice-shape-selected',type:'line',source:'choice-geometry',filter:['==',['get','name'],'§never§'],paint:{'line-color':'#fff3ae','line-width':5}});
         map.addSource('choice-points',{type:'geojson',data:emptyFC as GeoJSON.FeatureCollection});
         map.addLayer({id:'choice-halo',type:'circle',source:'choice-points',paint:{'circle-radius':16,'circle-color':'#3be6ce','circle-opacity':0.17}});
         map.addLayer({id:'choice-dots',type:'circle',source:'choice-points',paint:{'circle-radius':['interpolate',['linear'],['zoom'],2,8,13,12],'circle-color':'#a8fff1','circle-stroke-color':'#073343','circle-stroke-width':3}});
@@ -110,6 +116,7 @@ export default function MapCanvas({stage,disabled=false,onSelect,pickMode=false,
         map.addLayer({id:'choice-labels',type:'symbol',source:'choice-points',layout:{'text-field':['get','name'],'text-size':12,'text-font':['Open Sans Regular'],'text-offset':[0,-1.8],'text-anchor':'bottom','text-allow-overlap':false},paint:{'text-color':'#ffffff','text-halo-color':'#092737','text-halo-width':2.5}});
         const pickChoice=(e:any)=>{if(disabledRef.current||pickRef.current)return;const name=String(e.features?.[0]?.properties?.name||'');if(name)onSelectRef.current?.(name)};
         map.on('click','choice-dots',pickChoice);
+        map.on('click','choice-areas',pickChoice);map.on('click','choice-line-targets',pickChoice);
         map.on('click','choice-labels',pickChoice);
         for(const layer of ['choice-dots','choice-labels']){
           map.on('mouseenter',layer,()=>{map.getCanvas().style.cursor='pointer'});
@@ -187,7 +194,7 @@ export default function MapCanvas({stage,disabled=false,onSelect,pickMode=false,
     map.setLayoutProperty('regions-lines','visibility',active&&stage.selection==='region'?'visible':'none');
     map.setLayoutProperty('region-highlight','visibility',active&&stage.selection==='region'?'visible':'none');
 
-    clearMarkers();setBoundaryFailed(false);setWarning('');
+    clearMarkers();(map.getSource('choice-geometry') as GeoJSONSource).setData(emptyFC as GeoJSON.FeatureCollection);setBoundaryFailed(false);setWarning('');
     (map.getSource('regions') as GeoJSONSource).setData(emptyFC as GeoJSON.FeatureCollection);
     if(!active||stage.selection==='country')return;
     if(stage.selection==='region'){
@@ -196,11 +203,11 @@ export default function MapCanvas({stage,disabled=false,onSelect,pickMode=false,
       const timeout=window.setTimeout(()=>controller.abort(),25000);
       // ISO3 is passed explicitly as a server-authorised value; there are no arbitrary external requests.
       const iso=(stage as PublicStage & {countryIso3?:string}).countryIso3||'USA';
-      fetch('/api/geo?iso='+encodeURIComponent(iso),{cache:boundaryAttempt?'reload':'force-cache',signal:controller.signal})
+      fetch('/api/geo?iso='+encodeURIComponent(iso)+'&level='+(stage.boundaryLevel||'ADM1'),{cache:boundaryAttempt?'reload':'force-cache',signal:controller.signal})
         .then(async response=>{if(!response.ok)throw new Error('Official boundaries are not reachable.');return response.json()})
         .then(data=>{if(cancelled||!mapRef.current||stageRef.current?.selection!=='region')return;
           // Only authored candidates are selectable, matching the accessible list.
-          const choices=new Map(stage.choices.map(c=>[normalized(c.name),c.name]));
+          const choices=new Map(stage.choices.flatMap(c=>[c.name,...(c.aliases||[])].map(name=>[normalized(name),c.name] as const)));
           const features=data.geojson.features.filter((f:{properties:{name:string}})=>choices.has(normalized(f.properties.name)))
             .map((f:{properties:{name:string}})=>({...f,properties:{...f.properties,name:choices.get(normalized(f.properties.name))}}));
           (map.getSource('regions') as GeoJSONSource).setData({...data.geojson,features});
@@ -217,6 +224,7 @@ export default function MapCanvas({stage,disabled=false,onSelect,pickMode=false,
     addChoiceMarkers(stage);
     return()=>clearMarkers();
     function addChoiceMarkers(s:PublicStage){
+      (mapInstance.getSource('choice-geometry') as GeoJSONSource).setData({type:'FeatureCollection',features:s.choices.filter(c=>c.geometry&&validGeometry(c.geometry)).map(c=>({type:'Feature',properties:{name:c.name},geometry:c.geometry!}))});
       const source=mapInstance.getSource('choice-points') as GeoJSONSource|undefined;
       if(!source)return;
       source.setData({type:'FeatureCollection',features:s.choices.map(choice=>({type:'Feature',properties:{name:choice.name,id:choice.id},geometry:{type:'Point',coordinates:[choice.lng,choice.lat]}}))} as GeoJSON.FeatureCollection);
@@ -250,6 +258,7 @@ export default function MapCanvas({stage,disabled=false,onSelect,pickMode=false,
     if(map.getLayer('microstates-highlight'))map.setFilter('microstates-highlight',['==',['get','name'],selected||'§never§']);
     if(stage?.selection==='country')map.setFilter('country-highlight',['==',['get','name'],selected||'§never§']);
     if(stage?.selection==='region')map.setFilter('region-highlight',['==',['get','name'],selected||'§never§']);
+    if(map.getLayer('choice-shape-selected'))map.setFilter('choice-shape-selected',['==',['get','name'],selected||'§never§']);
     if(map.getLayer('choice-selected-ring'))map.setFilter('choice-selected-ring',['==',['get','name'],selected||'§never§']);
   },[selected,stage?.selection,ready]);
   useEffect(()=>{

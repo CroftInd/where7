@@ -2,15 +2,15 @@ import {NextResponse} from 'next/server';
 export const dynamic='force-dynamic';
 // Controlled geoBoundaries proxy. Does not allow arbitrary URL fetches or unapproved boundary layers.
 export async function GET(req:Request){
-  const url=new URL(req.url);const iso=url.searchParams.get('iso')||'';
-  if(!/^[A-Z]{3}$/.test(iso))return NextResponse.json({error:'Invalid ISO3 code.'},{status:400});
+  const url=new URL(req.url);const iso=url.searchParams.get('iso')||'';const level=url.searchParams.get('level')||'ADM1';
+  if(!/^[A-Z]{3}$/.test(iso)||!['ADM1','ADM2'].includes(level))return NextResponse.json({error:'Invalid country or boundary level.'},{status:400});
   try{
-    const endpoint=`https://www.geoboundaries.org/api/current/gbOpen/${iso}/ADM1/`;
+    const endpoint=`https://www.geoboundaries.org/api/current/gbOpen/${iso}/${level}/`;
     const metadata=await fetch(endpoint,{next:{revalidate:86400},signal:AbortSignal.timeout(9500)});
     if(!metadata.ok)throw new Error('No administrative boundaries available.');
     const detail=await metadata.json();
     const geoUrl=detail.simplifiedGeometryGeoJSON || detail.gjDownloadURL;
-    if(typeof geoUrl!=='string'||!/^https:\/\//i.test(geoUrl)||!/(geoboundaries\.org|githubusercontent\.com|github\.com)(\/|$)/i.test(new URL(geoUrl).hostname+'/'))
+    if(typeof geoUrl!=='string'||!/^https:\/\//i.test(geoUrl)||!['geoboundaries.org','githubusercontent.com','github.com'].some(host=>new URL(geoUrl).hostname===host||new URL(geoUrl).hostname.endsWith('.'+host)))
       throw new Error('Untrusted boundary data URL.');
     const response=await fetch(geoUrl,{next:{revalidate:86400},signal:AbortSignal.timeout(12500)});
     if(!response.ok)throw new Error('Boundary download unavailable.');

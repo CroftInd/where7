@@ -13,7 +13,8 @@ test('import rejects injected rows and malformed coordinates',()=>{
  assert(q.errors.some(x=>x.includes('latitude')));assert(q.errors.some(x=>x.includes('HTTPS')));
 });
 test('audit catches stages with insufficient candidate choices',()=>{
- const c=structuredClone(source[0]) as never;
+ const candidate=structuredClone(source[0]);candidate.stages[2].choices=candidate.stages[2].choices.slice(0,4);
+ const c=candidate as never;
  const faults=inspectChallenge(c);assert(faults.some(x=>x.includes('five')));
  const summary=auditStudio([{...(c as object),status:'published'} as never],[]);
  assert.equal(summary.invalid.length,1);

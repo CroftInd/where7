@@ -37,6 +37,11 @@ async function run(){
  assert.equal((await get('daily')).guesses,0);
  assert.equal((await post(daily,'restart')).status,400);
  const noVersion=await post(daily,'guess',{answer:'Canada',version:undefined});assert.equal(noVersion.status,409);
+ assert.equal(daily.contentRevision,1);
+ assert(!JSON.stringify(daily).includes('challengeSnapshot'));
+ for(const path of ['/api/admin/challenges','/api/admin/editorial','/api/admin/quality'])assert.equal((await fetch(base+path,{headers:{cookie}})).status,403);
+ const blocked=await fetch(base+'/api/admin/editorial',{method:'POST',headers:{cookie,'Content-Type':'application/json'},body:JSON.stringify({action:'activate'})});assert.equal(blocked.status,403);
+ const demoReport=await fetch(base+'/api/reports',{method:'POST',headers:{cookie,'Content-Type':'application/json'},body:JSON.stringify({mode:'practice',challengeId:'london',revision:1,stage:0,category:'ambiguous',notes:''})});assert.equal(demoReport.status,503);
  await new Promise(r=>setTimeout(r,100));
  const events=logs.join('').split('\n').filter(l=>l.startsWith('{')).map(l=>JSON.parse(l));
  assert(events.some(e=>e.event==='game_completed'));assert(events.some(e=>e.event==='guess_rejected'));assert(events.some(e=>e.event==='share_action'));

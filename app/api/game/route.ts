@@ -1,7 +1,7 @@
 import {NextResponse} from 'next/server';
 import {createHash} from 'node:crypto';
 import {playerKey,currentAccount,ensureProfile} from '@/lib/player';
-import {selectChallenge,readSession,saveSession,cloudReady} from '@/lib/store';
+import {selectChallenge,getGameState,saveSession,cloudReady} from '@/lib/store';
 import {guess,useHint,abandon,publicGame,newSession} from '@/lib/engine';
 import {assertCurrentRequest,GameConflict,utcDay,nextDailyReset} from '@/lib/game-request';
 import {gameEvent,transitionEvents,type GameEvent} from '@/lib/game-events';
@@ -16,7 +16,7 @@ async function guestKey(){
 }
 function modeAndId(url:URL,body?:Record<string,unknown>){
   const mode=(body?.mode||url.searchParams.get('mode'))==='practice'?'practice':'daily' as Session['mode'];
-  const id=String(body?.challengeId||url.searchParams.get('challenge')||'').slice(0,100);
+  const id=String(body?.practiceKey||body?.challengeId||url.searchParams.get('challenge')||'').slice(0,100);
   return {mode,id};
 }
 function view(session:Session,challenge:Challenge,day:string){
@@ -36,8 +36,7 @@ export async function GET(request:Request){
   const day=utcDay();
   try{
     const guest=await guestKey();const {mode,id}=modeAndId(new URL(request.url));
-    const challenge=await selectChallenge(id,mode,day);
-    const session=await readSession(guest,challenge.id,mode,day);
+    const {challenge,session}=await getGameState(guest,id,mode,day);
     record('game_loaded',guest,session,day);
     return NextResponse.json({game:view(session,challenge,day)}, {headers});
   }catch(e){return errorResponse(e)}
@@ -53,8 +52,7 @@ export async function POST(request:Request){
     // Reject yesterday's screen before selecting/creating today's session.
     if(mode==='daily'&&body.dailyDate!==day)
       throw new GameConflict('DAILY_CHANGED','A new daily expedition is ready. Check your progress to load it.');
-    const guest=await guestKey();const challenge=await selectChallenge(id,mode,day);
-    const session=await readSession(guest,challenge.id,mode,day);
+    const guest=await guestKey();const {challenge,session}=await getGameState(guest,id,mode,day);
     context={guest,session};
     assertCurrentRequest(body,session,day);
     if(body.action==='share'){
@@ -66,7 +64,8 @@ export async function POST(request:Request){
     if(body.action==='restart'){
       if(mode!=='practice')throw new Error('Official daily challenges cannot be restarted.');
       // Restart also uses compare-and-swap; an old guess cannot hit a fresh run.
-      next={...newSession(challenge.id,mode),version:session.version+1};
+      const latest=session.practiceKey?challenge:await selectChallenge(id,mode,day);
+      next={...newSession(latest.id,mode),version:session.version+1,...(session.storageId?{storageId:session.storageId,practiceKey:session.practiceKey}:{}),challengeSnapshot:structuredClone(latest)};
     }else if(body.action==='guess')next=guess(session,challenge,String(body.answer||''));
     else if(body.action==='hint')next=useHint(session);
     else if(body.action==='giveup')next=abandon(session);

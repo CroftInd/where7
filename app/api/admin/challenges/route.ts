@@ -1,36 +1,41 @@
 import {NextResponse} from 'next/server';
 import {requireAdmin,serviceDb} from '@/lib/supabase';
+import {currentAccount} from '@/lib/player';
 import {listChallenges} from '@/lib/store';
-import {validateChallenge,publicationChoiceErrors} from '@/lib/engine';
+import {validateChallenge} from '@/lib/engine';
+import {contentIssues,checklistComplete,destinationKey} from '@/lib/content-quality';
 export const dynamic='force-dynamic';
-const reject=()=>NextResponse.json({error:'Admin login required.'},{status:403});
+const headers={'Cache-Control':'private, no-store'};
+const reject=()=>NextResponse.json({error:'Admin login required.'},{status:403,headers});
 export async function GET(){
-  if(!(await requireAdmin()))return reject();
-  try{return NextResponse.json({challenges:await listChallenges(true)},{headers:{'Cache-Control':'no-store'}})}
-  catch(e){return NextResponse.json({error:String(e)},{status:500})}
+ if(!(await requireAdmin()))return reject();
+ try{return NextResponse.json({challenges:await listChallenges(true)},{headers});}
+ catch{return NextResponse.json({error:'Content library unavailable. Apply the Phase 2 migration.'},{status:503,headers});}
 }
 export async function POST(req:Request){
-  if(!(await requireAdmin()))return reject();
-  const db=serviceDb();if(!db)return NextResponse.json({error:'Supabase credentials required.'},{status:503});
-  if(Number(req.headers.get('content-length')||0)>90000)return NextResponse.json({error:'Challenge payload too large.'},{status:413});
-  let body:unknown;
-  try{body=await req.json()}catch{return NextResponse.json({error:'Invalid JSON'},{status:400})}
-  if(JSON.stringify(body).length>90000)return NextResponse.json({error:'Challenge payload too large.'},{status:413});
-  const parsed=validateChallenge(body);if(!parsed.valid)return NextResponse.json({error:'Invalid challenge',details:parsed.errors},{status:400});
-  const v=parsed.value;
-  const id=v.id&&/^[-a-z0-9]{3,64}$/.test(v.id)?v.id:`custom-${crypto.randomUUID()}`;
-  // Published challenges without a date join the random daily rotation pool.
-  const publicationErrors=publicationChoiceErrors(v.stages);
-  if(v.status==='published'&&publicationErrors.length)return NextResponse.json({error:'Published challenges require exactly five distinct, real places at each stage after Country.',details:publicationErrors},{status:400});
-  const {error}=await db.from('challenges').upsert({id,title:v.title,description:v.description||'',country_iso3:v.countryIso3,
-    status:v.status,difficulty:v.difficulty||'standard',publish_date:v.publishDate||null,stages:v.stages,updated_at:new Date().toISOString()});
-  return error?NextResponse.json({error:error.message},{status:400}):NextResponse.json({id,success:true});
-}
-export async function DELETE(req:Request){
-  if(!(await requireAdmin()))return reject();
-  const db=serviceDb();if(!db)return NextResponse.json({error:'Database not configured'},{status:503});
-  const id=new URL(req.url).searchParams.get('id')||'';
-  if(!/^custom-[0-9a-f-]{36}$/.test(id))return NextResponse.json({error:'Only custom challenges can be deleted.'},{status:400});
-  const {error}=await db.from('challenges').delete().eq('id',id);
-  return error?NextResponse.json({error:error.message},{status:400}):NextResponse.json({success:true});
+ if(!(await requireAdmin()))return reject();
+ const editor=await currentAccount();if(!editor)return reject();
+ const origin=req.headers.get('origin');if(origin&&origin!==new URL(req.url).origin)return reject();
+ const db=serviceDb();if(!db)return NextResponse.json({error:'Database unavailable.'},{status:503,headers});
+ try{
+  const raw=await req.text();if(raw.length>500000)return NextResponse.json({error:'Content limit is 500 KB.'},{status:413,headers});
+  const body=JSON.parse(raw);
+  const parsed=validateChallenge(body,{draft:body.intent!=='approve'});if(!parsed.valid)return NextResponse.json({error:'Invalid challenge',details:parsed.errors},{status:422,headers});
+  const value=parsed.value;
+  const intent=body.intent;
+  if(!['draft','in_review','approve'].includes(intent))return NextResponse.json({error:'Choose save draft, submit for review or approve.'},{status:400,headers});
+  const expected=body.expectedRevision;
+  if(!Number.isSafeInteger(expected)||expected<0)return NextResponse.json({error:'A saved revision is required.'},{status:409,headers});
+  const id=value.id&&/^[-a-z0-9]{3,100}$/.test(value.id)?value.id:`custom-${crypto.randomUUID()}`;
+  const issues=contentIssues(value);
+  if(intent==='approve'){
+   if(issues.some(i=>i.severity==='error')||!checklistComplete(body.checklist))return NextResponse.json({error:'Complete the editorial checklist and correct publication errors.',details:issues.filter(i=>i.severity==='error').map(i=>i.message)},{status:422,headers});
+   const duplicate=(await listChallenges(true)).find(c=>c.id!==id&&c.status==='published'&&c.reviewStatus==='approved'&&destinationKey(c)===destinationKey(value));
+   if(duplicate)return NextResponse.json({error:'An approved challenge already uses this destination. Archive or revise the duplicate.'},{status:422,headers});
+  }
+  const payload={id,title:value.title,description:value.description||'',countryIso3:value.countryIso3,difficulty:value.difficulty||'standard',stages:value.stages,checklist:body.checklist||{},reserve:body.reserve===true};
+  const {data,error}=await db.rpc('where7_save_content',{payload,expected_revision:expected,editor:editor.id,intent});
+  if(error)return NextResponse.json({error:error.message},{status:error.message.includes('CONTENT_CONFLICT')?409:422,headers});
+  return NextResponse.json({challenge:data,issues,success:true},{headers});
+ }catch{return NextResponse.json({error:'Unable to save content. Check the payload and migration.'},{status:400,headers});}
 }

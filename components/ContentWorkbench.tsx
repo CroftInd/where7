@@ -1,0 +1,66 @@
+'use client';
+import {useEffect,useRef,useState} from 'react';
+import type {Challenge,Choice,Stage} from '@/lib/types';
+import type {PlaceEvidence,ReviewChecklist} from '@/lib/content-types';
+import {emptyChecklist,REVIEW_CHECKS,REVIEW_LABELS} from '@/lib/content-types';
+import {contentIssues,checklistComplete,httpsSource} from '@/lib/content-quality';
+import {normalized} from '@/lib/engine';
+import ContentPlaytest from './ContentPlaytest';
+
+type Place={id:string;name:string;level:number;parent_id:string|null;lat:number;lng:number;source:string};
+const labels=['Country','State / Region','City','Area','District','Street','Building'];
+function fresh():Challenge{return {id:'custom-'+crypto.randomUUID(),title:'New expedition',description:'',countryIso3:'GBR',status:'draft',publishDate:null,difficulty:'standard',revision:0,reviewStatus:'draft',checklist:emptyChecklist(),stages:labels.map((label,level)=>({level,label,clue:'',hint:'',source:'',answer:'',center:[0,20],zoom:[2,5,8,11,13,15,17][level],selection:level===0?'country':'markers',choices:[]}))};}
+function JsonField({label,value,onChange,onValidity,kind}:{label:string;value:unknown;onChange:(value:any)=>void;onValidity:(valid:boolean)=>void;kind:'array'|'object'}){
+ const [text,setText]=useState(()=>value===undefined?'':JSON.stringify(value,null,2)),[error,setError]=useState('');
+ const emitted=useRef(value);
+ useEffect(()=>{if(value!==emitted.current){emitted.current=value;setText(value===undefined?'':JSON.stringify(value,null,2));setError('');onValidity(true);}},[value]);
+ return <label>{label}<textarea rows={5} value={text} spellCheck={false} onChange={e=>{
+  setText(e.target.value);try{
+   const parsed=e.target.value.trim()?JSON.parse(e.target.value):kind==='array'?[]:undefined;
+   if(parsed!==undefined&&(kind==='array'?!Array.isArray(parsed):!parsed||typeof parsed!=='object'||Array.isArray(parsed)))throw Error('Use a JSON '+kind+'.');
+   emitted.current=parsed;onChange(parsed);setError('');onValidity(true);
+  }catch{setError('Invalid JSON '+kind+'. Saving is paused until corrected.');onValidity(false);}
+ }}/>{error&&<span role="alert" className="editorial-error">{error}</span>}</label>;
+}
+export default function ContentWorkbench({challenges,places,onSaved}:{challenges:Challenge[];places:Place[];onSaved:()=>Promise<void>}){
+ const [challenge,setChallenge]=useState<Challenge|null>(null),[query,setQuery]=useState(''),[dirty,setDirty]=useState(false),[invalid,setInvalid]=useState<string[]>([]),[busy,setBusy]=useState(false),[message,setMessage]=useState(''),[playtest,setPlaytest]=useState(false);
+ const choose=(next:Challenge)=>{if(dirty&&!confirm('Discard unsaved changes?'))return;setChallenge(structuredClone(next));setDirty(false);setInvalid([]);setMessage('');setPlaytest(false);};
+ const change=(patch:Partial<Challenge>,content=true)=>{setChallenge(c=>c?{...c,...patch,...(content?{checklist:emptyChecklist(),reviewStatus:'draft'}:{})}:null);setDirty(true);setPlaytest(false);};
+ const stageChange=(index:number,patch:Partial<Stage>)=>{if(challenge)change({stages:challenge.stages.map((s,i)=>i===index?{...s,...patch}:s)});};
+ const validity=(key:string,valid:boolean)=>setInvalid(keys=>valid?keys.filter(k=>k!==key):[...new Set([...keys,key])]);
+ const save=async(intent:'draft'|'in_review'|'approve')=>{
+  if(!challenge||busy||invalid.length)return;setBusy(true);setMessage('');
+  try{
+   const response=await fetch('/api/admin/challenges',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({...challenge,intent,expectedRevision:challenge.revision||0})});
+   const data=await response.json();if(!response.ok)throw Error([data.error,...(data.details||[])].join(' '));
+   setChallenge(data.challenge);setDirty(false);setInvalid([]);setMessage(intent==='approve'?'Approved revision saved. Existing runs retain their original clues.':'Revision saved without publication.');await onSaved();
+  }catch(e){setMessage(e instanceof Error?e.message:'Save failed.');}finally{setBusy(false);}
+ };
+ const issues=challenge?contentIssues(challenge):[];
+ const checklist:ReviewChecklist=challenge?.checklist?.stages?.length===7?challenge.checklist:emptyChecklist();
+ const candidates=challenges.filter(c=>(c.title+' '+c.countryIso3+' '+c.reviewStatus).toLowerCase().includes(query.toLowerCase()));
+ const setCheck=(index:number,key:typeof REVIEW_CHECKS[number],value:boolean)=>change({checklist:{...checklist,stages:checklist.stages.map((s,i)=>i===index?{...s,[key]:value}:s)}},false);
+ return <div className="editorial-workbench"><aside className="studio-panel editorial-library"><h2>Content revisions</h2><button type="button" onClick={()=>choose(fresh())}>Create expedition</button><label>Search content<input value={query} onChange={e=>setQuery(e.target.value)} placeholder="Title, country or review state"/></label><div className="editorial-library-list">{candidates.map(c=><button type="button" key={c.id} onClick={()=>choose(c)} aria-pressed={challenge?.id===c.id}><b>{c.title}</b><small>{c.countryIso3} · r{c.revision||1} · {c.reviewStatus||'unreviewed'}{c.reserve?' · reserve':''}</small></button>)}</div></aside>
+ <section className="studio-panel editorial-editor">{challenge?<><header><h2>{challenge.title}</h2><p>Saved revision {challenge.revision||0} · {challenge.reviewStatus||'unreviewed'}{dirty?' · unsaved changes':''}</p></header>
+ <div className="editorial-fields"><label>Title<input value={challenge.title} maxLength={120} onChange={e=>change({title:e.target.value})}/></label><label>Country ISO3<input value={challenge.countryIso3} maxLength={3} onChange={e=>change({countryIso3:e.target.value.toUpperCase()})}/></label><label>Difficulty<select value={challenge.difficulty} onChange={e=>change({difficulty:e.target.value as Challenge['difficulty']})}><option value="easy">Easy</option><option value="standard">Standard</option><option value="expert">Expert</option></select></label><label>Description<textarea value={challenge.description} onChange={e=>change({description:e.target.value})}/></label></div>
+ {challenge.stages.map((s,i)=><details key={challenge.id+'-'+i} className="editorial-stage" open={i===0}><summary>{i+1}. {s.label} · {s.answer||'No answer yet'} · {issues.filter(issue=>issue.stage===i).length} checks to inspect</summary>
+  <label>Stage label<input value={s.label} onChange={e=>stageChange(i,{label:e.target.value})}/></label><label>Answer<input value={s.answer} onChange={e=>stageChange(i,{answer:e.target.value})}/></label><label>Clue<textarea rows={3} value={s.clue} onChange={e=>stageChange(i,{clue:e.target.value})}/></label><label>Hint<textarea value={s.hint} onChange={e=>stageChange(i,{hint:e.target.value})}/></label><label>Specific factual source<input type="url" value={s.source} onChange={e=>stageChange(i,{source:e.target.value})}/>{httpsSource(s.source)&&<a href={s.source} target="_blank" rel="noreferrer noopener">Read supporting source</a>}</label>
+  <label>Select on map as<select value={s.selection} onChange={e=>stageChange(i,{selection:e.target.value as Stage['selection']})}>{i===0?<option value="country">Country</option>:<><option value="region">Regional borders and markers</option><option value="markers">Markers and authored geometry</option></>}</select></label>
+  {s.selection==='region'&&<label>Administrative boundary layer<select value={s.boundaryLevel||'ADM1'} onChange={e=>stageChange(i,{boundaryLevel:e.target.value as 'ADM1'|'ADM2'})}><option value="ADM1">ADM1 — regions/states</option><option value="ADM2">ADM2 — local authorities/districts where available</option></select></label>}
+  {i>0&&<JsonField key={challenge.id+'-'+challenge.revision+'-choices-'+i} label="Choices: stable id, name, lat, lng; optional aliases, geometry, source and attribution" value={s.choices} kind="array" onChange={choices=>stageChange(i,{choices:choices as Choice[]})} onValidity={v=>validity('choices-'+i,v)}/>}
+  <label>Populate place evidence from the geography library<select value="" onChange={e=>{const p=places.find(p=>p.id===e.target.value);if(!p)return;stageChange(i,{place:{id:p.id,parentId:p.parent_id,lat:p.lat,lng:p.lng,source:p.source,relationshipSource:'',relation:'within'},choices:s.choices.map(c=>normalized(c.name)===normalized(s.answer)?{...c,id:p.id,lat:p.lat,lng:p.lng}:c)});}}><option value="">Select a saved place at this level…</option>{places.filter(p=>p.level===i).map(p=><option key={p.id} value={p.id}>{p.name}</option>)}</select></label>
+  <p>Place evidence must identify this location and cite its relationship to the preceding place. Polygon containment is checked where a boundary exists; streets/building entrances may use an evidenced access relationship.</p>
+  {!s.place&&<button type="button" onClick={()=>{
+   const correct=s.choices.find(c=>normalized(c.name)===normalized(s.answer));const id=crypto.randomUUID();
+   stageChange(i,{place:{id,parentId:i===0?null:challenge.stages[i-1].place?.id||'',lat:correct?.lat||s.center[1],lng:correct?.lng||s.center[0],source:correct?.source||s.source,...(correct?.geometry?{geometry:correct.geometry,attribution:correct.attribution}:{}),relationshipSource:i===0?undefined:'',relation:i===6?'accessed_from':'within'},choices:s.choices.map(c=>c===correct?{...c,id}:c)});
+  }}>Add evidence fields</button>}
+  <JsonField key={challenge.id+'-'+challenge.revision+'-place-'+i+'-'+(s.place?.id||'empty')} label="Place evidence: id, parentId, lat, lng, source, relationshipSource, relation; optional geometry and attribution" value={s.place} kind="object" onChange={place=>stageChange(i,{place:place as PlaceEvidence|undefined})} onValidity={v=>validity('place-'+i,v)}/>
+  {i===1&&challenge.countryIso3==='GBR'&&<label><input type="checkbox" checked={!!s.choiceException} onChange={e=>stageChange(i,{choiceException:e.target.checked?{reason:'The UK has four constituent nations, so all four are offered without inventing a fifth peer.',source:'https://service-manual.ons.gov.uk/content/language/countries-and-regions'}:undefined})}/> Document the four-nation UK exception (only those four peers are allowed).</label>}
+ </details>)}
+ <section className="editorial-preflight"><h3>Publication checks</h3>{issues.length?<ul>{issues.map((issue,i)=><li key={i} className={issue.severity==='error'?'editorial-error':''}>{issue.stage!==null?`Stage ${issue.stage+1}: `:''}{issue.message} ({issue.severity})</li>)}</ul>:<p>Automated structural and geographic checks pass. Editorial sign-off is still required.</p>}</section>
+ <section className="editorial-checklist"><h3>Editorial sign-off</h3><p>Check each item only after reviewing the evidence. Editing content clears these checks; no legacy challenge is approved automatically.</p>{challenge.stages.map((s,i)=><details key={i}><summary>Stage {i+1}: {s.label}</summary>{REVIEW_CHECKS.map(key=><label key={key}><input type="checkbox" checked={checklist.stages[i]?.[key]===true} onChange={e=>setCheck(i,key,e.target.checked)}/>{REVIEW_LABELS[key]}</label>)}</details>)}<label><input type="checkbox" checked={checklist.mobileTested===true} onChange={e=>change({checklist:{...checklist,mobileTested:e.target.checked}},false)}/> I playtested this revision on the intended mobile layout.</label><label>Review minutes (optional)<input type="number" min={0} max={1440} value={checklist.minutesSpent??''} onChange={e=>change({checklist:{...checklist,minutesSpent:e.target.value===''?undefined:Number(e.target.value)}},false)}/></label><label>Editorial notes<textarea maxLength={2000} value={checklist.notes||''} onChange={e=>change({checklist:{...checklist,notes:e.target.value}},false)}/></label><label><input type="checkbox" checked={challenge.reserve===true} onChange={e=>change({reserve:e.target.checked},false)}/> Hold as an emergency reserve; exclude from automatic rotation and the normal schedule.</label></section>
+ <div className="editorial-save-actions"><button type="button" disabled={busy||!!invalid.length} onClick={()=>void save('draft')}>Save draft revision</button><button type="button" disabled={busy||!!invalid.length} onClick={()=>void save('in_review')}>Submit for review</button><button type="button" disabled={busy||!!invalid.length||issues.some(i=>i.severity==='error')||!checklistComplete(checklist)} onClick={()=>void save('approve')}>Approve and publish revision</button></div>
+ {message&&<p role="status">{message}</p>}
+ <button type="button" disabled={!!invalid.length||issues.some(i=>i.code==='structure')} onClick={()=>setPlaytest(v=>!v)}>{playtest?'Close':'Open'} player playtest</button>{playtest&&<ContentPlaytest key={challenge.id+'-'+challenge.revision} challenge={challenge}/>}
+ </>:<p>Select an expedition, or create a new one. All changes are versioned; saving a correction will not replace clues in an active run.</p>}</section></div>;
+}
