@@ -9,6 +9,7 @@ import {formatScore,shouldAnimate} from '@/lib/presentation';
 import ProgressionClient from './ProgressionClient';
 import FocusDialog from './FocusDialog';
 import LocationChoices from './LocationChoices';
+import ClueReportForm from './ClueReportForm';
 import {requestGame,GameRequestError} from '@/lib/game-client';
 const MapCanvas=dynamic(()=>import('./MapCanvas'),{ssr:false,loading:()=> <div className="map-loading"><div className="loading-orb"/>Preparing your atlas…</div>});
 const STAGES=['COUNTRY','STATE / REGION','CITY','AREA','DISTRICT','STREET','BUILDING'];
@@ -169,7 +170,7 @@ export default function Game(){
     currentLoad.current?.abort();const actionGeneration=++loadRequestId.current;
     try{
       const data=await requestGame('/api/game',{method:'POST',headers:{'Content-Type':'application/json'},
-        body:JSON.stringify({action:kind,mode:game.mode,challengeId:game.challengeId,stage:game.stage,version:game.version,dailyDate:game.dailyDate,answer})});
+        body:JSON.stringify({action:kind,mode:game.mode,challengeId:game.challengeId,stage:game.stage,version:game.version,practiceKey:game.practiceKey,dailyDate:game.dailyDate,answer})});
       if(actionGeneration!==loadRequestId.current)return;
       if(kind==='guess'){
         const right=Boolean(data.correct);setFeedback(right?'right':'wrong');setFeedbackText(right?`${answer} confirmed · ${data.game.hearts} chances left`:`Incorrect · 1 chance used · ${data.game.hearts} left`);playTone(right);bump(right);
@@ -199,7 +200,7 @@ export default function Game(){
     setNameSaving(true);setNameStatus('');
     try{const response=await fetch('/api/leaderboard',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:displayName})});
       const data=await response.json();if(!response.ok)throw new Error(data.error||'Could not publish player name');
-      setNameStatus('Your verified score is on today’s leaderboard.');
+      setNameStatus(data.message||'Your verified score is on today’s leaderboard.');
     }catch(e){setNameStatus(e instanceof Error?e.message:'Leaderboard is currently unavailable')}
     finally{setNameSaving(false)}
   };
@@ -211,7 +212,7 @@ export default function Game(){
     }).join('');
     const date=game.dailyDate||new Date(game.startedAt).toISOString().slice(0,10);
     const message=(game.mode==='daily'?'WHERE7 🌍 ':'WHERE7 Practice 🌍 ')+date+'\n'+cells+'\n'+game.stage+'/7 locations · '+game.guesses+'/7 chances used · '+game.score.toLocaleString()+' points\nPlay: https://www.where7.world';
-    const recordShare=()=>{void requestGame('/api/game',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'share',mode:game.mode,challengeId:game.challengeId,stage:game.stage,version:game.version,dailyDate:game.dailyDate})}).catch(()=>{});};
+    const recordShare=()=>{void requestGame('/api/game',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'share',mode:game.mode,challengeId:game.challengeId,stage:game.stage,version:game.version,practiceKey:game.practiceKey,dailyDate:game.dailyDate})}).catch(()=>{});};
     try{
       if(navigator.share){await navigator.share({title:'WHERE7 Daily Geography',text:message,url:'https://www.where7.world'});setToast('Result shared');recordShare();return;}
       await navigator.clipboard.writeText(message);setToast('Spoiler-free result copied');recordShare();
@@ -300,6 +301,7 @@ export default function Game(){
               <div className="select-helper">Select on the map or use the list below. Previewing a place is free.</div>
               <LocationChoices key={`${game.challengeId}:${stage.level}`} stage={stage} selected={selected} disabled={selectionDisabled} onSelect={choose}/>
               {chosenStage&&<div className="selected-inline"><Target size={15}/> Selected: <strong>{selected}</strong><div className="selected-actions"><button type="button" className="confirm-clear" onClick={()=>setSelected(null)}><X size={16}/> Change</button><button type="button" className="confirm-submit" disabled={selectionDisabled} onClick={()=>void action('guess',selected||undefined)}><Check size={16}/> Confirm guess</button></div></div>}
+              <ClueReportForm key={`report-${game.challengeId}-${game.contentRevision}-${game.stage}`} game={game}/>
               <div className="mission-actions">
                 <button className="primary-action" disabled={selectionDisabled||!!stage.hint} onClick={()=>void action('hint')}><Lightbulb size={17}/>{stage.hint?'Hint revealed':'Hint (−125 pts)'}</button>
                 <button className="secondary-action" disabled={selectionDisabled} onClick={()=>void action('giveup')}><Flag size={16}/> Give up</button>

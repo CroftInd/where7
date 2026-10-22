@@ -1,4 +1,5 @@
 import type {Challenge} from './types.ts';
+import {contentIssues} from './content-quality.ts';
 export type ImportedPlace={name:string;level:number;parent_id:string|null;clue:string;hint:string;source:string;lat:number;lng:number;iso3:string|null;published:boolean};
 export type StudioAudit={total:number;published:number;validPublished:number;invalid:{id:string;title:string;issues:string[]}[];totalPlaces:number;completePaths:number;orphanedNodes:number};
 export type GeoNode={id:string;parent_id:string|null;level:number;published:boolean};
@@ -46,20 +47,7 @@ export function validateImportedPlace(value:Record<string,string>,i=0):{place:Im
  return {place:{name:value.name.trim(),level,parent_id:level===0?null:id,clue:value.clue.trim(),hint:(value.hint||'').trim(),source:value.source.trim(),lat,lng,iso3:level===0?(value.iso3||'').trim().toUpperCase():null,published:['true','1','yes'].includes((value.published||'false').toLowerCase())},errors:[]};
 }
 export function inspectChallenge(c:Challenge):string[]{
- const issues:string[]=[];
- if(c.stages.length!==7){issues.push('Needs exactly seven stages');return issues}
- for(const [i,stage] of c.stages.entries()){
-  if(stage.level!==i)issues.push('Stage '+(i+1)+': incorrect level');
-  if(stage.clue.length<10||!/^https:\/\//.test(stage.source))issues.push('Stage '+(i+1)+': missing clue or source');
-  if(!Array.isArray(stage.center)||stage.center.length!==2||!Number.isFinite(stage.center[0])||!Number.isFinite(stage.center[1])||Math.abs(stage.center[0])>180||Math.abs(stage.center[1])>90)issues.push('Stage '+(i+1)+': invalid coordinates');
-  if(i===0)continue;
-  if(stage.choices.length!==5)issues.push('Stage '+(i+1)+': requires five options');
-  const names=new Set(stage.choices.map(x=>x.name.toLocaleLowerCase().trim()));
-  if(names.size!==stage.choices.length)issues.push('Stage '+(i+1)+': repeated names');
-  if(stage.choices.filter(x=>x.name===stage.answer).length!==1)issues.push('Stage '+(i+1)+': incorrect answer mapping');
-  if(stage.choices.some(x=>/^map point\b/i.test(x.name)||Math.abs(x.lat)>90||Math.abs(x.lng)>180))issues.push('Stage '+(i+1)+': placeholder or invalid coordinates');
- }
- return issues;
+ return contentIssues(c,{requireEvidence:false}).filter(issue=>issue.severity==='error').map(issue=>(issue.stage===null?'':`Stage ${issue.stage+1}: `)+issue.message);
 }
 export function auditStudio(challenges:Challenge[],nodes:GeoNode[]):StudioAudit{
  const invalid=challenges.filter(c=>c.status==='published').map(c=>({id:c.id,title:c.title,issues:inspectChallenge(c)})).filter(x=>x.issues.length);

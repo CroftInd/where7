@@ -17,11 +17,13 @@ jobs:
         with:
           node-version: '22'
       - name: Install dependencies
-        run: npm install --no-audit --no-fund
+        run: npm ci --no-audit --no-fund
       - name: Test game rules and presentation
         run: npm test
       - name: Verify interactive map files and layout safeguards
         run: node scripts/verify-atlas.mjs
+      - name: Verify content revisions, scheduling, reports and database permissions
+        run: npm run test:content-db
       - name: Check TypeScript
         run: npm run typecheck
       - name: Compile production app
@@ -31,3 +33,6 @@ jobs:
 
       - name: Verify expedition requests and recovery against a local demo server
         run: npm run test:flow
+
+      - name: Verify content API flows against isolated PostgreSQL
+        run: npm run test:content-flow

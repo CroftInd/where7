@@ -2,7 +2,7 @@ import {NextResponse} from 'next/server';
 import {playerKey,currentAccount,ensureProfile} from '@/lib/player';
 import {levelFromXp,rankFromLevel} from '@/lib/ranks';
 import {serviceDb} from '@/lib/supabase';
-import {readSession,selectChallenge,storedChallengeId} from '@/lib/store';
+import {getGameState,selectChallenge,storedChallengeId} from '@/lib/store';
 export const dynamic='force-dynamic';
 const noCache={'Cache-Control':'private, no-store'};
 export async function GET(){
@@ -28,13 +28,13 @@ export async function POST(req:Request){
     if(name.length<2||name.length>24||!(/^[\p{L}\p{N} _-]+$/u.test(name)))throw new Error('Use a name with 2–24 letters, digits, spaces, underscores or hyphens.');
     const account=await currentAccount();if(!account)throw new Error('Sign in to publish a ranked leaderboard score.');
     const token=await playerKey();await ensureProfile(account.id,account.email);
-    const puzzle=await selectChallenge(undefined,'daily');
-    const session=await readSession(token,puzzle.id,'daily');
+    const {challenge:puzzle,session}=await getGameState(token,undefined,'daily');
     if(session.status==='playing')throw new Error('Finish the daily challenge before submitting a name.');
     const {data,error}=await db.from('results').update({display_name:name}).eq('guest_key',token).eq('challenge_id',storedChallengeId(puzzle.id,'daily')).eq('mode','daily').select('score');
     if(error||!data?.length)throw new Error(error?.message||'Daily result not found.');
     const {error:profileError}=await db.from('player_profiles').update({display_name:name}).eq('id',account.id);
     if(profileError)throw new Error(profileError.message);
-    return NextResponse.json({success:true},{headers:noCache});
+    const current=await selectChallenge(undefined,'daily');
+    return NextResponse.json({success:true,...(current.id!==puzzle.id?{message:'Your original expedition result is saved separately from today’s replacement leaderboard.'}:{})},{headers:noCache});
   }catch(e){return NextResponse.json({error:e instanceof Error?e.message:'Error publishing name'},{status:400})}
 }

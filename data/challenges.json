@@ -65,7 +65,11 @@
             "lng": -6.5,
             "kind": "region"
           }
-        ]
+        ],
+        "choiceException": {
+          "reason": "The UK has four constituent nations, so all four are offered without inventing a fifth peer.",
+          "source": "https://service-manual.ons.gov.uk/content/language/countries-and-regions"
+        }
       },
       {
         "level": 2,
@@ -158,65 +162,376 @@
           51.480000000000004
         ],
         "zoom": 10,
-        "selection": "markers",
+        "selection": "region",
         "choices": [
           {
-            "id": "city-of-westminster",
+            "id": "geoboundaries:9080712B54935279696040",
             "name": "City of Westminster",
-            "lat": 51.5095,
-            "lng": -0.151,
-            "kind": "place"
+            "lat": 51.51438,
+            "lng": -0.160932,
+            "geometry": {
+              "type": "Polygon",
+              "coordinates": [
+                [
+                  [
+                    -0.11160678750862,
+                    51.51533799695561
+                  ],
+                  [
+                    -0.129361450349643,
+                    51.5134832609334
+                  ],
+                  [
+                    -0.152732420226796,
+                    51.537519143528804
+                  ],
+                  [
+                    -0.191483481915455,
+                    51.53628936444309
+                  ],
+                  [
+                    -0.196568744529984,
+                    51.527653972554056
+                  ],
+                  [
+                    -0.205309897927594,
+                    51.53295691813311
+                  ],
+                  [
+                    -0.21602889331714,
+                    51.52792816066051
+                  ],
+                  [
+                    -0.179570818350525,
+                    51.49777836018933
+                  ],
+                  [
+                    -0.158468622949821,
+                    51.50224817229959
+                  ],
+                  [
+                    -0.150000889186005,
+                    51.485467340556845
+                  ],
+                  [
+                    -0.128471262440794,
+                    51.485063944337014
+                  ],
+                  [
+                    -0.111580481254835,
+                    51.5108316453289
+                  ],
+                  [
+                    -0.11160678750862,
+                    51.51533799695561
+                  ]
+                ]
+              ]
+            },
+            "source": "https://www.geoboundaries.org/api/current/gbOpen/GBR/ADM2/",
+            "attribution": "geoBoundaries gbOpen; UK Open Government Licence v3.0; simplified local authority boundaries",
+            "aliases": [
+              "Westminster"
+            ]
           },
           {
-            "id": "camden",
+            "id": "geoboundaries:9080712B44623990435361",
             "name": "Camden",
-            "lat": 51.552,
-            "lng": -0.1535,
-            "kind": "place"
+            "lat": 51.538737,
+            "lng": -0.148921,
+            "geometry": {
+              "type": "Polygon",
+              "coordinates": [
+                [
+                  [
+                    -0.105349879609074,
+                    51.51854099551614
+                  ],
+                  [
+                    -0.122556034430967,
+                    51.5307255602818
+                  ],
+                  [
+                    -0.142415805924253,
+                    51.569120256407096
+                  ],
+                  [
+                    -0.171285194237143,
+                    51.572429692162956
+                  ],
+                  [
+                    -0.213501359183424,
+                    51.55518609035638
+                  ],
+                  [
+                    -0.191483481915455,
+                    51.53628936444309
+                  ],
+                  [
+                    -0.152732420226796,
+                    51.537519143528804
+                  ],
+                  [
+                    -0.129361450349643,
+                    51.5134832609334
+                  ],
+                  [
+                    -0.11160678750862,
+                    51.51533799695561
+                  ],
+                  [
+                    -0.105349879609074,
+                    51.51854099551614
+                  ]
+                ]
+              ]
+            },
+            "source": "https://www.geoboundaries.org/api/current/gbOpen/GBR/ADM2/",
+            "attribution": "geoBoundaries gbOpen; UK Open Government Licence v3.0; simplified local authority boundaries"
           },
           {
-            "id": "kensington-and-chelsea",
-            "name": "Kensington and Chelsea",
-            "lat": 51.5025,
-            "lng": -0.201,
-            "kind": "place"
-          },
-          {
-            "id": "lambeth",
+            "id": "geoboundaries:9080712B40540283796062",
             "name": "Lambeth",
-            "lat": 51.4585,
-            "lng": -0.119,
-            "kind": "place"
+            "lat": 51.446584,
+            "lng": -0.118311,
+            "geometry": {
+              "type": "Polygon",
+              "coordinates": [
+                [
+                  [
+                    -0.078306628843177,
+                    51.42060916538995
+                  ],
+                  [
+                    -0.101425373040856,
+                    51.45195572465233
+                  ],
+                  [
+                    -0.09007970493796,
+                    51.46615786891372
+                  ],
+                  [
+                    -0.108245927081271,
+                    51.48029470023429
+                  ],
+                  [
+                    -0.111580481254835,
+                    51.5108316453289
+                  ],
+                  [
+                    -0.128471262440794,
+                    51.485063944337014
+                  ],
+                  [
+                    -0.151231452135587,
+                    51.4658845376408
+                  ],
+                  [
+                    -0.143620663352912,
+                    51.441838621109255
+                  ],
+                  [
+                    -0.13590398904223,
+                    51.442005729818625
+                  ],
+                  [
+                    -0.14040541023492,
+                    51.41924942862106
+                  ],
+                  [
+                    -0.148090387932414,
+                    51.412870312153004
+                  ],
+                  [
+                    -0.127751741865233,
+                    51.41231700477889
+                  ],
+                  [
+                    -0.11268555206088,
+                    51.42324418565536
+                  ],
+                  [
+                    -0.078548580505356,
+                    51.41984780279143
+                  ],
+                  [
+                    -0.078306628843177,
+                    51.42060916538995
+                  ]
+                ]
+              ]
+            },
+            "source": "https://www.geoboundaries.org/api/current/gbOpen/GBR/ADM2/",
+            "attribution": "geoBoundaries gbOpen; UK Open Government Licence v3.0; simplified local authority boundaries"
           },
           {
-            "id": "southwark",
+            "id": "geoboundaries:9080712B52245663238426",
             "name": "Southwark",
-            "lat": 51.48,
-            "lng": -0.0805,
-            "kind": "place"
+            "lat": 51.473479,
+            "lng": -0.071671,
+            "geometry": {
+              "type": "Polygon",
+              "coordinates": [
+                [
+                  [
+                    -0.111580481254835,
+                    51.5108316453289
+                  ],
+                  [
+                    -0.108245927081271,
+                    51.48029470023429
+                  ],
+                  [
+                    -0.09007970493796,
+                    51.46615786891372
+                  ],
+                  [
+                    -0.101425373040856,
+                    51.45195572465233
+                  ],
+                  [
+                    -0.078306628843177,
+                    51.42060916538995
+                  ],
+                  [
+                    -0.073935627174087,
+                    51.42615336930937
+                  ],
+                  [
+                    -0.061826897385457,
+                    51.44779608030741
+                  ],
+                  [
+                    -0.041648593696182,
+                    51.454990305048995
+                  ],
+                  [
+                    -0.053977484783036,
+                    51.487935193633454
+                  ],
+                  [
+                    -0.032404715947382,
+                    51.49305689397536
+                  ],
+                  [
+                    -0.035916513294532,
+                    51.50697548195771
+                  ],
+                  [
+                    -0.062980183843532,
+                    51.50065922450197
+                  ],
+                  [
+                    -0.079395270663612,
+                    51.50781128301588
+                  ],
+                  [
+                    -0.111580481254835,
+                    51.5108316453289
+                  ]
+                ]
+              ]
+            },
+            "source": "https://www.geoboundaries.org/api/current/gbOpen/GBR/ADM2/",
+            "attribution": "geoBoundaries gbOpen; UK Open Government Licence v3.0; simplified local authority boundaries"
           },
           {
-            "id": "city-of-london",
-            "name": "City of London",
-            "lat": 51.516,
-            "lng": -0.093,
-            "kind": "place"
-          },
-          {
-            "id": "islington",
-            "name": "Islington",
-            "lat": 51.5505,
-            "lng": -0.1,
-            "kind": "place"
-          },
-          {
-            "id": "hackney",
-            "name": "Hackney",
-            "lat": 51.551,
-            "lng": -0.0545,
-            "kind": "place"
+            "id": "geoboundaries:9080712B56158297313901",
+            "name": "Wandsworth",
+            "lat": 51.455191,
+            "lng": -0.196562,
+            "geometry": {
+              "type": "Polygon",
+              "coordinates": [
+                [
+                  [
+                    -0.223456066819647,
+                    51.47149428689822
+                  ],
+                  [
+                    -0.232695422966167,
+                    51.47255422162651
+                  ],
+                  [
+                    -0.233314226476037,
+                    51.463991055275585
+                  ],
+                  [
+                    -0.256020336775387,
+                    51.46304058656787
+                  ],
+                  [
+                    -0.259113005564873,
+                    51.454932189264106
+                  ],
+                  [
+                    -0.241629228791727,
+                    51.44313298643971
+                  ],
+                  [
+                    -0.254090545721183,
+                    51.4372906965058
+                  ],
+                  [
+                    -0.251084015715244,
+                    51.43256617592279
+                  ],
+                  [
+                    -0.190039687945997,
+                    51.44147459762013
+                  ],
+                  [
+                    -0.181939855639822,
+                    51.424735557105684
+                  ],
+                  [
+                    -0.14040541023492,
+                    51.41924942862106
+                  ],
+                  [
+                    -0.13590398904223,
+                    51.442005729818625
+                  ],
+                  [
+                    -0.143620663352912,
+                    51.441838621109255
+                  ],
+                  [
+                    -0.151231452135587,
+                    51.4658845376408
+                  ],
+                  [
+                    -0.128471262440794,
+                    51.485063944337014
+                  ],
+                  [
+                    -0.150000889186005,
+                    51.485467340556845
+                  ],
+                  [
+                    -0.18389774764274,
+                    51.47743134532505
+                  ],
+                  [
+                    -0.184198593047401,
+                    51.466758632954104
+                  ],
+                  [
+                    -0.193565592293198,
+                    51.45971282708902
+                  ],
+                  [
+                    -0.223456066819647,
+                    51.47149428689822
+                  ]
+                ]
+              ]
+            },
+            "source": "https://www.geoboundaries.org/api/current/gbOpen/GBR/ADM2/",
+            "attribution": "geoBoundaries gbOpen; UK Open Government Licence v3.0; simplified local authority boundaries"
           }
-        ]
+        ],
+        "boundaryLevel": "ADM2"
       },
       {
         "level": 4,
@@ -286,10 +601,10 @@
       {
         "level": 5,
         "label": "Street",
-        "clue": "This London road runs from Trafalgar Square towards Parliament Street past government offices.",
-        "hint": "Its name is associated with the British civil service.",
-        "source": "https://www.visitlondon.com/things-to-do/place/281729-whitehall",
-        "answer": "Whitehall",
+        "clue": "This short street off Whitehall contains the official residence at number 10 and the Chancellor’s residence at number 11.",
+        "hint": "It is named after Sir George Downing.",
+        "source": "https://www.gov.uk/government/history/10-downing-street",
+        "answer": "Downing Street",
         "center": [
           -0.133,
           51.5075
