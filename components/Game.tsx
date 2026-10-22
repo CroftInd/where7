@@ -6,6 +6,7 @@ import {Map,Settings2,Compass,CircleHelp,HelpCircle,Flame,Sparkles,Lightbulb,Fla
 import type {PublicGame} from '@/lib/types';
 import {xpFromScore} from '@/lib/ranks';
 import {formatScore,shouldAnimate} from '@/lib/presentation';
+import {dailyCountdown,nextGmtMidnight} from '@/lib/daily-clock';
 import ProgressionClient from './ProgressionClient';
 import FocusDialog from './FocusDialog';
 import LocationChoices from './LocationChoices';
@@ -29,7 +30,8 @@ export default function Game(){
   const timers=useRef<number[]>([]);
   const [elapsed,setElapsed]=useState(0),[showHow,setShowHow]=useState(false),[showOptions,setShowOptions]=useState(false);
   const [needsSync,setNeedsSync]=useState(false),[guidePrompt,setGuidePrompt]=useState(false),[reportOpen,setReportOpen]=useState(true);
-  const [now,setNow]=useState(Date.now()),[resetLabel,setResetLabel]=useState('midnight UTC');
+  const [now,setNow]=useState(Date.now());
+  const nextRolloverAttempt=useRef(0);
   const gameRef=useRef<PublicGame|null>(null);gameRef.current=game;
   const missionRef=useRef<HTMLDivElement>(null);
   useEffect(()=>{
@@ -92,11 +94,9 @@ export default function Game(){
     const tick=()=>setNow(Date.now());const timer=setInterval(tick,1000);
     return()=>clearInterval(timer);
   },[]);
-  useEffect(()=>{
-    if(!game?.resetsAt)return;
-    setResetLabel(new Date(game.resetsAt).toLocaleString(undefined,{weekday:'short',hour:'2-digit',minute:'2-digit',timeZoneName:'short'}));
-  },[game?.resetsAt]);
   const dailyExpired=game?.mode==='daily'&&!!game.resetsAt&&now>=Date.parse(game.resetsAt);
+  const nextReset=game?.mode==='daily'&&game.resetsAt?game.resetsAt:nextGmtMidnight(now);
+  const countdown=dailyCountdown(nextReset,now);
   useEffect(()=>{
     const target=game?.score??0;
     if(!motionAllowed){setAnimatedScore(target);return;}
@@ -136,6 +136,12 @@ export default function Game(){
     }
   };
   useEffect(()=>{
+    if(!dailyExpired||mode!=='daily'||loading||busy||pendingAction.current||currentLoad.current||document.hidden||!navigator.onLine||now<nextRolloverAttempt.current)return;
+    // GET only: never replay a guess when the date changes or a response is lost.
+    nextRolloverAttempt.current=now+15000;
+    void load('daily',challenge,true).then(loaded=>{if(loaded){setNameStatus('');setSelected(null);setFeedback(null);setToast('A new daily expedition is ready.');}});
+  },[now,dailyExpired,mode,loading,busy,challenge]);
+  useEffect(()=>{
     try {
       if(window.localStorage.getItem('where7-how-to-play-seen-v1')!=='yes')setGuidePrompt(true);
     } catch {setGuidePrompt(true); }
@@ -151,8 +157,8 @@ export default function Game(){
       if(document.hidden||pendingAction.current||currentLoad.current||!current)return;
       void load(current.mode,challenge,true);
     };
-    window.addEventListener('focus',check);document.addEventListener('visibilitychange',check);
-    return()=>{window.removeEventListener('focus',check);document.removeEventListener('visibilitychange',check);};
+    window.addEventListener('focus',check);window.addEventListener('online',check);document.addEventListener('visibilitychange',check);
+    return()=>{window.removeEventListener('focus',check);window.removeEventListener('online',check);document.removeEventListener('visibilitychange',check);};
   },[challenge]);
   useEffect(()=>{if(!toast)return;const id=setTimeout(()=>setToast(''),3500);return()=>clearTimeout(id)},[toast]);
   const playTone=(correct:boolean)=>{
@@ -283,7 +289,7 @@ export default function Game(){
           </div>
           <div className="heart-helper">Every guess uses 1 chance — correct or incorrect.</div>
 
-          {game?.mode==='daily'&&<div className="daily-reset-note">{dailyExpired?'A new daily expedition is ready.':`Next daily: ${resetLabel} (midnight UTC).`}{dailyExpired&&<button type="button" disabled={loading||busy} onClick={()=>void load('daily',challenge,true)}>Load new daily</button>}</div>}
+          {game?.mode==='daily'&&<div className="daily-reset-note">{dailyExpired?'A new daily expedition is ready.':`Next daily in ${countdown} · 00:00 GMT.`}{dailyExpired&&<button type="button" disabled={loading||busy} onClick={()=>void load('daily',challenge,true)}>Load new daily</button>}</div>}
           {(needsSync||error)&&<div className="game-recovery" role="alert"><p>{error||'Check your saved progress before continuing.'}</p><button type="button" disabled={loading||busy} onClick={()=>void load(mode,challenge,true)}>{loading?'Checking…':game?'Check saved progress':'Retry expedition'}</button></div>}
           {busy&&<p className="saving-status" role="status">Saving your choice… please wait.</p>}
           <div className="reward-strip" aria-label="Daily rewards"><div><Zap size={16}/><span>XP IN PLAY</span><b>+{xpFromScore(game?.score||0)}</b></div><div><Gift size={16}/><span>DAILY REWARD</span><b>{mode==='daily'?'1 run / day':'Practice'}</b></div></div>
@@ -326,6 +332,7 @@ export default function Game(){
         <div className="eyebrow">{game?.status==='won'?'EXPEDITION COMPLETED':'EXPEDITION REPORT'}</div>
         <h2 id="results-title">{game?.status==='won'?'An extraordinary journey.':game?.status==='lost'?'Not quite the final destination.':'The journey ended.'}</h2>
         <p>{game?.status==='won'?'Seven correct answers, seven chances used, one amazing discovery.':'One or more incorrect guesses kept the final building out of reach. There is always another journey.'}</p>
+        <section className="next-expedition-countdown" aria-label="Next daily challenge"><Clock size={20} aria-hidden="true"/><div><span>NEXT DAILY CHALLENGE</span><strong role="timer" aria-live="off" aria-label="Time until the next daily challenge">{countdown}</strong><small>{dailyExpired?(loading?'Loading the new expedition…':'New expedition ready · reconnecting…'):'Resets at midnight GMT (00:00 UTC), every day.'}</small></div></section>
         <div className="xp-earned" role="status"><Zap size={20}/> <span>{game?.mode==='daily'?'DAILY XP EARNED':'PRACTICE XP ESTIMATE'}</span><strong>+{xpFromScore(game?.score||0).toLocaleString()} XP</strong></div>
         {game?.mode==='daily'&&<ProgressionClient compact/>}
         <div className="result-metrics"><div><strong>{game?.score.toLocaleString()}</strong><span>POINTS</span></div><div><strong>{game?.stage} / 7</strong><span>DISCOVERED</span></div><div><strong>{fmt(elapsed)}</strong><span>TIME</span></div></div>
