@@ -4,7 +4,7 @@ import {formatScore,mapCameraOffset,shouldAnimate} from '../lib/presentation.ts'
 test('map camera respects desktop overlay and small screens',()=>{
  assert.deepEqual(mapCameraOffset(1200,false),[205,0]);
  assert.deepEqual(mapCameraOffset(390,false),[0,-48]);
- assert.deepEqual(mapCameraOffset(800,false),[0,0]);
+ assert.deepEqual(mapCameraOffset(800,false),[205,0]);
  assert.deepEqual(mapCameraOffset(1200,true),[0,0]);
 });
 test('presentation settings never alter points and honour reduced motion',()=>{

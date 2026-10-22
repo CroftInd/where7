@@ -50,7 +50,7 @@ export function publicGame(session:Session,challenge:Challenge,demo:boolean):Pub
     selection:stage.selection,choices:stage.choices,countryIso3:challenge.countryIso3,
     ...(session.hints.includes(session.stage)?{hint:stage.hint}:{})
   }:null;
-  return {challengeId:challenge.id,title:session.status==='playing'?'Daily Mystery':challenge.title,mode:session.mode,stage:session.stage,guesses:session.guesses,
+  return {version:session.version,challengeId:challenge.id,title:session.status==='playing'?'Daily Mystery':challenge.title,mode:session.mode,stage:session.stage,guesses:session.guesses,
     hearts:MAX_GUESSES-session.guesses,score:session.score,hints:session.hints,history:session.history,
     status:session.status,startedAt:session.startedAt,endedAt:session.endedAt,current,
     path:challenge.stages.slice(0,Math.min(session.stage,7)).map(s=>s.answer), demo,

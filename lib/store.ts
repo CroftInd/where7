@@ -2,11 +2,12 @@ import seeds from '@/data/challenges.json';
 import {serviceDb,cloudReady} from './supabase';
 import {type Challenge,type Session} from './types';
 import {newSession} from './engine';
+import {utcDay,GameConflict} from './game-request';
 
 const demoGames=new Map<string,Session>();
 const seed=seeds as unknown as Challenge[];
 const key=(guest:string,challenge:string,mode:string)=>guest+':'+mode+':'+challenge;
-function currentDate(){return new Date().toISOString().slice(0,10)}
+const currentDate=utcDay;
 function hash(x:string){let h=2166136261;for(const ch of x){h^=ch.charCodeAt(0);h=Math.imul(h,16777619)}return h>>>0}
 export async function listChallenges(admin=false):Promise<Challenge[]> {
   const db=serviceDb(); if(!db)return seed;
@@ -18,7 +19,7 @@ export async function listChallenges(admin=false):Promise<Challenge[]> {
   // added to the live rotation. Only explicitly published DB entries qualify.
   return [...records,...seed.filter(x=>!records.some(v=>v.id===x.id)).map(x=>({...x,status:"draft" as const}))];
 }
-export async function selectChallenge(id:string|undefined,mode:'daily'|'practice'){
+export async function selectChallenge(id:string|undefined,mode:'daily'|'practice',day=currentDate()){
   const catalog=await listChallenges();
   if(mode==='practice'&&id?.startsWith('archive:')){
     const day=id.slice('archive:'.length);
@@ -31,7 +32,7 @@ export async function selectChallenge(id:string|undefined,mode:'daily'|'practice
     return c;
   }
   if(mode==='practice'&&id){const p=catalog.find(v=>v.id===id);if(!p)throw new Error('Challenge not found.');return p;}
-  const date=currentDate();
+  const date=day;
   const db=serviceDb();
   if(db){
     // Atomic PostgreSQL function freezes each day's selection for every visitor.
@@ -54,11 +55,11 @@ export async function selectChallenge(id:string|undefined,mode:'daily'|'practice
   return candidates[hash(date)%candidates.length];
 }
 // The same puzzle can return on another day; keep daily sessions/results distinct.
-export function storedChallengeId(challengeId:string,mode:Session['mode']){
-  return mode==='daily'?`${currentDate()}:${challengeId}`:challengeId;
+export function storedChallengeId(challengeId:string,mode:Session['mode'],day=currentDate()){
+  return mode==='daily'?`${day}:${challengeId}`:challengeId;
 }
-export async function readSession(guest:string,challengeId:string,mode:Session['mode']):Promise<Session> {
-  const db=serviceDb();const scoped=storedChallengeId(challengeId,mode);const id=key(guest,scoped,mode);
+export async function readSession(guest:string,challengeId:string,mode:Session['mode'],day=currentDate()):Promise<Session> {
+  const db=serviceDb();const scoped=storedChallengeId(challengeId,mode,day);const id=key(guest,scoped,mode);
   if(!db){if(!demoGames.has(id))demoGames.set(id,newSession(challengeId,mode));return demoGames.get(id)!;}
   const {data,error}=await db.from('game_sessions').select('data').eq('guest_key',guest).eq('challenge_id',scoped).eq('mode',mode).maybeSingle();
   if(error)throw new Error('Cannot read progress: '+error.message);
@@ -69,13 +70,13 @@ export async function readSession(guest:string,challengeId:string,mode:Session['
   const {data:existing}=await db.from('game_sessions').select('data').eq('guest_key',guest).eq('challenge_id',scoped).eq('mode',mode).single();
   return existing?.data as Session || fresh;
 }
-export async function saveSession(guest:string,previous:Session,next:Session):Promise<void>{
-  const db=serviceDb();const scoped=storedChallengeId(next.challengeId,next.mode);const id=key(guest,scoped,next.mode);
-  if(!db){if(demoGames.get(id)?.version!==previous.version)throw new Error('Your game changed in another tab. Refresh to continue.');demoGames.set(id,next);return;}
+export async function saveSession(guest:string,previous:Session,next:Session,day=currentDate()):Promise<void>{
+  const db=serviceDb();const scoped=storedChallengeId(next.challengeId,next.mode,day);const id=key(guest,scoped,next.mode);
+  if(!db){if(demoGames.get(id)?.version!==previous.version)throw new GameConflict('STALE_SESSION','Your game changed in another tab. Check your progress to continue.');demoGames.set(id,next);return;}
   const {data,error}=await db.from('game_sessions').update({data:next,version:next.version,updated_at:new Date().toISOString()})
     .eq('guest_key',guest).eq('challenge_id',scoped).eq('mode',next.mode).eq('version',previous.version).select('version');
   if(error)throw new Error('Cannot save guess: '+error.message);
-  if(!data?.length)throw new Error('Your game changed in another tab. Refresh to continue.');
+  if(!data?.length)throw new GameConflict('STALE_SESSION','Your game changed in another tab. Check your progress to continue.');
   if(next.status!=='playing'){
     await db.from('results').upsert({guest_key:guest,challenge_id:scoped,mode:next.mode,score:next.score,guesses:next.guesses,stage:next.stage,perfect:next.status==='won',finished_at:next.endedAt},
       {onConflict:'guest_key,challenge_id,mode'});
