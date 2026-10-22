@@ -254,3 +254,38 @@
 :root[data-atlas-theme="aurora"]{--aqua:#b9a8f5;--cyan:#a2d7f7;--gold:#eac7ff}
 :root[data-atlas-theme="sunset"]{--aqua:#ffaf86;--cyan:#e4a1a3;--gold:#ffdf92}
 :root[data-atlas-theme="midnight"]{--aqua:#d0bae8;--cyan:#92afdd;--gold:#cfc0fe}
+
+/* First-expedition refresh: accessible choices, recovery and a focused header. */
+.site-header{position:relative}
+.mobile-menu-toggle{display:grid;place-items:center;flex-shrink:0;min-width:44px;min-height:44px;color:#e7fffb;background:#123344;border:1px solid #436f7d;border-radius:10px}
+.mobile-nav-panel{position:absolute;z-index:39;top:calc(100% + 7px);right:12px;width:min(310px,calc(100vw - 24px));max-height:calc(100dvh - 90px);overflow-y:auto;display:flex;flex-direction:column;gap:3px;padding:9px;background:#102c40;border:1px solid #578797;border-radius:15px;box-shadow:0 21px 60px #000c}
+.mobile-nav-panel a,.mobile-nav-panel button{display:flex;align-items:center;gap:12px;text-align:left;text-decoration:none;width:100%;min-height:44px;padding:10px 13px;border:0;border-radius:10px;background:transparent;color:#effaff;font-size:13px;font-weight:760}
+.mobile-nav-panel a:hover,.mobile-nav-panel button:hover{background:#245063}.mobile-nav-panel svg{color:#89e2d6}
+.skip-to-clue{position:fixed;left:12px;top:-100px;z-index:100;background:#caffed;color:#062b32;padding:12px;border-radius:8px;font-weight:800}.skip-to-clue:focus{top:10px}
+.first-expedition-guide,.game-recovery{border:1px solid #4a8d91;background:#143a48;border-radius:12px;padding:12px;margin:10px 0;color:#e8fff6}
+.first-expedition-guide p,.game-recovery p{font-size:13px;line-height:1.55;margin:6px 0}
+.first-expedition-guide button,.game-recovery button,.daily-reset-note button{min-height:44px;padding:8px 12px;border-radius:8px;border:1px solid #65cdbd;background:#214e5a;color:#e6fff6;font-weight:750;margin:4px 6px 0 0}
+.game-recovery{border-color:#f3bf8b;background:#44322b}.game-recovery button{background:#ffe0b8;color:#37200c;border-color:#ffe0b8}
+.saving-status{color:#caffec;font-weight:750;font-size:12px}.daily-reset-note{font-size:11px;line-height:1.6;color:#c2dbe3;margin:6px 0 10px}
+.rule-example{border:1px solid #477983;background:#123644;border-radius:12px;padding:12px;margin:16px 0}.rule-example p{font-size:13px;margin:6px 0 0;line-height:1.6}
+.location-choices{margin:12px 0;border:1px solid #40677b;background:#0c2739;border-radius:12px;padding:12px}
+.choice-heading{display:flex;justify-content:space-between;gap:8px;align-items:center;flex-wrap:wrap}.choice-heading small{font-size:10px;color:#b9d8df}
+.location-choices input{width:100%;min-height:44px;margin-top:10px;background:#071e2f;border:1px solid #5a8596;border-radius:8px;padding:10px 12px;color:#fff}
+.choice-count{font-size:11px;line-height:1.5;color:#bcd9e1;margin:8px 0}.choice-list{display:flex;flex-direction:column;gap:6px}
+.country-choice-list{max-height:190px;overflow:auto;padding:4px;scroll-padding:8px}
+.choice-list button{min-height:44px;display:flex;justify-content:space-between;align-items:center;gap:8px;text-align:left;border:1px solid #416f82;border-radius:8px;background:#16394c;color:#f2fcff;padding:10px 12px;font-weight:700;font-size:13px;overflow-wrap:anywhere}
+.choice-list button:hover{border-color:#9dffe6;background:#225364}.choice-list button.is-selected{background:#28594f;border-color:#9dffdf;color:#e7fff5}
+.location-choices button:focus-visible,.location-choices input:focus-visible,summary:focus-visible{outline:3px solid #ffdfa4;outline-offset:2px}
+.selected-inline{display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding:12px;background:#173947;border:1px solid #72bfba;border-radius:12px;margin:10px 0}
+.selected-actions{display:flex;gap:8px;flex-wrap:wrap}.selected-actions button{min-height:44px}.selected-inline>strong{overflow-wrap:anywhere}
+.results-dialog{position:relative}.results-dialog>.close-modal{position:absolute;top:12px;right:12px;min-height:44px;min-width:44px}
+.map-boundary-note{pointer-events:auto;align-items:flex-start;flex-wrap:wrap}.map-boundary-note>svg{flex-shrink:0}.map-boundary-note>span{flex:1;min-width:100px}.map-boundary-note button{border:1px solid #78b7ba;background:#143f50;color:#ecfffb;border-radius:6px;min-height:44px;padding:8px}
+.map-load-error{display:flex;gap:12px;flex-direction:column;align-items:center}.map-confirm-card .confirm-submit{min-height:44px}.map-confirm-text strong{overflow-wrap:anywhere}
+@media(min-width:701px){.mission-panel{width:390px}.mission-inside{padding-bottom:24px}.map-confirm-card{right:85px;left:auto;width:min(370px,calc(100% - 500px))}.reward-strip{display:none}}
+@media(max-width:700px){.reward-strip{display:none}.sheet-peek .peek-eyebrow{font-size:11px}.first-expedition-guide{margin-top:6px}.sheet-expanded .selected-inline{display:flex}.map-load-error{top:130px;left:auto;right:10px;transform:none;width:min(300px,calc(100% - 20px));padding:12px}.map-load-error>span{font-size:12px}.map-boundary-note{max-width:200px}.country-choice-list{max-height:170px}.mobile-nav-panel{right:8px}.saving-status{margin:8px 0}.map-confirm-buttons .confirm-submit{min-height:44px}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}}
+/* Keep the clue legible when the panel overflows; scroll content instead of shrinking it. */
+.mission-inside>*{flex-shrink:0}.map-root{z-index:0}.clue-card{min-height:120px}
+@media(min-width:701px){.game-mode-bar{top:20px;left:450px;right:auto;bottom:auto}}
+.first-expedition-guide{padding:10px}.first-expedition-guide p{font-size:12px}.first-expedition-guide button{font-size:12px}
+@media(max-width:700px){.mobile-grip .mobile-grip-label{width:auto;height:auto;position:static;background:none;border-radius:0;line-height:1.4}}

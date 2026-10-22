@@ -4,6 +4,7 @@ import type {PublicStage} from '@/lib/types';
 import type {Map as MaplibreMap,StyleSpecification,GeoJSONSource} from 'maplibre-gl';
 import {Compass,LocateFixed,Plus,Minus,Layers,AlertCircle,RefreshCw} from 'lucide-react';
 import {mapCameraOffset,shouldAnimate} from '@/lib/presentation';
+import {normalized} from '@/lib/engine';
 
 type Props={stage:PublicStage|null; disabled?:boolean; onSelect?:(name:string)=>void; pickMode?:boolean; onPick?:(lat:number,lng:number)=>void; selected?:string|null; reduceMotion?:boolean;};
 const emptyFC={type:'FeatureCollection',features:[]};
@@ -27,7 +28,9 @@ export default function MapCanvas({stage,disabled=false,onSelect,pickMode=false,
 
   const onSelectRef=useRef(onSelect),onPickRef=useRef(onPick),stageRef=useRef(stage),disabledRef=useRef(disabled),pickRef=useRef(pickMode);
   const [ready,setReady]=useState(false),[warning,setWarning]=useState(''),[hover,setHover]=useState(''),[hoverPos,setHoverPos]=useState<[number,number]>([0,0]),[detail,setDetail]=useState(true);
-  const [mapError,setMapError]=useState('');
+  const [mapError,setMapError]=useState(''),[mapAttempt,setMapAttempt]=useState(0),[boundaryAttempt,setBoundaryAttempt]=useState(0),[boundaryFailed,setBoundaryFailed]=useState(false);
+  const selectedRef=useRef(selected);selectedRef.current=selected;
+  const stageKey=JSON.stringify([stage?.level,stage?.selection,stage?.countryIso3,stage?.choices,stage?.center,stage?.zoom]);
   const [renderStatus,setRenderStatus]=useState<'loading'|'ready'|'error'>('loading');
   const detailRef=useRef(detail);
   const motionRef=useRef(reduceMotion);
@@ -37,6 +40,7 @@ export default function MapCanvas({stage,disabled=false,onSelect,pickMode=false,
   const clearMarkers=useCallback(()=>{const map=mapRef.current;const source=map?.getSource('choice-points') as GeoJSONSource|undefined;if(source)source.setData(emptyFC as GeoJSON.FeatureCollection)},[]);
   useEffect(()=>{
     if(!holder.current)return;
+    setReady(false);setMapError('');setWarning('');setRenderStatus('loading');
     let stopped=false;let instance:MaplibreMap|null=null;let teardownExtra=()=>{};
     import('maplibre-gl').then(mod=>{
       if(stopped||!holder.current)return;
@@ -68,7 +72,7 @@ export default function MapCanvas({stage,disabled=false,onSelect,pickMode=false,
         const message=String(e.error?.message||'');
         console.warn('[WHERE7 map]',message);
         if(/webgl|context lost/i.test(message)){
-          setRenderStatus('error');setMapError('The interactive map could not render. Check WebGL / hardware acceleration and retry.');
+          setRenderStatus('error');setMapError('The map could not render. Retry it or use the location list to keep playing.');
         }else if(!layersInitialised&&!fallbackStarted&&/style|fetch|network|http|request|load/i.test(message)){
           fallbackToRaster();
         }else if(/tile|fetch|http|network/i.test(message)){
@@ -121,7 +125,7 @@ export default function MapCanvas({stage,disabled=false,onSelect,pickMode=false,
           map?.getCanvas().style.setProperty('cursor','pointer');
           if(name)map?.setFilter('country-highlight',['==',['get','name'],name]);
         });
-        map.on('mouseleave','countries',()=>{setHover('');map?.getCanvas().style.setProperty('cursor','');map?.setFilter('country-highlight',['==',['get','name'],'§never§']);});
+        map.on('mouseleave','countries',()=>{setHover('');map?.getCanvas().style.setProperty('cursor','');map?.setFilter('country-highlight',['==',['get','name'],selectedRef.current||'§never§']);});
         map.on('click','countries',e=>{
           if(stageRef.current?.selection!=='country'||disabledRef.current||pickRef.current)return;
           if(map?.queryRenderedFeatures(e.point,{layers:['microstates']}).length)return;
@@ -133,7 +137,7 @@ export default function MapCanvas({stage,disabled=false,onSelect,pickMode=false,
           map?.getCanvas().style.setProperty('cursor','pointer');
           if(name)map?.setFilter('microstates-highlight',['==',['get','name'],name]);
         });
-        map.on('mouseleave','microstates',()=>{setHover('');map?.setFilter('microstates-highlight',['==',['get','name'],'§never§']);});
+        map.on('mouseleave','microstates',()=>{setHover('');map?.setFilter('microstates-highlight',['==',['get','name'],selectedRef.current||'§never§']);});
         map.on('click','microstates',e=>{
           if(stageRef.current?.selection!=='country'||disabledRef.current||pickRef.current)return;
           const name=String(e.features?.[0]?.properties?.name||'');if(name)onSelectRef.current?.(name);
@@ -143,10 +147,12 @@ export default function MapCanvas({stage,disabled=false,onSelect,pickMode=false,
           const name=String(e.features?.[0]?.properties?.name||'');setHover(name);setHoverPos([e.point.x,e.point.y]);map?.getCanvas().style.setProperty('cursor','pointer');
           if(name)map?.setFilter('region-highlight',['==',['get','name'],name]);
         });
-        map.on('mouseleave','regions-fill',()=>{setHover('');map?.getCanvas().style.setProperty('cursor','');map?.setFilter('region-highlight',['==',['get','name'],'§never§']);});
+        map.on('mouseleave','regions-fill',()=>{setHover('');map?.getCanvas().style.setProperty('cursor','');map?.setFilter('region-highlight',['==',['get','name'],selectedRef.current||'§never§']);});
         map.on('click','regions-fill',e=>{
           if(stageRef.current?.selection!=='region'||disabledRef.current||pickRef.current)return;
-          const name=String(e.features?.[0]?.properties?.name||'');if(name)onSelectRef.current?.(name);
+          const name=String(e.features?.[0]?.properties?.name||'');
+          const choice=stageRef.current?.choices.find(c=>normalized(c.name)===normalized(name));
+          if(choice)onSelectRef.current?.(choice.name);
         });
         map.on('click',e=>{if(pickRef.current)onPickRef.current?.(e.lngLat.lat,e.lngLat.lng)});
         // Gameplay is available before any external raster tiles are fetched.
@@ -164,9 +170,9 @@ export default function MapCanvas({stage,disabled=false,onSelect,pickMode=false,
       document.addEventListener('visibilitychange',onVisible);
       // Remove observers even if React unmounts before style.load.
       teardownExtra=()=>{observer.disconnect();window.clearTimeout(firstResize);if(mapStyleTimeout!==undefined)window.clearTimeout(mapStyleTimeout);document.removeEventListener('visibilitychange',onVisible)};
-    }).catch(error=>{console.error('[WHERE7 map initialization]',error);setRenderStatus('error');setMapError('Unable to initialise the map. Try reloading this page.');});
+    }).catch(error=>{console.error('[WHERE7 map initialization]',error);setRenderStatus('error');setMapError('The map could not load. Retry it or use the location list to keep playing.');});
     return()=>{stopped=true;teardownExtra();instance?.remove();mapRef.current=null;};
-  },[]);
+  },[mapAttempt]);
   useEffect(()=>{
     const map=mapRef.current;
     if(!ready||!map)return;
@@ -181,25 +187,31 @@ export default function MapCanvas({stage,disabled=false,onSelect,pickMode=false,
     map.setLayoutProperty('regions-lines','visibility',active&&stage.selection==='region'?'visible':'none');
     map.setLayoutProperty('region-highlight','visibility',active&&stage.selection==='region'?'visible':'none');
 
-    clearMarkers();
+    clearMarkers();setBoundaryFailed(false);setWarning('');
+    (map.getSource('regions') as GeoJSONSource).setData(emptyFC as GeoJSON.FeatureCollection);
     if(!active||stage.selection==='country')return;
     if(stage.selection==='region'){
       setWarning('Loading verified administrative boundaries…');
-      let cancelled=false;
+      let cancelled=false;const controller=new AbortController();
+      const timeout=window.setTimeout(()=>controller.abort(),25000);
       // ISO3 is passed explicitly as a server-authorised value; there are no arbitrary external requests.
       const iso=(stage as PublicStage & {countryIso3?:string}).countryIso3||'USA';
-      fetch('/api/geo?iso='+encodeURIComponent(iso),{cache:'force-cache'})
+      fetch('/api/geo?iso='+encodeURIComponent(iso),{cache:boundaryAttempt?'reload':'force-cache',signal:controller.signal})
         .then(async response=>{if(!response.ok)throw new Error('Official boundaries are not reachable.');return response.json()})
         .then(data=>{if(cancelled||!mapRef.current||stageRef.current?.selection!=='region')return;
-          (map.getSource('regions') as GeoJSONSource).setData(data.geojson);
+          // Only authored candidates are selectable, matching the accessible list.
+          const choices=new Map(stage.choices.map(c=>[normalized(c.name),c.name]));
+          const features=data.geojson.features.filter((f:{properties:{name:string}})=>choices.has(normalized(f.properties.name)))
+            .map((f:{properties:{name:string}})=>({...f,properties:{...f.properties,name:choices.get(normalized(f.properties.name))}}));
+          (map.getSource('regions') as GeoJSONSource).setData({...data.geojson,features});
           setWarning('Administrative borders: geoBoundaries · gbOpen');
         }).catch(()=>{if(cancelled)return;
           (map.getSource('regions') as GeoJSONSource).setData(emptyFC as GeoJSON.FeatureCollection);
-          setWarning('Boundary service unavailable — select a labelled regional marker instead.');
-        });
+          setBoundaryFailed(true);setWarning('Borders unavailable. Use the markers or location list.');
+        }).finally(()=>window.clearTimeout(timeout));
       // Always show named fallback markers, useful for sparse datasets and keyboard access.
       addChoiceMarkers(stage);
-      return()=>{cancelled=true;clearMarkers()};
+      return()=>{cancelled=true;controller.abort();window.clearTimeout(timeout);clearMarkers()};
     }
     setWarning('');
     addChoiceMarkers(stage);
@@ -210,7 +222,7 @@ export default function MapCanvas({stage,disabled=false,onSelect,pickMode=false,
       source.setData({type:'FeatureCollection',features:s.choices.map(choice=>({type:'Feature',properties:{name:choice.name,id:choice.id},geometry:{type:'Point',coordinates:[choice.lng,choice.lat]}}))} as GeoJSON.FeatureCollection);
     }
 
-  },[ready,stage?.level,stage?.selection,stage?.clue,stage?.center?.[0],stage?.center?.[1],stage?.zoom,clearMarkers]);
+  },[ready,stageKey,boundaryAttempt,clearMarkers]);
   // Keep ALL five legitimate candidates on screen. Previously, flying directly
   // to the correct answer could hide distractors and effectively reveal the solution.
   const frameStage=()=>{
@@ -222,7 +234,7 @@ export default function MapCanvas({stage,disabled=false,onSelect,pickMode=false,
       const minLng=Math.min(...candidates.map(c=>c.lng)),maxLng=Math.max(...candidates.map(c=>c.lng));
       const minLat=Math.min(...candidates.map(c=>c.lat)),maxLat=Math.max(...candidates.map(c=>c.lat));
       if(maxLng-minLng>0.00001||maxLat-minLat>0.00001){
-        const isDesktop=map.getContainer().clientWidth>900;
+        const isDesktop=map.getContainer().clientWidth>700;
         const padding=isDesktop?{top:74,right:56,bottom:80,left:430}:{top:93,right:35,bottom:190,left:35};
         map.fitBounds([[minLng,minLat],[maxLng,maxLat]],{padding,maxZoom:stage?.zoom||17,duration,essential:false});
         return;
@@ -232,9 +244,10 @@ export default function MapCanvas({stage,disabled=false,onSelect,pickMode=false,
       offset:mapCameraOffset(map.getContainer().clientWidth,false),duration,essential:false});
   };
   // Change framing only when the stage/options change, not during submissions.
-  useEffect(frameStage,[ready,stage?.level,stage?.center?.[0],stage?.center?.[1],stage?.zoom,stage?.choices,pickMode]);
+  useEffect(frameStage,[ready,stageKey,pickMode]);
   useEffect(()=>{
     const map=mapRef.current;if(!ready||!map)return;
+    if(map.getLayer('microstates-highlight'))map.setFilter('microstates-highlight',['==',['get','name'],selected||'§never§']);
     if(stage?.selection==='country')map.setFilter('country-highlight',['==',['get','name'],selected||'§never§']);
     if(stage?.selection==='region')map.setFilter('region-highlight',['==',['get','name'],selected||'§never§']);
     if(map.getLayer('choice-selected-ring'))map.setFilter('choice-selected-ring',['==',['get','name'],selected||'§never§']);
@@ -249,12 +262,12 @@ export default function MapCanvas({stage,disabled=false,onSelect,pickMode=false,
   const zoom=(n:number)=>mapRef.current?.zoomTo((mapRef.current?.getZoom()||2)+n,{duration:shouldAnimate(reduceMotion)?260:0});
   const recenter=()=>{if(pickMode){const map=mapRef.current;map?.flyTo({center:stage?.center||[-17,24],zoom:stage?.zoom||2,duration:shouldAnimate(reduceMotion)?620:0});return;}frameStage();};
   return <div className="map-root">
-    <div ref={holder} className="map-container" aria-label="Interactive geography map. Select a location, then confirm your guess." role="application"/>
+    <div ref={holder} className="map-container" aria-label="Interactive geography map. Select a location, then confirm your guess." role="region"/>
     <div className="map-vignette" aria-hidden="true"/>
     {hover&&<div className="map-hover-tag" style={{left:hoverPos[0],top:hoverPos[1]}}><span className="mini-pulse"/>{hover}</div>}
-    {warning&&<div className="map-boundary-note"><AlertCircle size={13}/>{warning}</div>}
+    {warning&&<div className="map-boundary-note" role="status"><AlertCircle size={13}/><span>{warning}</span>{boundaryFailed&&<button type="button" onClick={()=>setBoundaryAttempt(v=>v+1)}>Retry borders</button>}</div>}
     {renderStatus==='loading'&&<div className="map-render-loading" role="status"><div className="loading-orb"/><span>Loading your interactive atlas…</span></div>}
-    {mapError&&<div className="map-load-error" role="alert"><AlertCircle size={20}/><span>{mapError}</span><button type="button" onClick={()=>window.location.reload()}><RefreshCw size={15}/> Retry</button></div>}
+    {mapError&&<div className="map-load-error" role="alert"><AlertCircle size={20}/><span>{mapError}</span><button type="button" onClick={()=>setMapAttempt(v=>v+1)}><RefreshCw size={15}/> Retry</button></div>}
     <div className="map-toolbar" aria-label="Map controls">
       <button type="button" onClick={()=>zoom(1)} aria-label="Zoom in"><Plus size={19}/></button>
       <button type="button" onClick={()=>zoom(-1)} aria-label="Zoom out"><Minus size={19}/></button>

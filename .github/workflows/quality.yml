@@ -28,3 +28,6 @@ jobs:
         run: npm run build
         env:
           NEXT_TELEMETRY_DISABLED: '1'
+
+      - name: Verify expedition requests and recovery against a local demo server
+        run: npm run test:flow
