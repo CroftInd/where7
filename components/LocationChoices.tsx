@@ -31,7 +31,7 @@ export default function LocationChoices({stage,selected,disabled,onSelect}:{stag
     {(!isCountry||countryState==='ready')&&<>
       <p className="choice-count" aria-live="polite">{names.length} {names.length===1?'location':'locations'} · selection is free until you confirm</p>
       <div className={isCountry?'choice-list country-choice-list':'choice-list'}>{names.map(name=><button type="button" key={name} aria-pressed={selected===name} className={selected===name?'is-selected':''} disabled={disabled} onClick={()=>onSelect(name)}>{name}{selected===name&&<span aria-hidden="true">✓</span>}</button>)}</div>
-      {stage.choices.some(c=>c.geometry)&&<p className="geometry-credit">Map data: {[...new Set(stage.choices.filter(c=>c.geometry).map(c=>c.attribution))].join(' · ')}</p>}
+      {stage.choices.some(c=>c.attribution)&&<p className="geometry-credit">Map data: {[...new Set(stage.choices.filter(c=>c.attribution).map(c=>c.attribution))].join(' · ')}</p>}
       {names.length===0&&<p>No countries match. Try a shorter name.</p>}
     </>}
   </section>;

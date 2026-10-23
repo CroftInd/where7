@@ -102,3 +102,24 @@ test('sourced borough geometries have valid selection anchors and imported extra
  const c=fixture();(c.stages[2].choices[0] as unknown as Record<string,unknown>).privateAnswer='Do not serialize imported metadata';
  const result=validateChallenge(c);assert(result.valid);if(result.valid)assert(!JSON.stringify(result.value.stages[2].choices).includes('privateAnswer'));
 });
+test('Belgium offers its three real regions without adding provinces or aliases',()=>{
+ const c=fixture();c.countryIso3='BEL';const s=c.stages[1];s.answer='Brussels-Capital Region';s.choices=['Brussels-Capital Region','Flemish Region','Walloon Region'].map((name,i)=>({id:i?'belgium-'+i:s.place!.id,name,lat:s.place!.lat,lng:s.place!.lng}));
+ assert(contentIssues(c).some(i=>i.code==='choice_count'));
+ s.choiceException={reason:'Belgium has exactly three territorial regions; this is the complete set.',source:'https://www.belgium.be/en/about_belgium/government/regions'};
+ assert(!contentIssues(c).some(i=>i.code==='choice_count'));
+ s.choices[2].name='Province of Antwerp';assert(contentIssues(c).some(i=>i.code==='choice_count'));
+});
+test('withdrawn draft copies do not count as duplicate published destinations',()=>{const c=fixture(),copy=structuredClone(c);copy.id='withdrawn';copy.status='draft';assert.deepEqual(duplicateDestinations([c,copy]),[]);});
+test('Ireland offers the complete traditional province set, separately from counties',()=>{
+ const c=fixture();c.countryIso3='IRL';const s=c.stages[1];s.answer='Leinster';s.choices=['Leinster','Connacht','Munster','Ulster'].map((name,i)=>({id:i?'province-'+i:s.place!.id,name,lat:40.75,lng:-73.98}));
+ assert(contentIssues(c).some(i=>i.code==='choice_count'));
+ s.choiceException={reason:'The four traditional provinces are the complete set; Ulster includes its part in the Republic.',source:'https://www.ireland.com/help-and-advice/practical-information/irelands-counties-and-provinces/'};
+ assert(!contentIssues(c).some(i=>i.code==='choice_count'));
+ s.choices[3].name='County Dublin';assert(contentIssues(c).some(i=>i.code==='choice_count'));
+});
+test('translated regional names cannot be presented as competing answers',()=>{
+ for(const [iso,a,b] of [['ESP','Catalonia','Cataluña'],['NLD','North Holland','Noord-Holland'],['AUT','Vienna','Wien'],['CZE','Prague','Hlavní město Praha'],['CHN','Beijing','Beijing Municipality'],['BEL','Flemish Region','Vlaams Gewest']]){
+  const c=fixture();c.countryIso3=iso;c.stages[1].answer=a;c.stages[1].choices[0].name=a;c.stages[1].choices[1].name=b;
+  assert(contentIssues(c).some(i=>i.code==='equivalent_choices'),iso);
+ }
+});

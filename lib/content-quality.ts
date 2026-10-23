@@ -14,7 +14,13 @@ export function placeKey(name:string,iso:string,level:number){
   const groups:Record<string,string[][]>={
     'USA:3':[['manhattan','newyorkcounty'],['brooklyn','kingscounty'],['statenisland','richmondcounty']],
     'USA:5':[['fifthavenue','5thavenue'],['sixthavenue','6thavenue','avenueoftheamericas']],
-    'DNK:1':[['capitalregion','capitalregionofdenmark','hovedstaden']]
+    'DNK:1':[['capitalregion','capitalregionofdenmark','hovedstaden']],
+    'ESP:1':[['catalonia','cataluna','catalunya','catalunacatalunya'],['communityofmadrid','comunidaddemadrid']],
+    'NLD:1':[['northholland','noordholland'],['southholland','zuidholland']],
+    'AUT:1':[['vienna','wien']],
+    'CZE:1':[['prague','praha','hlavnimestopraha']],
+    'CHN:1':[['beijing','beijingmunicipality'],['shanghai','shanghaimunicipality']],
+    'BEL:1':[['brusselscapitalregion','brusselshoofdstedelijkgewest','brusselshoofdstedelijk'],['flemishregion','vlaamsgewest'],['walloonregion','wallonie','wallonnegewest']]
   };
   return groups[iso+':'+level]?.find(group=>group.includes(key))?.[0]||key;
 }
@@ -52,8 +58,10 @@ export function containsPoint(geometry:Geometry,point:Position):boolean|null{
   return null; // A road is not an enclosing area. Require address/access evidence.
 }
 export function choiceExceptionAllowed(stage:Stage,iso:string){
-  return stage.level===1&&iso==='GBR'&&stage.choices.length===4&&
-    ['england','scotland','wales','northernireland'].every(n=>stage.choices.some(c=>normalized(c.name)===n))&&
+  const peers:Record<string,string[]>={GBR:['england','scotland','wales','northernireland'],BEL:['brusselscapitalregion','flemishregion','walloonregion'],IRL:['connacht','leinster','munster','ulster']};
+  const expected=peers[iso];
+  return stage.level===1&&!!expected&&stage.choices.length===expected.length&&
+    expected.every(n=>stage.choices.some(c=>normalized(c.name)===n))&&
     !!stage.choiceException&&stage.choiceException.reason.trim().length>=20&&httpsSource(stage.choiceException.source);
 }
 export function contentIssues(challenge:Challenge,{requireEvidence=true}={}):QualityIssue[]{
@@ -71,7 +79,7 @@ export function contentIssues(challenge:Challenge,{requireEvidence=true}={}):Qua
     if(/next map area|zoom further into|final access road|cluster of nearby|shown on the map/i.test(s.clue))add(i,'generic_clue','This generic navigation prompt does not distinguish the answer.');
     if(s.center.length!==2||Math.abs(s.center[0])>180||Math.abs(s.center[1])>90)add(i,'coordinates','Map centre is outside valid longitude/latitude bounds.');
     if(i>0){
-      if(s.choices.length<5&&!choiceExceptionAllowed(s,challenge.countryIso3))add(i,'choice_count','Needs at least five choices, or the documented four-nation UK exception.');
+      if(s.choices.length<5&&!choiceExceptionAllowed(s,challenge.countryIso3))add(i,'choice_count','Needs at least five choices, or a documented complete finite geographic set.');
       const seen=new Set<string>(),choiceIds=new Set<string>();
       for(const c of s.choices){
         if(!c.id||choiceIds.has(c.id))add(i,'choice_id','Choices need distinct stable IDs.');
@@ -109,7 +117,7 @@ export function checklistComplete(value:unknown):value is ReviewChecklist{
 }
 export const destinationKey=(c:Challenge)=>c.countryIso3+':'+normalized(c.stages[6]?.answer||c.id);
 export function duplicateDestinations(challenges:Challenge[]){
-  const groups=new Map<string,Challenge[]>();for(const c of challenges){const key=destinationKey(c);groups.set(key,[...(groups.get(key)||[]),c]);}
+  const groups=new Map<string,Challenge[]>();for(const c of challenges.filter(c=>c.status==='published')){const key=destinationKey(c);groups.set(key,[...(groups.get(key)||[]),c]);}
   return [...groups.values()].filter(g=>g.length>1).map(g=>g.map(c=>c.id));
 }
 /** A deterministic proposal; this does not mark content reviewed or publish it. */
