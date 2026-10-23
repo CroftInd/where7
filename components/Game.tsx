@@ -10,6 +10,7 @@ import {dailyCountdown,nextGmtMidnight} from '@/lib/daily-clock';
 import ProgressionClient from './ProgressionClient';
 import FocusDialog from './FocusDialog';
 import LocationChoices from './LocationChoices';
+import {ExpeditionSeal,JourneyTrace} from './AtlasArtwork';
 import ClueReportForm from './ClueReportForm';
 import {requestGame,GameRequestError} from '@/lib/game-client';
 const MapCanvas=dynamic(()=>import('./MapCanvas'),{ssr:false,loading:()=> <div className="map-loading"><div className="loading-orb"/>Preparing your atlas…</div>});
@@ -328,7 +329,7 @@ export default function Game(){
       <div className="map-status"><span className="ping"/>{!game?'CONNECTING':game.demo?'DEMO · LOCAL SERVER':'LIVE · VERIFIED SERVER'}<span>·</span><Clock size={12}/>{fmt(elapsed)}</div>
       {toast&&<div className={`toast-message ${feedback||''}`} role="status">{feedback==='right'?<Check size={17}/>:feedback==='wrong'?<HelpCircle size={17}/>:<Sparkles size={17}/>} {toast}</div>}
       {finished&&reportOpen&&!showHow&&<FocusDialog className="results-backdrop" labelledBy="results-title" onClose={()=>setReportOpen(false)}><div className="results-dialog"><button type="button" className="close-modal" aria-label="Close expedition report" onClick={()=>setReportOpen(false)}><X size={19}/></button>
-        <div className="result-halo"><Trophy size={42}/></div>
+        <div className="result-halo result-seal"><ExpeditionSeal/></div>
         <div className="eyebrow">{game?.status==='won'?'EXPEDITION COMPLETED':'EXPEDITION REPORT'}</div>
         <h2 id="results-title">{game?.status==='won'?'An extraordinary journey.':game?.status==='lost'?'Not quite the final destination.':'The journey ended.'}</h2>
         <p>{game?.status==='won'?'Seven correct answers, seven chances used, one amazing discovery.':'One or more incorrect guesses kept the final building out of reach. There is always another journey.'}</p>
@@ -337,7 +338,7 @@ export default function Game(){
         {game?.mode==='daily'&&<ProgressionClient compact/>}
         <div className="result-metrics"><div><strong>{game?.score.toLocaleString()}</strong><span>POINTS</span></div><div><strong>{game?.stage} / 7</strong><span>DISCOVERED</span></div><div><strong>{fmt(elapsed)}</strong><span>TIME</span></div></div>
         <div className="reward-milestones"><span><Medal size={15}/> {game?.status==='won'?'Perfect expedition!':'Every stage counts'}</span><span><TrendingUp size={15}/> <Link href="/rewards">Passport & streaks →</Link></span></div>
-        <div className="result-stages">{STAGES.map((v,i)=><span title={v} key={i} className={i<(game?.stage||0)?'clear':'closed'}>{i<(game?.stage||0)?<Check size={16}/>:<Lock size={15}/>}</span>)}</div>
+        <JourneyTrace discovered={game?.stage||0} finished/><div className="result-stages">{STAGES.map((v,i)=><span title={v} key={i} className={i<(game?.stage||0)?'clear':'closed'}>{i<(game?.stage||0)?<Check size={16}/>:<Lock size={15}/>}</span>)}</div>
         <div className="results-path">{game?.path.join(' → ')||'No locations discovered yet'}</div>
         {!!game?.sources?.length&&<details className="result-sources"><summary><ExternalLink size={13}/> Review factual sources</summary>{game.sources.map(s=><a key={s.stage} href={s.url} rel="noreferrer noopener" target="_blank">Stage {s.stage+1}: {s.answer} ↗</a>)}</details>}
         {game?.mode==='daily'&&<div className="leaderboard-submit"><label htmlFor="public-name">JOIN TODAY’S LEADERBOARD</label><div><input id="public-name" maxLength={24} placeholder="Explorer name" value={displayName} onChange={e=>setDisplayName(e.target.value)}/><button disabled={dailyExpired||nameSaving||!displayName.trim()} onClick={()=>void submitLeaderboard()}><Trophy size={15}/> Submit</button></div>{nameStatus&&<small role="status">{nameStatus}</small>}</div>}
