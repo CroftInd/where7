@@ -24,7 +24,16 @@ try{
  const legacySession={challengeId:legacy.id,mode:'daily',stage:0,guesses:0,score:0,hints:[],history:[],status:'playing',version:0,startedAt:new Date().toISOString(),endedAt:null};
  await db.query("insert into game_sessions(guest_key,challenge_id,mode,data) values($1::uuid,$2,'daily',$3::jsonb)",[guest,today+':'+legacy.id,JSON.stringify(legacySession)]);
  const migration=read('supabase/migrations/20261022010833_puzzle_quality.sql');
- await db.exec(migration);await db.exec(migration); // Reapplication must not alter frozen revisions.
+ await db.exec(migration);await db.exec(migration);
+ await db.exec(read('supabase/migrations/20261023225006_belgian_region_choices.sql'));
+ await db.exec(read('supabase/migrations/20261023225006_belgian_region_choices.sql'));
+ const belgium=fixture(98);belgium.countryIso3='BEL';belgium.stages[1].answer='Brussels-Capital Region';belgium.stages[1].choices=['Brussels-Capital Region','Flemish Region','Walloon Region'].map((name,i)=>({id:i?'belgium-'+i:belgium.stages[1].place.id,name,lat:40,lng:-74}));belgium.stages[1].choiceException={reason:'Belgium has exactly three territorial regions; all three are offered.',source:'https://www.belgium.be/en/about_belgium/government/regions'};
+ assert.equal((await db.query(`select where7_content_shape_ok($1::jsonb,'BEL',true) ok`,[JSON.stringify(belgium.stages)])).rows[0].ok,true);
+ belgium.stages[1].choices[2].name='Province of Antwerp';assert.equal((await db.query(`select where7_content_shape_ok($1::jsonb,'BEL',true) ok`,[JSON.stringify(belgium.stages)])).rows[0].ok,false);
+ const ireland=fixture(97);ireland.countryIso3='IRL';ireland.stages[1].answer='Leinster';ireland.stages[1].choices=['Leinster','Connacht','Munster','Ulster'].map((name,i)=>({id:i?'province-'+i:ireland.stages[1].place.id,name,lat:40,lng:-74}));ireland.stages[1].choiceException={reason:'The complete set of four traditional provinces, separately from counties.',source:'https://www.ireland.com/help-and-advice/practical-information/irelands-counties-and-provinces/'};
+ assert.equal((await db.query(`select where7_content_shape_ok($1::jsonb,'IRL',true) ok`,[JSON.stringify(ireland.stages)])).rows[0].ok,true);
+ ireland.stages[1].choices[3].name='County Dublin';assert.equal((await db.query(`select where7_content_shape_ok($1::jsonb,'IRL',true) ok`,[JSON.stringify(ireland.stages)])).rows[0].ok,false);
+ // Reapplication must not alter frozen revisions.
  let frozen=(await db.query('select data from game_sessions')).rows[0].data.challengeSnapshot;
  assert.equal(frozen.id,legacy.id);assert.equal(frozen.revision,1);assert.equal(frozen.reviewStatus,'draft');
  assert.equal((await db.query('select reviews_required from content_settings')).rows[0].reviews_required,false);
